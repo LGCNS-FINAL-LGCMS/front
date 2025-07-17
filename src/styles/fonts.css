@@ -1,0 +1,17 @@
+/* src/styles/fonts.css */
+
+/* RedHatDisplay 폰트 */
+@font-face {
+  font-family: "RedHatDisplay";
+  src: url("/fonts/RedHatDisplay-VariableFont_wght.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* KoPubWorldDotumMedium 폰트 */
+@font-face {
+  font-family: "KoPubWorldDotumMedium";
+  src: url("/fonts/KoPubWorldDotumMedium.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
