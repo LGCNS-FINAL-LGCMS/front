@@ -1,4 +1,3 @@
-// Layout.js
 import React from "react";
 import Header, { HEADER_HEIGHT } from "../Header/Header";
 
@@ -7,20 +6,12 @@ const Layout = ({ children }) => {
     <>
       <Header />
       <div
-        className="mx-auto w-full flex justify-center items-center"
+        className="w-full min-h-screen bg-background"
         style={{ paddingTop: HEADER_HEIGHT }}
       >
-        <div className="flex justify-center items-center min-h-[calc(100vh-140px)] h-full w-full">
-          <main
-            className="flex justify-center items-center p-5 min-h-[calc(100vh-140px)] h-full w-full max-w-[1280px] mx-auto px-4
-            md:max-w-[840px]
-            lg:max-w-[1140px]
-            xl:max-w-[1280px]
-          "
-          >
-            {children}
-          </main>
-        </div>
+        <main className="max-w-[1280px] w-full mx-auto px-4 py-8">
+          {children}
+        </main>
       </div>
     </>
   );

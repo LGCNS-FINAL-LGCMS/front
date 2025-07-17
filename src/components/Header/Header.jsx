@@ -45,13 +45,13 @@ const Header = () => {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 bg-white shadow h-[70px] px-4"
+      className="fixed top-0 left-0 right-0 z-50 bg-white shadow h-[70px] "
       style={{ height: HEADER_HEIGHT }}
     >
-      <div className="relative max-w-screen-xl mx-auto h-full flex items-center justify-center">
+      <div className="relative flex items-center justify-center h-full max-w-screen-xl mx-auto">
         {/* 로고 - 중앙 */}
         <div
-          className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2 cursor-pointer hover:text-blue-500"
+          className="absolute flex items-center gap-2 transform -translate-x-1/2 cursor-pointer left-1/2 hover:text-blue-500"
           onClick={handleLogoClick}
         >
           <img src={Logo} alt="logo" className="h-[65px]" />
@@ -68,7 +68,7 @@ const Header = () => {
               {/* 드롭다운 토글 버튼 */}
               <button
                 onClick={toggleDropdown}
-                className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 p-2 rounded-md"
+                className="flex items-center gap-2 p-2 text-sm font-medium text-gray-700 rounded-md hover:text-blue-600 hover:bg-gray-100"
               >
                 {isMobile ? (
                   <FontAwesomeIcon icon={faBars} size="lg" />
@@ -82,13 +82,13 @@ const Header = () => {
 
               {/* 드롭다운 메뉴 */}
               {isDropdownOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white border rounded-md shadow-xl py-1 z-50">
+                <div className="absolute right-0 z-50 w-48 py-1 mt-2 bg-white border rounded-md shadow-xl top-full">
                   <button
                     onClick={() => {
                       onLogout();
                       setIsDropdownOpen(false);
                     }}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                    className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
                   >
                     <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
                     로그아웃
@@ -98,7 +98,7 @@ const Header = () => {
                       onNavigate("/userinfo");
                       setIsDropdownOpen(false);
                     }}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                    className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
                   >
                     <FontAwesomeIcon icon={faUserCircle} className="mr-2" />
                     마이 페이지
@@ -109,7 +109,7 @@ const Header = () => {
           ) : (
             <button
               onClick={() => navigate("/login")}
-              className="px-4 py-2 rounded-sm text-sm font-semibold bg-primary text-white hover:bg-secondary transition"
+              className="px-4 py-2 m-4 text-sm font-semibold text-white transition rounded-sm bg-primary hover:bg-secondary"
             >
               로그인
             </button>

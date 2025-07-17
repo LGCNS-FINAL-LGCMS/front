@@ -1,19 +1,18 @@
-import { useState } from "react";
-import "./App.css";
+import "./index.css";
 import Layout from "./components/Layout/Layout";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import MainPage from "./pages/MainPage/MainPage";
+import LessionViewerPage from "./pages/LecturePage/LectureViewPage";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
       <Router>
         <Layout>
           <Routes>
             <Route path="/" element={<MainPage />} />
+            <Route path="/lecture" element={<LessionViewerPage />} />
           </Routes>
         </Layout>
       </Router>
