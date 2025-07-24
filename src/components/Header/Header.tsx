@@ -157,6 +157,24 @@ const LogoText = styled.span`
   }
 `;
 
+const AlertDropdown = styled(DropdownMenu)`
+  right: 3rem; /* 위치 조정 (UserButton과 겹치지 않도록) */
+  width: 250px;
+  background-color: rgba(113, 113, 113, 0.75);
+  box-shadow: 0 10px 10px -3px rgba(130, 130, 130, 0.35);
+  font-size: 0.85rem;
+  padding: 0.5rem 0;
+`;
+
+const AlertItem = styled.div`
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${theme.colors.header};
+  }
+`;
+
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -305,6 +323,22 @@ const Header = () => {
                       </>
                     )}
                   </DropdownMenu>
+                )}
+
+                {isAlertOpen && (
+                  <AlertDropdown ref={alertRef}>
+                    {alerts.length > 0 ? (
+                      alerts.map((alert) => (
+                        <AlertCell
+                          key={alert.id}
+                          message={alert.message}
+                          date={alert.date}
+                        />
+                      ))
+                    ) : (
+                      <AlertItem>새 알림이 없습니다.</AlertItem>
+                    )}
+                  </AlertDropdown>
                 )}
               </>
             ) : (
