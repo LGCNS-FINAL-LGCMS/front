@@ -5,8 +5,12 @@ import GlobalStyle from "./assets/styles/globalstyle";
 import { ThemeProvider } from "styled-components";
 import { theme } from "./assets/styles/theme";
 
+
+import { PAGE_PATHS } from "./constants/pagePaths";
+
 // =========== 페이지 임포트 ===========
-import MainPage from "./pages/MainPage/MainPage";
+// import MainPage from "./pages/MainPage/MainPage";
+import LectureWatchingPage from "./pages/LectureWatchingPage";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -17,7 +21,8 @@ function App() {
           <GlobalStyle />
           <Layout>
             <Routes>
-              <Route path="/" element={<MainPage />} />
+              {/* <Route path="/" element={<MainPage />} /> */}
+              <Route path={PAGE_PATHS.LECTUREWATCH} element={<LectureWatchingPage />} />
             </Routes>
           </Layout>
         </Router>
