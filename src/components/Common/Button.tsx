@@ -87,7 +87,7 @@ const StyledButton = styled.button<{
  * @param disabled 비활성화 여부
  * @param design 스타일 디자인 번호(1,2,3)
  * @param fontColor 버튼 폰트 색상(1,2)
- * @param fontWeight 글꼴 두께(100,400,600)
+ * @param fontWeight 글꼴 두께(100,400,700)
  * @param title 마우스오버 툴팁
  */
 const Button: React.FC<ButtonProps> = ({
