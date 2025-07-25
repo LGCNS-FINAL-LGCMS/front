@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "../components/Common/Button";
+import SearchBar from "../components/Common/SearchBar";
 
 const Title = styled.h1`
   color: ${({ theme }) => theme.colors.caution};
@@ -15,30 +16,32 @@ const Container = styled.div`
 `;
 
 const MainPage = () => {
+  const [searchValue, setSearchValue] = useState("");
+
   const handleClick = () => {
     alert("버튼이 클릭됐어요!");
   };
 
+  const handleSearch = (value: string) => {
+    alert(`검색어: ${value}`);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
   return (
     <Container>
-      <Title>
-        안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요
-        안녕하세요 안녕하세요안녕하세요안녕하세요 안녕하세요안녕하세요
-        안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요
-        안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요안녕하세요
-        안녕하세요 안녕하세요 안녕하세요안녕하세요 안녕하세요 안녕하세요
-        안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요
-        안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요
-        안녕하세요 안녕하세요 안녕하세요 안녕하세요안녕하세요 안녕하세요
-        안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요
-      </Title>
-
-      <Button
-        text="클릭"
-        onClick={handleClick}
-        design={3}
-        fontWeight={700}
+      <SearchBar
+        value={searchValue}
+        fontColor={1}
+        fontWeight={100}
+        design={2}
+        width="450px"
+        onChange={handleInputChange}
+        onSearch={handleSearch}
         disabled={false}
+        placeholder="하이요"
       />
     </Container>
   );
