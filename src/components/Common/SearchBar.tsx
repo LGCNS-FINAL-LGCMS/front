@@ -85,6 +85,7 @@ const StyledInput = styled.input<{
   border-radius: 24px;
   padding-right: 50px;
   font-weight: ${({ fontWeight }) => fontWeight};
+  font-family: ${({ theme }) => theme.font.primary}, sans-serif;
 
   ${({ fontColor }) => fontColor && fontColors[fontColor]}
 `;
