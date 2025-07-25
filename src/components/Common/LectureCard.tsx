@@ -50,6 +50,7 @@ const Card = styled.div<{
   width: ${({ width }) => width};
   height: ${({ height }) => height};
   overflow: hidden;
+  font-family: ${({ theme }) => theme.font.primary}, sans-serif;
   display: flex;
   flex-direction: column;
   cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
@@ -85,7 +86,7 @@ const Content = styled.div<{
   padding: 10px 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 9px;
   ${({ fontColor }) => fontColor && fontColorStyles[fontColor]};
   font-weight: 400;
 `;
@@ -137,7 +138,7 @@ const LectureCard: React.FC<LectureCardProps> = ({
     const match = widthValue.match(/^(\d+)(px)?$/);
     if (match) {
       const numericWidth = parseInt(match[1], 10);
-      return `${Math.round(numericWidth * 1.4)}px`;
+      return `${Math.round(numericWidth * 1.35)}px`;
     }
     return `calc(${widthValue} * 1.4)`;
   };
