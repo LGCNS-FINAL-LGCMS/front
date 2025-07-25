@@ -112,7 +112,7 @@ const SearchButton = styled.button`
 `;
 
 /**
- * 공통 버튼 컴포넌트입니다. *
+ * 공통 검색바 컴포넌트입니다. *
  * @param value 입력될 값 (필수!!)
  * @param onChange 입력값 변경시 이벤트 (필수!!)
  * @param onSearch 검색시 이벤트 (필수!!)
