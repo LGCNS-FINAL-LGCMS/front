@@ -42,7 +42,7 @@ const fontColorStyles = {
 };
 
 const Card = styled.div<{
-  design: 1 | 2 | 3;
+  $design: 1 | 2 | 3;
   width: string;
   height: string;
   onClick?: () => void;
@@ -56,7 +56,7 @@ const Card = styled.div<{
   cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
-  ${({ design }) => designStyles[design]}
+  ${({ $design }) => designStyles[$design]}
 
   &:hover {
     transform: ${({ onClick }) => (onClick ? "scale(1.02)" : "none")};
@@ -80,9 +80,9 @@ const Image = styled.img`
   object-fit: cover;
 `;
 
-const Content = styled.div<{
-  fontColor?: 1 | 2;
-}>`
+const Content = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "fontColor",
+})<{ fontColor?: 1 | 2 }>`
   padding: 10px 16px;
   display: flex;
   flex-direction: column;
@@ -148,7 +148,7 @@ const LectureCard: React.FC<LectureCardProps> = ({
   return (
     <Card
       onClick={onClick}
-      design={design}
+      $design={design}
       width={width}
       height={height}
       role="button"
