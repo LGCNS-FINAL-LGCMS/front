@@ -105,10 +105,11 @@ const Divider = styled.hr<{ design: 1 | 2 | 3 }>`
     `}
 `;
 
-const AnswerWrapper = styled.div<{ isOpen: boolean; maxHeight: number }>`
+const AnswerWrapper = styled.div<{ $isOpen: boolean; $maxHeight: number }>`
   overflow: hidden;
   transition: max-height 0.4s ease;
-  max-height: ${({ isOpen, maxHeight }) => (isOpen ? `${maxHeight}px` : "0")};
+  max-height: ${({ $isOpen, $maxHeight }) =>
+    $isOpen ? `${$maxHeight}px` : "0"};
 `;
 
 const AnswerText = styled.div`
@@ -166,7 +167,7 @@ const QnaCard: React.FC<QnaCardProps> = ({
       )}
 
       {answer && (
-        <AnswerWrapper isOpen={isOpen} maxHeight={maxHeight + 20}>
+        <AnswerWrapper $isOpen={isOpen} $maxHeight={maxHeight + 20}>
           <ContentInner ref={contentRef}>
             <Divider design={design} />
             <AnswerText>{answer}</AnswerText>
