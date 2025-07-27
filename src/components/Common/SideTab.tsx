@@ -7,14 +7,14 @@ const ITEM_HEIGHT = 40;
 const GAP = 5;
 const PADDING = 10;
 
-const TabContainer = styled.div<{ itemCount: number }>`
+const TabContainer = styled.div<{ $itemCount: number }>`
   position: fixed;
   top: ${TOP}px;
   left: -0.5px;
   width: ${TAB_WIDTH}px;
-  height: ${({ itemCount }) =>
-    itemCount * ITEM_HEIGHT +
-    (itemCount > 1 ? (itemCount - 1) * GAP : 0) +
+  height: ${({ $itemCount }) =>
+    $itemCount * ITEM_HEIGHT +
+    ($itemCount > 1 ? ($itemCount - 1) * GAP : 0) +
     PADDING +
     1}px;
   background: ${({ theme }) => theme.colors.header};
@@ -104,7 +104,7 @@ interface TabMenuProps {
  */
 const SideTab: React.FC<TabMenuProps> = ({ items, onSelect }) => {
   return (
-    <TabContainer tabIndex={0} itemCount={items.length}>
+    <TabContainer tabIndex={0} $itemCount={items.length}>
       <TabHandle>TAB</TabHandle>
       <TabList>
         {items.map((item) => (
