@@ -18,19 +18,19 @@ const TabList = styled.div`
   display: flex;
 `;
 
-const TabItem = styled.li<{ active: boolean }>`
+const TabItem = styled.li<{ $active: boolean }>`
   list-style: none;
   padding: 5px 10px;
   border: 1px solid #ccc;
-  background-color: ${({ active }) => (active ? '#fff' : '#f2f2f2')};
+  background-color: ${({ $active }) => ($active ? '#fff' : '#f2f2f2')};
   cursor: pointer;
-  color: ${({ active }) => (active ? '#000' : '#666')};
+  color: ${({ $active }) => ($active ? '#000' : '#666')};
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
   transition: all 0.2s;
 
   &:hover {
-    background-color: ${({ active }) => (active ? '#fff' : '#e6e6e6')};
+    background-color: ${({ $active }) => ($active ? '#fff' : '#e6e6e6')};
   }
 `;
 
@@ -68,7 +68,7 @@ const Tab = () => {
           <TabItem
             key={tab.key}
             onClick={() => setKey(tab.key)}
-            active={tab.key === key}
+            $active={tab.key === key}
           >
             {tab.label}
           </TabItem>
