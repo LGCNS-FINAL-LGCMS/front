@@ -1,8 +1,16 @@
 // Layout.tsx
 import type { ReactNode } from "react";
+import { useLocation } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 import Header, { HEADER_HEIGHT } from "../components/Header/Header";
 import { theme } from "../assets/styles/theme";
+
+import ChatLauncher from "../components/Common/Chat/ChatLauncher";
+import ChatWindow from "../components/Common/Chat/ChatWindow";
+import { useState } from "react";
+import { useChatSession } from "../hooks/useChatSession";
+
+import { PAGE_PATHS } from "../constants/pagePaths";
 
 const AppWrapper = styled.div`
   display: flex;
@@ -44,12 +52,34 @@ const MainContent = styled.main`
   width: 100%;
 `;
 
+// 채팅 관련 포지션 고정
+const ChatFixedWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 999;
+`;
+
 // children 타입 지정
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  // 챗봇이 보이는 경로 배열
+  const chatVisiblePaths = [PAGE_PATHS.HOME, "/추후 결정하기"];
+  const shouldShowChat = chatVisiblePaths.includes(currentPath);
+
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const { messages, sendMessage } = useChatSession("ws://localhost:8080");
+
+  const toggleChat = () => {
+    setIsChatOpen((prev) => !prev);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Header />
@@ -58,6 +88,18 @@ const Layout = ({ children }: LayoutProps) => {
           <MainContent>{children}</MainContent>
         </LayoutContainer>
       </AppWrapper>
+
+      {shouldShowChat && (
+        <ChatFixedWrapper>
+          <ChatLauncher onClick={toggleChat} />
+          <ChatWindow
+            isOpen={isChatOpen}
+            messages={messages}
+            onSend={sendMessage}
+            onClose={() => setIsChatOpen(false)}
+          />
+        </ChatFixedWrapper>
+      )}
     </ThemeProvider>
   );
 };
