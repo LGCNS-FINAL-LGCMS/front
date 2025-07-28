@@ -7,7 +7,7 @@ import { theme } from "./assets/styles/theme";
 import { PAGE_PATHS } from "./constants/pagePaths";
 
 // =========== 페이지 임포트 ===========
-import MainPage from "./pages/MainPage";
+import MainPage from "./pages/MainPage/MainPage";
 // =========== 페이지 임포트 ===========
 
 function App() {

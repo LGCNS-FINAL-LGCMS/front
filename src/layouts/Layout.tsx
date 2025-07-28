@@ -2,8 +2,10 @@
 import type { ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
-import Header, { HEADER_HEIGHT } from "../components/Header/Header";
 import { theme } from "../assets/styles/theme";
+import Header from "../components/Header/Header";
+
+const HEADER_HEIGHT: string = theme.size.header_Height;
 
 import ChatLauncher from "../components/Common/Chat/ChatLauncher";
 import ChatWindow from "../components/Common/Chat/ChatWindow";
@@ -13,9 +15,6 @@ import { useChatSession } from "../hooks/useChatSession";
 import { PAGE_PATHS } from "../constants/pagePaths";
 
 const AppWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding-top: ${HEADER_HEIGHT};
   margin: 0 auto;
   width: 100%;
@@ -34,21 +33,13 @@ const AppWrapper = styled.div`
 `;
 
 const LayoutContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - ${HEADER_HEIGHT});
   height: 100%;
   width: 100%;
 `;
 
 const MainContent = styled.main`
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 20px;
   min-height: calc(100vh - ${HEADER_HEIGHT});
-  height: 100%;
   width: 100%;
 `;
 

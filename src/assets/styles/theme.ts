@@ -15,6 +15,7 @@ export const theme: DefaultTheme = {
   },
   size: {
     maxWidth: "1200px",
+    header_Height: "70px",
   },
   font: { primary: "GTL", logo: "BlackHanSans" },
 };
