@@ -17,7 +17,7 @@ import {
   faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
 
-const HEADER_HEIGHT: string = "70px";
+const HEADER_HEIGHT: string = theme.size.header_Height;
 
 interface Alert {
   id: number;
@@ -352,5 +352,4 @@ const Header = () => {
   );
 };
 
-export { HEADER_HEIGHT };
 export default Header;
