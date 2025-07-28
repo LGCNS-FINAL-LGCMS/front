@@ -17,6 +17,7 @@ declare module "styled-components" {
     };
     size: {
       maxWidth: string;
+      header_Height: string;
     };
     font: {
       primary: string;
