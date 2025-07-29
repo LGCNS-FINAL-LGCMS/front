@@ -1,9 +1,7 @@
 import ReactPlayer from 'react-player';
 import styled from 'styled-components';
 
-import type { JSX } from 'react'; // 컴포넌트 호출 땜에 불러오는 것
-
-interface LessionViewerProps {
+interface LectureViewerProps {
   url: string;
 }
 
@@ -12,7 +10,7 @@ const PlayerWrapper = styled.div`
   aspect-ratio: 16 / 9;
 `;
 
-const LessionViewer = ({ url }: LessionViewerProps): JSX.Element => {
+const LectureViewer = ({ url }: LectureViewerProps): React.ReactElement => {
   return (
     <PlayerWrapper>
       <ReactPlayer
@@ -26,4 +24,4 @@ const LessionViewer = ({ url }: LessionViewerProps): JSX.Element => {
   );
 };
 
-export default LessionViewer;
+export default LectureViewer;
