@@ -3,19 +3,17 @@ import styled from 'styled-components';
 import Memo from '../Memo/Memo';
 import LessonList from '../Lecture/LessonList';
 
-import type { JSX } from 'react'; // 컴포넌트 호출 땜에 불러오는 것
-
-
 const Container = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
-
 `;
 
-const TabList = styled.div`
+const TabList = styled.ul`
   display: flex;
+  padding-left: 0;
+  margin: 0;
 `;
 
 const TabItem = styled.li<{ $active: boolean }>`
@@ -43,12 +41,10 @@ const ContentBox = styled.div`
   overflow-y: auto;
 `;
 
-// 구현부분
-
 type TabData = {
   key: string;
   label: string;
-  content: JSX.Element;
+  content: React.ReactElement;
 };
 
 const tabs: TabData[] = [
