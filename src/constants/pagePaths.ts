@@ -7,4 +7,5 @@ export const PAGE_PATHS = {
   HOME: "/",
   LOGIN: "/login",
   USER_INFO: "/userinfo",
+  LECTUREWATCH: "/lecture_w"
 };
