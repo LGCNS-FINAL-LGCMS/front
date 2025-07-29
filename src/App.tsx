@@ -8,6 +8,7 @@ import { PAGE_PATHS } from "./constants/pagePaths";
 
 // =========== 페이지 임포트 ===========
 import MainPage from "./pages/MainPage/MainPage";
+import LectureWatchingPage from "./pages/LectureWatchingPage";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <GlobalStyle />
           <Layout>
             <Routes>
+              <Route path={PAGE_PATHS.LECTUREWATCH} element={<LectureWatchingPage />} />
               <Route path={PAGE_PATHS.HOME} element={<MainPage />} />
             </Routes>
           </Layout>
