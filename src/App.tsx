@@ -4,9 +4,10 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import GlobalStyle from "./assets/styles/globalstyle";
 import { ThemeProvider } from "styled-components";
 import { theme } from "./assets/styles/theme";
+import Signin from "./pages/Signin";
 
 // =========== 페이지 임포트 ===========
-import MainPage from "./pages/MainPage/MainPage";
+// import MainPage from "./pages/MainPage/MainPage";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -17,7 +18,8 @@ function App() {
           <GlobalStyle />
           <Layout>
             <Routes>
-              <Route path="/" element={<MainPage />} />
+              {/* <Route path="/" element={<MainPage />} /> */}
+              <Route path="/signin" element={<Signin />} />
             </Routes>
           </Layout>
         </Router>
