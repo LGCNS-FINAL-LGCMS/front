@@ -17,12 +17,13 @@ import {
   faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
 
-const HEADER_HEIGHT: string = "70px";
+const HEADER_HEIGHT: string = theme.size.;
 
 interface Alert {
   id: number;
   message: string;
   date?: string;
+  url?: string;
 }
 
 const HeaderWrapper = styled.header`
@@ -180,15 +181,46 @@ const Header = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // 임시 mock 알림
     setAlerts([
-      { id: 1, message: "새 댓글이 달렸습니다.", date: "2025-07-24" },
-      { id: 2, message: "주문이 완료되었습니다.", date: "2025-07-23" },
-      { id: 3, message: "답변이 달렸습니다.", date: "2025-07-23" },
-      { id: 4, message: "주문이 완료되었습니다.", date: "2025-07-23" },
-      { id: 5, message: "주문이 완료되었습니다.", date: "2025-07-23" },
+      {
+        id: 1,
+        message: "새 댓글이 달렸습니다.",
+        date: "2025-07-24",
+        url: "/",
+      },
+      {
+        id: 2,
+        message: "주문이 완료되었습니다.",
+        date: "2025-07-23",
+        url: "/orders/123",
+      },
+      {
+        id: 3,
+        message: "답변이 달렸습니다.",
+        date: "2025-07-23",
+        url: "/answers/45",
+      },
+      {
+        id: 4,
+        message: "주문이 완료되었습니다.",
+        date: "2025-07-23",
+        url: "/orders/124",
+      },
+      {
+        id: 5,
+        message: "주문이 완료되었습니다.",
+        date: "2025-07-23",
+        url: "/orders/125",
+      },
     ]);
   }, []);
+
+  const handleAlertClick = (url?: string) => {
+    if (url) {
+      navigate(url);
+      setIsAlertOpen(false);
+    }
+  };
 
   const onNavigate = (url: string) => {
     navigate(url);
@@ -325,7 +357,7 @@ const Header = () => {
                   </DropdownMenu>
                 )}
 
-                {isAlertOpen && (
+                {isAuthenticated && isAlertOpen && (
                   <AlertDropdown ref={alertRef}>
                     {alerts.length > 0 ? (
                       alerts.map((alert) => (
@@ -333,6 +365,7 @@ const Header = () => {
                           key={alert.id}
                           message={alert.message}
                           date={alert.date}
+                          onClick={() => handleAlertClick(alert.url)}
                         />
                       ))
                     ) : (

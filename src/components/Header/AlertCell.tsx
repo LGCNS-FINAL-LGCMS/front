@@ -1,4 +1,3 @@
-// AlertCell.tsx
 import React from "react";
 import styled from "styled-components";
 import { theme } from "../../assets/styles/theme";
@@ -16,11 +15,13 @@ const AlertItemWrapper = styled.div`
 interface AlertCellProps {
   message: string;
   date?: string;
+  url?: string;
+  onClick?: () => void;
 }
 
-const AlertCell: React.FC<AlertCellProps> = ({ message, date }) => {
+const AlertCell: React.FC<AlertCellProps> = ({ message, date, onClick }) => {
   return (
-    <AlertItemWrapper>
+    <AlertItemWrapper onClick={onClick}>
       <div>{message}</div>
       {date && (
         <small style={{ fontSize: "0.7rem", color: theme.colors.text_B }}>
