@@ -6,6 +6,7 @@
 export const PAGE_PATHS = {
   HOME: "/",
   LOGIN: "/login",
+  SIGNUP: "/signup",
   USER_INFO: "/userinfo",
-  LECTUREWATCH: "/lecture_w"
+  LECTUREWATCH: "/lecture_w",
 };
