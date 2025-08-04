@@ -7,6 +7,7 @@ import { PAGE_PATHS } from "./constants/pagePaths";
 
 // =========== 페이지 임포트 ===========
 import Login from "./Pages/Login";
+import SignupPage from "./Pages/Signup/SignupPage";
 import MainPage from "./pages/MainPage/MainPage";
 import LectureWatchingPage from "./pages/LectureWatchingPage";
 // =========== 페이지 임포트 ===========
@@ -21,8 +22,12 @@ function App() {
             <Routes>
               {/* <Route path="/" element={<MainPage />} /> */}
               <Route path="/login" element={<Login />} />
-              <Route path={PAGE_PATHS.LECTUREWATCH} element={<LectureWatchingPage />} />
+              <Route
+                path={PAGE_PATHS.LECTUREWATCH}
+                element={<LectureWatchingPage />}
+              />
               <Route path={PAGE_PATHS.HOME} element={<MainPage />} />
+              <Route path={PAGE_PATHS.SIGNUP} element={<SignupPage />} />
             </Routes>
           </Layout>
         </Router>
