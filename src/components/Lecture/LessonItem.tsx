@@ -1,66 +1,77 @@
 import styled from 'styled-components';
 
-const ItemWrapper = styled.div`
+const ItemWrapper = styled.div<{ isSelected: boolean }>`
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  align-items: center;
-  margin-bottom: 3px;
-  height: 59px;
-  border: 2px solid #e8e7e7;
-  background: #fefefe;
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.05);
-  box-sizing: border-box;
+  grid-template-columns: 4fr 1fr;
+  grid-template-areas: "text time";
+  gap: 5px;
+  height: 60px;
+  border: 1px solid #ddd;
+  background: ${({ isSelected }) => (isSelected ? "#d3d3d3" : "#fff")};
   border-radius: 6px;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.05);
   cursor: pointer;
-
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #a5a9ab;
+    background-color: ${({ isSelected }) => (isSelected ? "#c0c0c0" : "#f0f0f0")};
   }
 `;
 
-const LeftBox = styled.div`
+const TextArea = styled.div`
+  grid-area: text;
   display: grid;
   grid-template-rows: 1fr 1fr;
-  padding: 5px 10px;
+  padding-left: 15px;
+  gap: 5px;
 `;
 
 const Title = styled.div`
   font-weight: 500;
   font-size: 14px;
   color: #222;
+  padding-top: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
-const Lecture = styled.div`
+const Info = styled.div`
   font-size: 12px;
   color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const Duration = styled.div`
+  grid-area: time;
   font-size: 12px;
-  padding-right: 10px;
-  text-align: right;
   color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
-type LessonInfo = {
+interface LessonInfo {
   title: string;
   lecture: string;
   duration: string;
-};
+}
 
 interface LessonItemProps {
   data: LessonInfo;
+  onClick: () => void;
+  isSelected: boolean;
 }
 
-const LessonItem = ({ data }: LessonItemProps) => {
+const LessonItem = ({ data, onClick, isSelected }: LessonItemProps) => {
   return (
-    <ItemWrapper onClick={() => console.log("클릭")}>
-      <LeftBox>
+    <ItemWrapper onClick={onClick} isSelected={isSelected}>
+      <TextArea>
         <Title>{data.title}</Title>
-        <Lecture>{data.lecture}</Lecture>
-      </LeftBox>
+        <Info>{data.lecture}</Info>
+      </TextArea>
       <Duration>{data.duration}</Duration>
     </ItemWrapper>
   );
