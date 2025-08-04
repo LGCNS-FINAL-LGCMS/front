@@ -1,121 +1,99 @@
-import { useState } from "react";
-import styled from "styled-components";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { nord } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useMemoStore } from "../../hooks/useMemoStore";
 import MDEditor from "@uiw/react-md-editor";
+import styled from "styled-components";
+import MemoList from "./MemoList";
+
+interface MemoProps {
+  lessonId: string;
+}
 
 const MemoWrapper = styled.div`
   height: 100%;
   width: 100%;
   display: grid;
-  grid-template-rows: 0.25fr 2fr 1.5fr 0.25fr;
-  gap: 10px;
-  padding: 10px;
+  grid-template-columns: 3.5fr 0.2fr 0.8fr;
+  grid-template-areas: "editor save list";
+  gap: 5px;
 `;
 
-const MemoNav = styled.div`
+const EditorArea = styled.div`
+  grid-area: editor;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const MemoListArea = styled.div`
+  grid-area: list;
+  height: 100%;
+  overflow-y: hidden;
+`;
+
+const ButtonArea = styled.div`
+  grid-area: save;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   align-items: center;
 `;
 
-const MarkdownPreview = styled.div`
-  padding: 10px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background-color: #f9f9f9;
-  font-size: 14px;
-  line-height: 1.6;
-`;
-
-const StyledEditorWrapper = styled.div`
+const IconButton = styled.button`
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: white;
+  color: black;
   border: 1px solid #ccc;
-  border-radius: 6px;
-
-  .w-md-editor {
-    height: 286px !important;
-    background-color: white;
-  }
-
-  .w-md-editor-content {
-    flex: 1;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
-  .w-md-editor-text {
-    flex: 1 !important;
-    overflow-y: auto !important;
-    padding: 10px;
-  }
-
-  .w-md-editor-preview {
-    display: none !important;
-  }
-`;
-
-const SaveButton = styled.button`
-  /* justify-self: end; */
-  align-self: center;
-  padding: 8px 16px;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: white;
-  border: none;
-  border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
-    background-color: #adabab;
+    background-color: ${({ theme }) => theme.colors.secondary};
+    color: white;
   }
 `;
 
-const Memo = () => {
-  const [markdown, setMarkdown] = useState("메모를 마크다운으로 입력해 보세요!");
+const Memo = ({ lessonId }: MemoProps) => {
+  const {
+    memos,
+    selectedId,
+    addMemo,
+    updateMemo,
+    deleteMemo,
+    selectMemo,
+    getSelectedMemo,
+  } = useMemoStore(lessonId);
 
-  const handleSave = () => {
-    console.log("✅ 저장된 내용:", markdown);
-  };
+  const selectedMemo = getSelectedMemo();
+  const markdown = selectedMemo?.content ?? "";
 
   return (
     <MemoWrapper>
-      <MemoNav>
-        <SaveButton>{`<`}</SaveButton>
-        {/* <div> 1 </div> 메모 id 넣기? */}
-        <SaveButton>{`>`}</SaveButton>
-      </MemoNav>
+      <EditorArea>
+        <div data-color-mode="light">
+          <MDEditor
+            value={markdown}
+            onChange={(value = "") => updateMemo(value)}
+            preview="live"
+            textareaProps={{
+              placeholder: "마크다운으로 메모를 작성해 보세요...", // 플레이스홀더 역할
+             }}
+          />
+        </div>
+      </EditorArea>
 
-      <MarkdownPreview>
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            code({ node, inline, className, children, ...props }) {
-              const match = /language-(\w+)/.exec(className || "");
-              return !inline && match ? (
-                <SyntaxHighlighter language={match[1]} style={nord} PreTag="div" {...props}>
-                  {String(children).replace(/\n$/, "")}
-                </SyntaxHighlighter>
-              ) : (
-                <code className={className} {...props}>{children}</code>
-              );
-            },
-          }}
-        >
-          {markdown}
-        </ReactMarkdown>
-      </MarkdownPreview>
+      <ButtonArea>
+        <IconButton onClick={addMemo} title="메모 추가">➕</IconButton>
+        <IconButton onClick={() => updateMemo(markdown)} title="저장">💾</IconButton>
+        <IconButton onClick={deleteMemo} title="삭제">❌</IconButton>
+      </ButtonArea>
 
-      <StyledEditorWrapper data-color-mode="light">
-        <MDEditor
-          value={markdown}
-          onChange={(value) => setMarkdown(value ?? "")}
-          preview="edit"
-        />
-      </StyledEditorWrapper>
-
-      <SaveButton onClick={handleSave}> 메모 저장</SaveButton>
+      <MemoListArea>
+        <MemoList memos={memos} selectedId={selectedId} onSelect={selectMemo} />
+      </MemoListArea>
     </MemoWrapper>
   );
 };

@@ -2,10 +2,11 @@
 import styled from "styled-components";
 
 import { useNavigate } from "react-router-dom";
-
 import { useState, useEffect } from "react";
+
 import LessonPlayer from "../../components/Lecture/LessonPlayer";
 import LessonList from "../../components/Lecture/LessonList";
+import Memo from "../../components/Memo/Memo";
 
 
 const LessonViewWrapper = styled.div`
@@ -80,7 +81,6 @@ const ChatBotArea = styled.div`
 
 const MemoArea = styled.div`
   grid-area: memo;
-  background-color: green;
   height: 100%;
 `;
 
@@ -126,24 +126,30 @@ const dummyLessons: LessonInfo[] = [
 ];
 
 const LessonViewPage = () => {
-
   const [lessons, setLessons] = useState<LessonInfo[]>([]);
-
-  //강좌 선택하기
   const [selectedLesson, setSelectedLesson] = useState<LessonInfo | null>(null);
 
   useEffect(() => {
-      setLessons(dummyLessons);
-    }, []);
+    setLessons(dummyLessons);
+    const lastViewedId = localStorage.getItem("lastViewedLessonId");
+    const fallback = dummyLessons[0];
+    const lesson = dummyLessons.find(l => l.id === lastViewedId) || fallback;
+    setSelectedLesson(lesson);
+  }, []);
 
-    const handleSelectLesson = (id: string) => {
-      const lesson = lessons.find((l) => l.id === id);
-      if (lesson) setSelectedLesson(lesson);
-    };
-  
-  // 내강의실로 돌아가기
-      const navigateToMypage = useNavigate();
-      const handleBack = () => {navigateToMypage("/");};
+  useEffect(() => {
+    if (selectedLesson) {
+      localStorage.setItem("lastViewedLessonId", selectedLesson.id);
+    }
+  }, [selectedLesson]);
+
+  const handleSelectLesson = (id: string) => {
+    const lesson = lessons.find((l) => l.id === id);
+    if (lesson) setSelectedLesson(lesson);
+  };
+
+  const navigate = useNavigate();
+  const handleBack = () => { navigate("/"); };
 
   return (
     <LessonViewWrapper>
@@ -154,26 +160,19 @@ const LessonViewPage = () => {
 
       <LessonViewArea>
         <ListArea>
-          <LessonList
-            lessons={lessons}
-            selectedId={selectedLesson?.id || null}
-            onSelect={handleSelectLesson}
-             />
+          <LessonList lessons={lessons} selectedId={selectedLesson?.id || null} onSelect={handleSelectLesson} />
         </ListArea>
 
         <LessonMain>
           <TopContent>
             <PlayerArea>
-             {selectedLesson && <LessonPlayer src={selectedLesson.videoUrl} />}
+              {selectedLesson && <LessonPlayer src={selectedLesson.videoUrl} />}
             </PlayerArea>
-
-            <ChatBotArea>
-              챗봇 (ChatBotArea)
-            </ChatBotArea>
+            <ChatBotArea>챗봇 (ChatBotArea)</ChatBotArea>
           </TopContent>
 
           <MemoArea>
-            메모 (MemoArea)
+            {selectedLesson ? <Memo lessonId={selectedLesson.id} /> : <div style={{ padding: "10px", color: "#888" }}>강의를 선택하면 메모를 입력할 수 있습니다.</div>}
           </MemoArea>
         </LessonMain>
       </LessonViewArea>
