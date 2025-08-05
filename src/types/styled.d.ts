@@ -88,6 +88,7 @@ declare module "styled-components" {
     zIndex: {
       base: number;
       dropdown: number;
+      header: number;
       overlay: number;
       modal: number;
       tooltip: number;

@@ -31,10 +31,10 @@ const HeaderWrapper = styled.header`
   top: 0;
   left: 0;
   right: 0;
-  z-index: 50;
+  z-index: ${theme.zIndex.header};
   background-color: ${theme.colors.header};
-  backdrop-filter: blur(5px);
   height: ${HEADER_HEIGHT};
+  backdrop-filter: blur(5px);
   ipadding: 0 1rem;
 `;
 
@@ -43,7 +43,8 @@ const DropdownMenu = styled.div`
   right: 0;
   top: calc(100% + 0.5rem);
   width: 150px;
-  background-color: rgba(113, 113, 113, 0.75);
+  background-color: ${theme.colors.header};
+  backdrop-filter: blur(8px);
   box-shadow: 0 10px 10px -3px rgba(130, 130, 130, 0.35);
   border: 3px solid rgba(104, 104, 104, 0.5);
   border-radius: 3px;
@@ -56,15 +57,14 @@ const DropdownItem = styled.button`
   text-align: left;
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
-  color: ${theme.colors.text_D};
+  color: ${theme.colors.text_B};
   background: none;
-  font-weight: 600;
+  font-weight: 400;
   font-family: ${theme.font.primary};
   border: none;
   cursor: pointer;
 
   &:hover {
-    color: ${theme.colors.text_B};
     background-color: ${theme.colors.background_D};
   }
 
@@ -162,7 +162,7 @@ const LogoText = styled.span`
 const AlertDropdown = styled(DropdownMenu)`
   right: 3rem;
   width: 250px;
-  background-color: rgba(113, 113, 113, 0.75);
+  background-color: ${theme.colors.header};
   box-shadow: 0 10px 10px -3px rgba(130, 130, 130, 0.35);
   font-size: 0.85rem;
   padding: 0.5rem 0;
@@ -171,7 +171,6 @@ const AlertDropdown = styled(DropdownMenu)`
 const AlertItem = styled.div`
   padding: 0.5rem 1rem;
   cursor: pointer;
-
   &:hover {
     background-color: ${theme.colors.header};
   }
@@ -234,7 +233,7 @@ const Header = () => {
   const isAuthenticated: boolean = true;
   const nickname: string = "형균";
 
-  const isLecturer: boolean = true; // 강사 여부를 나타내는 변수 추가
+  const isLecturer: boolean = true;
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const alertRef = useRef<HTMLDivElement>(null);
@@ -335,7 +334,7 @@ const Header = () => {
                   {isLecturer && (
                     <DropdownItem
                       onClick={() => {
-                        onNavigate(PAGE_PATHS.LECTURER_PAGE); // 강사 페이지로 이동
+                        // onNavigate(PAGE_PATHS.LECTURER_PAGE); // 강사 페이지로 이동
                         setIsDropdownOpen(false);
                       }}
                     >
