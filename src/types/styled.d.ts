@@ -7,6 +7,7 @@ declare module "styled-components" {
       primary: string;
       secondary: string;
       caution: string;
+      success: string;
       danger: string;
       gray_L: string;
       gray_M: string;
@@ -23,12 +24,73 @@ declare module "styled-components" {
     };
 
     size: {
-      maxWidth: string;
-      header_Height: string;
+      layout: {
+        L: string;
+        M: string;
+      };
+      modal: {
+        width: string;
+      };
+      header: {
+        height: string;
+      };
+      container_S: string;
+      containerMax: string;
+      bottomLine: string;
     };
+
+    fontSize: {
+      display: {
+        min: string;
+        max: string;
+      };
+      title: {
+        min: string;
+        max: string;
+      };
+      subtitle: string;
+      body: {
+        min: string;
+        max: string;
+      };
+      button: {
+        min: string;
+        max: string;
+      };
+      modal: {
+        min: string;
+        max: string;
+      };
+      small: {
+        min: string;
+        max: string;
+      };
+    };
+
     font: {
       primary: string;
       logo: string;
+    };
+
+    shadow: {
+      none: string;
+      sm: string;
+      md: string;
+      lg: string;
+    };
+
+    transition: {
+      default: string;
+      fast: string;
+      slow: string;
+    };
+
+    zIndex: {
+      base: number;
+      dropdown: number;
+      overlay: number;
+      modal: number;
+      tooltip: number;
     };
   }
 }
