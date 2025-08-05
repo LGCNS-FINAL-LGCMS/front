@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import Button from "../../components/Common/Button";
+import RoleSelect from "../../components/Signup/RoleSelect";
 
 const SignupContainer = styled.div`
   width: "600px";
@@ -41,6 +42,8 @@ const SignupPage = () => {
   const [nickname, setNickname] = useState(""); //input에서 받은 nickname
   const [nicknameCheckMessage, setNicknameCheckMessage] = useState(""); // 중복확인 결과 메세지
   const [nicknameOK, setNicknameOK] = useState<boolean | null>(null); // 회원가입완료 시 중복확인 검사
+
+  const [selectedRole, setSelectedRole] = useState<boolean | null>(null); // role 선택상태
 
   const handleNicknameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
@@ -92,8 +95,15 @@ const SignupPage = () => {
     }
   };
 
+  const handleRoleChange = (isTeacher: boolean | null) => {
+    setSelectedRole(isTeacher);
+  };
+
   //회원가입 api
-  const signupResponse = async (nickname: string) => {
+  const signupResponse = async (
+    nickname: string,
+    isTeacher: boolean | null
+  ) => {
     try {
       const response = await fetch("/api/auth/signup", {
         method: "POST",
@@ -102,6 +112,7 @@ const SignupPage = () => {
         },
         body: JSON.stringify({
           nickname: nickname.trim(),
+          isTeacher: isTeacher,
         }),
       });
       const data = await response.json();
@@ -123,9 +134,11 @@ const SignupPage = () => {
     } else if (nicknameOK == true) {
       alert("사용할 수 없는 닉네임입니다.");
       return;
+    } else if (selectedRole == null) {
+      alert("사용자 역할을 선택해주세요.");
     } else if (nicknameOK == false) {
       try {
-        const result = await signupResponse(nickname);
+        const result = await signupResponse(nickname, selectedRole);
         if (result.status == "OK") {
           alert("회원가입완료");
           console.log(nickname);
@@ -151,6 +164,7 @@ const SignupPage = () => {
         <Button text="중복확인" onClick={checkNickname} />
         <CheckMessage>{nicknameCheckMessage}</CheckMessage>
       </NicknameSection>
+      <RoleSelect selectedRole={selectedRole} onRoleChange={handleRoleChange} />
       <Button text="회원가입완료" onClick={signupClick} />
     </SignupContainer>
   );
