@@ -83,10 +83,13 @@ const handleLogoutForInterceptor = (): void => {
 };
 
 interface RefreshResponse {
-  code: string;
+  status: string;
+  message: string;
   data?: {
-    access?: {
-      token: string;
+    alreadyMember?: boolean;
+    tokens?: {
+      accessToken: string;
+      refreshToken: string;
     };
   };
 }
@@ -169,13 +172,18 @@ apiClient.interceptors.response.use(
 
         const responseData = refreshResponse.data;
 
-        if (responseData?.code === "OK" && responseData.data?.access?.token) {
-          const newAccessToken = responseData.data.access.token;
+        if (
+          responseData.status === "OK" &&
+          responseData.data?.tokens?.accessToken &&
+          responseData.data.tokens.refreshToken
+        ) {
+          const newAccessToken = responseData.data.tokens.accessToken;
+          const newRefreshToken = responseData.data.tokens.refreshToken;
 
           storeRef.dispatch(
             login({
               accessToken: newAccessToken,
-              refreshToken,
+              refreshToken: newRefreshToken,
             })
           );
 
