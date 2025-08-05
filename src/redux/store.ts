@@ -3,9 +3,15 @@ import { persistStore, persistReducer } from "redux-persist";
 import type { PersistConfig } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // localStorage
 
+//slice 파일들
+import keywordSlice from "./keyword/keywordSlice";
+import lectureDataSlice from "./lectureData/lectureDataSlice";
+
 // slice import 자리 (예: import userReducer from './slices/userSlice';)
-// 현재는 빈 리듀서
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({
+  keyword: keywordSlice,
+  lectureData: lectureDataSlice,
+});
 
 // persist 설정 타입 지정
 const persistConfig: PersistConfig<ReturnType<typeof rootReducer>> = {
@@ -28,6 +34,5 @@ export const store = configureStore({
 // persistor 생성
 export const persistor = persistStore(store);
 
-// 🔹 RootState, AppDispatch 타입 정의 (사용자용)
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

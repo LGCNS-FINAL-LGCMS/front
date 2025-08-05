@@ -17,7 +17,7 @@ import {
   faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
 
-const HEADER_HEIGHT: string = theme.size.;
+const HEADER_HEIGHT: string = theme.size.header_Height;
 
 interface Alert {
   id: number;
@@ -58,7 +58,8 @@ const DropdownItem = styled.button`
   font-size: 0.875rem;
   color: ${theme.colors.text_D};
   background: none;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: ${theme.font.primary};
   border: none;
   cursor: pointer;
 
@@ -148,7 +149,7 @@ const LogoLink = styled.div`
 
 const LogoText = styled.span`
   font-size: 1.7rem;
-
+  font-family: ${({ theme }) => theme.font.logo};
   cursor: pointer;
   font-weight: bold;
   color: ${theme.colors.text_B};
@@ -230,7 +231,7 @@ const Header = () => {
     navigate(PAGE_PATHS.HOME);
   };
 
-  const isAuthenticated: boolean = true;
+  const isAuthenticated: boolean = false;
   // const nickname: string = "형균";
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -384,5 +385,4 @@ const Header = () => {
   );
 };
 
-export { HEADER_HEIGHT };
 export default Header;

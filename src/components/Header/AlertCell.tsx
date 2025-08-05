@@ -7,6 +7,9 @@ const AlertItemWrapper = styled.div`
   cursor: pointer;
   transition: background-color 0.2s;
   color: ${theme.colors.text_B};
+  font-family: ${theme.font.primary};
+  font-weight: 400;
+  line-height: 1.6;
   &:hover {
     background-color: ${theme.colors.header};
   }
