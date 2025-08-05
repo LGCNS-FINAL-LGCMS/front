@@ -17,7 +17,7 @@ import {
   faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
 
-const HEADER_HEIGHT: string = theme.size.header_Height;
+const HEADER_HEIGHT: string = theme.size.header.height;
 
 interface Alert {
   id: number;
@@ -144,6 +144,7 @@ const UserActionsWrapper = styled.div`
 const LogoLink = styled.div`
   display: flex;
   align-items: center;
+  padding: 8px;
   gap: 0.5rem;
 `;
 
@@ -153,14 +154,13 @@ const LogoText = styled.span`
   cursor: pointer;
   font-weight: bold;
   color: ${theme.colors.text_B};
-
   &:hover {
     color: ${theme.colors.text_D};
   }
 `;
 
 const AlertDropdown = styled(DropdownMenu)`
-  right: 3rem; /* 위치 조정 (UserButton과 겹치지 않도록) */
+  right: 3rem;
   width: 250px;
   background-color: rgba(113, 113, 113, 0.75);
   box-shadow: 0 10px 10px -3px rgba(130, 130, 130, 0.35);
@@ -231,8 +231,10 @@ const Header = () => {
     navigate(PAGE_PATHS.HOME);
   };
 
-  const isAuthenticated: boolean = false;
-  // const nickname: string = "형균";
+  const isAuthenticated: boolean = true;
+  const nickname: string = "형균";
+
+  const isLecturer: boolean = true; // 강사 여부를 나타내는 변수 추가
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const alertRef = useRef<HTMLDivElement>(null);
@@ -269,119 +271,129 @@ const Header = () => {
   };
 
   return (
-    <>
-      <HeaderWrapper>
-        <Container>
-          {/* 왼쪽 섹션 */}
-          <LogoLink>
-            <LogoText onClick={handleLogoClick}>LGCMS</LogoText>
-          </LogoLink>
+    <HeaderWrapper>
+      <Container>
+        {/* 왼쪽 섹션 */}
+        <LogoLink>
+          <LogoText onClick={handleLogoClick}>LGCMS</LogoText>
+        </LogoLink>
 
-          {/* 가운데 섹션 */}
-          <nav>{/* 여기에 로고 넣을까?? */}</nav>
+        {/* 가운데 섹션 */}
+        <nav>{/* 여기에 로고 넣을까?? */}</nav>
 
-          {/* 오른쪽 섹션*/}
-          <UserActionsWrapper ref={dropdownRef}>
-            {isAuthenticated ? (
-              <>
-                {isMobile ? (
-                  <UserButton onClick={toggleDropdown}>
-                    <FontAwesomeIcon icon={faBars} size="lg" />
+        {/* 오른쪽 섹션 */}
+        <UserActionsWrapper ref={dropdownRef}>
+          {isAuthenticated ? (
+            <>
+              {isMobile ? (
+                <UserButton onClick={toggleDropdown}>
+                  <FontAwesomeIcon icon={faBars} size="lg" />
+                </UserButton>
+              ) : (
+                <>
+                  <UserButton>
+                    <FontAwesomeIcon icon={faShoppingCart} />
                   </UserButton>
-                ) : (
-                  <>
-                    <UserButton>
-                      <FontAwesomeIcon icon={faShoppingCart} />
-                    </UserButton>
 
-                    <UserButton
-                      onClick={() => {
-                        setIsAlertOpen((prev) => !prev);
-                        setIsDropdownOpen(false);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faBell} />
-                    </UserButton>
+                  <UserButton
+                    onClick={() => {
+                      setIsAlertOpen((prev) => !prev);
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faBell} />
+                  </UserButton>
 
-                    <UserButton onClick={toggleDropdown}>
-                      <FontAwesomeIcon icon={faCircleUser} />
-                    </UserButton>
-                  </>
-                )}
+                  <UserButton onClick={toggleDropdown}>
+                    <FontAwesomeIcon icon={faCircleUser} />
+                  </UserButton>
+                </>
+              )}
 
-                {isDropdownOpen && (
-                  <DropdownMenu>
+              {isDropdownOpen && (
+                <DropdownMenu>
+                  <DropdownItem
+                    onClick={() => {
+                      setIsDropdownOpen(false);
+                      // 로그아웃 로직
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faSignOutAlt} />
+                    Log Out
+                  </DropdownItem>
+
+                  <DropdownItem
+                    onClick={() => {
+                      // onNavigate("/userinfo");
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faUserCircle} />
+                    마이 페이지
+                  </DropdownItem>
+
+                  {isLecturer && (
                     <DropdownItem
                       onClick={() => {
-                        setIsDropdownOpen(false);
-                        // 로그아웃 로직
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faSignOutAlt} />
-                      Log Out
-                    </DropdownItem>
-
-                    <DropdownItem
-                      onClick={() => {
-                        // onNavigate("/userinfo");
+                        onNavigate(PAGE_PATHS.LECTURER_PAGE); // 강사 페이지로 이동
                         setIsDropdownOpen(false);
                       }}
                     >
                       <FontAwesomeIcon icon={faUserCircle} />
-                      마이 페이지
+                      강사 페이지
                     </DropdownItem>
+                  )}
 
-                    {isMobile && (
-                      <>
-                        <DropdownItem
-                          onClick={() => {
-                            setIsAlertOpen((prev) => !prev);
-                            setIsDropdownOpen(false);
-                            // 알림 로직
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faBell} />
-                          알림
-                        </DropdownItem>
+                  {isMobile && (
+                    <>
+                      <DropdownItem
+                        onClick={() => {
+                          setIsAlertOpen((prev) => !prev);
+                          setIsDropdownOpen(false);
+                          // 알림 로직
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faBell} />
+                        알림
+                      </DropdownItem>
 
-                        <DropdownItem
-                          onClick={() => {
-                            setIsDropdownOpen(false);
-                            // 장바구니 로직
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faShoppingCart} />
-                          장바구니
-                        </DropdownItem>
-                      </>
-                    )}
-                  </DropdownMenu>
-                )}
+                      <DropdownItem
+                        onClick={() => {
+                          setIsDropdownOpen(false);
+                          // 장바구니 로직
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faShoppingCart} />
+                        장바구니
+                      </DropdownItem>
+                    </>
+                  )}
+                </DropdownMenu>
+              )}
 
-                {isAuthenticated && isAlertOpen && (
-                  <AlertDropdown ref={alertRef}>
-                    {alerts.length > 0 ? (
-                      alerts.map((alert) => (
-                        <AlertCell
-                          key={alert.id}
-                          message={alert.message}
-                          date={alert.date}
-                          onClick={() => handleAlertClick(alert.url)}
-                        />
-                      ))
-                    ) : (
-                      <AlertItem>새 알림이 없습니다.</AlertItem>
-                    )}
-                  </AlertDropdown>
-                )}
-              </>
-            ) : (
-              <ActionButton onClick={onLogin}>Log In</ActionButton>
-            )}
-          </UserActionsWrapper>
-        </Container>
-      </HeaderWrapper>
-    </>
+              {isAuthenticated && isAlertOpen && (
+                <AlertDropdown ref={alertRef}>
+                  {alerts.length > 0 ? (
+                    alerts.map((alert) => (
+                      <AlertCell
+                        key={alert.id}
+                        message={alert.message}
+                        date={alert.date}
+                        onClick={() => handleAlertClick(alert.url)}
+                      />
+                    ))
+                  ) : (
+                    <AlertItem>새 알림이 없습니다.</AlertItem>
+                  )}
+                </AlertDropdown>
+              )}
+            </>
+          ) : (
+            <ActionButton onClick={onLogin}>Log In</ActionButton>
+          )}
+        </UserActionsWrapper>
+      </Container>
+    </HeaderWrapper>
   );
 };
 
