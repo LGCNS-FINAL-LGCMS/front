@@ -86,6 +86,7 @@ export const theme: DefaultTheme = {
   zIndex: {
     base: 0,
     dropdown: 1000,
+    header: 1050,
     overlay: 1100,
     modal: 1200,
     tooltip: 1300,
