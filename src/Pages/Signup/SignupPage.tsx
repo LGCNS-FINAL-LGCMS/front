@@ -2,6 +2,10 @@ import styled from "styled-components";
 import { useState } from "react";
 import Button from "../../components/Common/Button";
 import RoleSelect from "../../components/Signup/RoleSelect";
+import {
+  checkNicknameDuplicate,
+  signupResponse,
+} from "../../api/Signup/signupAPI";
 
 const SignupContainer = styled.div`
   width: "600px";
@@ -51,29 +55,6 @@ const SignupPage = () => {
     setNicknameCheckMessage("");
   };
 
-  // 닉네임API
-  const checkNicknameDuplicate = async (nickname: string) => {
-    try {
-      const response = await fetch("/api/auth/check-nickname", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ nickname: nickname.trim() }),
-      });
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.log("호출 실패 -> 더미데이터", error);
-      if (nickname == "test") {
-        return { status: "OK", data: { isDuplicate: true } };
-      } else {
-        return { status: "OK", data: { isDuplicate: false } };
-      }
-    }
-  };
-
   const checkNickname = async () => {
     if (nickname == "") {
       setNicknameCheckMessage("닉네임을 입력해주세요.");
@@ -97,31 +78,6 @@ const SignupPage = () => {
 
   const handleRoleChange = (isTeacher: boolean | null) => {
     setSelectedRole(isTeacher);
-  };
-
-  //회원가입 api
-  const signupResponse = async (
-    nickname: string,
-    isTeacher: boolean | null
-  ) => {
-    try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nickname: nickname.trim(),
-          isTeacher: isTeacher,
-        }),
-      });
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.log("호출 실패 -> 더미데이터", error);
-      return { status: "OK", data: { nickname: nickname } };
-      // return { status: "LEC-13", data: null };
-    }
   };
 
   const signupClick = async () => {
