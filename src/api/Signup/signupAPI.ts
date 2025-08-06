@@ -1,3 +1,6 @@
+import { API_ENDPOINTS } from "../../constants/endpoints";
+import apiClient from "../index";
+
 interface ResponseFormat<T> {
   status: string;
   message: string;
@@ -18,23 +21,14 @@ export const checkNicknameDuplicate = async (
   nickname: string
 ): Promise<ResponseFormat<CheckNicknameDuplicateResponse>> => {
   try {
-    const response = await fetch("/api/auth/check/nickname", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ nickname: nickname.trim() }),
+    const response = await apiClient.post(API_ENDPOINTS.AUTH.CHECK_NICKNAME, {
+      nickname,
     });
 
-    const data = await response.json();
-    return data;
+    return response.data;
   } catch (error) {
     console.log("호출 실패 -> 더미데이터", error);
-    if (nickname == "test") {
-      return { status: "OK", message: "", data: { isUsed: true } };
-    } else {
-      return { status: "OK", message: "", data: { isUsed: false } };
-    }
+    throw new Error("닉네임 중복 체크 실패");
   }
 };
 
@@ -51,19 +45,13 @@ export const signupAPI = async (
   wantTeacher: boolean | null
 ): Promise<ResponseFormat<SignupResponse>> => {
   try {
-    const response = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        nickname: nickname.trim(),
-        categories: categories,
-        wantTeacher: wantTeacher,
-      }),
+    const response = await apiClient.post(API_ENDPOINTS.USER.INFO, {
+      nickname: nickname.trim(),
+      categories: categories,
+      wantTeacher: wantTeacher,
     });
-    const data = await response.json();
-    return data;
+
+    return response.data;
   } catch (error) {
     console.log("호출 실패 -> 더미데이터", error);
     // 더미 데이터
@@ -95,10 +83,9 @@ export const signupAPI = async (
 //category API (전체조회)
 export const categoriesList = async () => {
   try {
-    const response = await fetch("/api/member/categoris");
-    const data = await response.json();
-    console.log("받아온 데이터 :", data);
-    return data;
+    const response = await apiClient.get(API_ENDPOINTS.USER.CATEGORY);
+    console.log("받아온 데이터 :", response);
+    return response;
   } catch (error) {
     console.log("서버 에러임", error);
     return {

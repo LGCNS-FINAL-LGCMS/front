@@ -22,7 +22,7 @@ const RoleSelect = ({ onRoleChange, selectedRole }: RoleSelectProps) => {
     if (roleType === "student") {
       onRoleChange(false);
       console.log("학생 선택됨: false");
-    } else if (roleType == "teacher") {
+    } else if (roleType === "teacher") {
       onRoleChange(true);
       console.log("강사 선택됨:true ");
     }
