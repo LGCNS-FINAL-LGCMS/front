@@ -9,9 +9,10 @@ export const API_ENDPOINTS = {
     LOGOUT: "/api/auth/logout", // Delete
     REFRESH: "/api/auth/refresh/token", // post
     SIGN_OUT: "/api/auth/sign-out/google", // post
+    CHECK_NICKNAME: "nickname/api/auth/check/", // post
   },
   USER: {
-    INFO: "???",
-    UPDATE: "????",
+    INFO: "/api/member/change/info",
+    CATEGORY: "/api/member/categories",
   },
 };
