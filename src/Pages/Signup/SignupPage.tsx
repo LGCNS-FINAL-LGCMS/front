@@ -1,10 +1,12 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Button from "../../components/Common/Button";
 import RoleSelect from "../../components/Signup/RoleSelect";
+import CategorySelect from "../../components/Signup/CategorySelect";
 import {
   checkNicknameDuplicate,
-  signupResponse,
+  signupAPI,
+  type CategoryFormat,
 } from "../../api/Signup/signupAPI";
 
 const SignupContainer = styled.div`
@@ -40,13 +42,16 @@ const NicknameInputBox = styled.input`
   margin-right: 10px;
 `;
 
-const CheckMessage = styled.div``;
+const NicknameCheckMessage = styled.div``;
 
 const SignupPage = () => {
   const [nickname, setNickname] = useState(""); //input에서 받은 nickname
   const [nicknameCheckMessage, setNicknameCheckMessage] = useState(""); // 중복확인 결과 메세지
   const [nicknameOK, setNicknameOK] = useState<boolean | null>(null); // 회원가입완료 시 중복확인 검사
 
+  const [selectedCategories, setSelectedCategories] = useState<
+    CategoryFormat[]
+  >([]);
   const [selectedRole, setSelectedRole] = useState<boolean | null>(null); // role 선택상태
 
   const handleNicknameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,10 +67,11 @@ const SignupPage = () => {
     } else {
       try {
         const result = await checkNicknameDuplicate(nickname);
-        if (result.data.isDuplicate == true) {
+
+        if (result.data.isUsed == true) {
           setNicknameOK(true);
           setNicknameCheckMessage("사용할 수 없는 닉네임입니다.");
-        } else if (result.data.isDuplicate == false) {
+        } else if (result.data.isUsed == false) {
           setNicknameOK(false);
           setNicknameCheckMessage("사용가능한 닉네임입니다.");
         }
@@ -76,8 +82,15 @@ const SignupPage = () => {
     }
   };
 
-  const handleRoleChange = (isTeacher: boolean | null) => {
-    setSelectedRole(isTeacher);
+  //카테고리 핸들러
+  const hadleCategoriesChange = useCallback((categories: CategoryFormat[]) => {
+    setSelectedCategories(categories);
+    console.log("선택된 카테고리 :", categories);
+  }, []);
+
+  // role 선택 핸들러
+  const handleRoleChange = (wantTeacher: boolean | null) => {
+    setSelectedRole(wantTeacher);
   };
 
   const signupClick = async () => {
@@ -90,19 +103,27 @@ const SignupPage = () => {
     } else if (nicknameOK == true) {
       alert("사용할 수 없는 닉네임입니다.");
       return;
+    } else if (selectedCategories.length == 0) {
+      alert("관심있는 카테고리를 선택해주세요.");
+      return;
     } else if (selectedRole == null) {
       alert("사용자 역할을 선택해주세요.");
+      return;
     } else if (nicknameOK == false) {
       try {
-        const result = await signupResponse(nickname, selectedRole);
+        const result = await signupAPI(
+          nickname,
+          selectedCategories,
+          selectedRole
+        );
         if (result.status == "OK") {
           alert("회원가입완료");
-          console.log(nickname);
+          console.log(nickname, selectedCategories, selectedRole);
         } else {
           alert("회원가입 중 오류가 발생했습니다.");
         }
       } catch (error) {
-        console.error("회원가입 오류 : ", error);
+        console.error("회원가입 서버 오류 : ", error);
       }
       return;
     }
@@ -118,8 +139,9 @@ const SignupPage = () => {
           onChange={handleNicknameInput}
         ></NicknameInputBox>
         <Button text="중복확인" onClick={checkNickname} />
-        <CheckMessage>{nicknameCheckMessage}</CheckMessage>
+        <NicknameCheckMessage>{nicknameCheckMessage}</NicknameCheckMessage>
       </NicknameSection>
+      <CategorySelect onCategoryChange={hadleCategoriesChange} />
       <RoleSelect selectedRole={selectedRole} onRoleChange={handleRoleChange} />
       <Button text="회원가입완료" onClick={signupClick} />
     </SignupContainer>

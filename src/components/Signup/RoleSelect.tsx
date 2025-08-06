@@ -13,7 +13,7 @@ const RoleIcon = styled.div``;
 const RoleLabel = styled.div``;
 
 interface RoleSelectProps {
-  onRoleChange: (isTeacher: boolean | null) => void;
+  onRoleChange: (wantTeacher: boolean | null) => void;
   selectedRole: boolean | null;
 }
 
@@ -24,7 +24,7 @@ const RoleSelect = ({ onRoleChange, selectedRole }: RoleSelectProps) => {
       console.log("학생 선택됨: false");
     } else if (roleType == "teacher") {
       onRoleChange(true);
-      console.log("강사 선택됨:truesss ");
+      console.log("강사 선택됨:true ");
     }
   };
 
