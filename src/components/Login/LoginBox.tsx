@@ -3,23 +3,26 @@ import GoogleLoginBox from "./GoogleLoginBox";
 import styled from "styled-components";
 
 const LoginBoxContainer = styled.div`
-  display: contents;
-  flex-direction: column;
-  width: 600px;
-  height: 90dvh;
+  display: flex;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  min-height: 80vh;
 `;
 
 const LoginCard = styled.div`
   background: white;
-  border: 2px solid #333;
-  border-radius: 8px;
-  padding: 60px 80px;
+  border: 2px solid ${(props) => props.theme.colors.border_Dark}; /* 테마 색상 사용 */
+  border-radius: 16px;
+  padding: 80px 60px;
   text-align: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  min-width: 400px;
+
+  width: 600px;
+  margin: 0 auto;
 `;
 
 const Title = styled.h1`
+  font-family: ${(props) => props.theme.font.logo};
+
   font-size: 48px;
   font-weight: bold;
   color: #333;
@@ -27,7 +30,9 @@ const Title = styled.h1`
   letter-spacing: 2px;
 `;
 
-const Subtitle = styled.h3``;
+const Subtitle = styled.h3`
+  font-family: ${(props) => props.theme.font.primary};
+`;
 
 const LoginBox = () => {
   return (
