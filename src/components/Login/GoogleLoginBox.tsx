@@ -2,6 +2,10 @@ import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import styled from "styled-components";
+import { googleLoginAPI } from "../../api/Login/loginAPI";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../redux/store";
+import { login } from "../../redux/token/tokenSlice";
 
 const GoogleButtonWrapper = styled.div`
   display: flex;
@@ -16,18 +20,35 @@ const GoogleButtonWrapper = styled.div`
 
 const GoogleLoginBox = () => {
   const clientId = process.env.VITE_GOOGLE_CLIENT_ID || "";
+  const dispatch = useDispatch<AppDispatch>();
 
-  const handleLogin = (credentialResponse: CredentialResponse) => {
+  const handleLogin = async (credentialResponse: CredentialResponse) => {
     try {
-      if (!credentialResponse.credential) return;
-
+      if (!credentialResponse.credential) {
+        console.log("구글 토큰이 없어요");
+        alert("구글 로그인 정보가 없습니다. ");
+        return;
+      }
       const userInfo = jwtDecode(credentialResponse.credential);
+      console.log("로그인 성공,, 사용자 정보 : ", userInfo);
 
-      console.log("로그인 성공", userInfo);
+      const response = await googleLoginAPI(credentialResponse.credential);
+
+      if (response.status === "OK" && response.data?.tokens) {
+        const { accessToken, refreshToken } = response.data.tokens;
+        dispatch(
+          login({
+            accessToken,
+            refreshToken,
+          })
+        );
+        console.log("로그인/토큰 저장 완료 ! ");
+      }
     } catch (error) {
       console.log("로그인 처리 실패", error);
     }
   };
+
   const handleLoginError = () => {
     console.log("로그인 실패");
     alert("로그인에 실패하였습니다.");
