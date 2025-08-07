@@ -35,7 +35,6 @@ const apiClient: AxiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true,
 });
 
 let storeRef: { getState: () => RootState; dispatch: AppDispatch } | null =
@@ -166,7 +165,6 @@ apiClient.interceptors.response.use(
           { refreshToken },
           {
             headers: { "Content-Type": "application/json" },
-            withCredentials: true,
           }
         );
 
