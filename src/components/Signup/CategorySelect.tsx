@@ -4,13 +4,27 @@ import InterestSelector from "../Common/InterestSelector";
 import { categoriesList } from "../../api/Signup/signupAPI";
 import type { CategoryFormat } from "../../api/Signup/signupAPI";
 // 카테고리 선택
-const CategorySection = styled.div``;
+const CategorySection = styled.div`
+  text-align: center;
+  padding: 10px;
+`;
 
-const CategoryTitle = styled.h1``;
+const CategoryTitle = styled.h1`
+  text-align: center;
+  margin: 20px; // 위아래 간격
 
-const CategorySubTitle = styled.text``;
+  font-size: ${(props) => props.theme.fontSize.title.min}; /* 28px */
+`;
 
-const CategoryGrid = styled.div``;
+const CategorySubTitle = styled.text`
+  text-align: center;
+`;
+
+const CategoryGrid = styled.div`
+  text-align: center;
+  padding: 20px;
+  margin: 30px 0 30px 0; /* 위 0, 오른쪽 0, 아래 40px, 왼쪽 0 */
+`;
 
 export type Interest = {
   id: string;

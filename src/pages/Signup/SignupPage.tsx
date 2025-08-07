@@ -10,39 +10,68 @@ import {
 } from "../../api/Signup/signupAPI";
 
 const SignupContainer = styled.div`
-  width: "600px";
-  margin: 0 auto; // 좌우 중앙 정렬 (0: 위아래,  auto는 좌우)
-  padding: 40px;
+  text-align: center;
+  width: ${({ theme }) => theme.size.container_S};
+  margin: 10px auto; //위아래 50px, 좌우 중앙 정렬 */
+  padding: 60px 40px; // 내부 여백: 위아래 40px, 좌우 40px
   border: 1px solid;
   border-radius: 8px;
   background-color: white;
+
+  font-family: ${(props) => props.theme.font.primary};
 `;
 
 const SignupTitle = styled.h1`
+  margin: 10px 0 40px 0; /* 위 0, 오른쪽 0, 아래 40px, 왼쪽 0 */
+
   text-align: center;
-  margin: 10px; // 위아래 간격
+  font-size: ${(props) => props.theme.fontSize.title.max}; /* 28px */
+  font-weight: 700;
 `;
 
 // 닉네임 입력
 const NicknameSection = styled.div`
-  text-align: left;
-  margin-bottom: 20px;
+  padding: 10px;
 `;
 
 const NicknameLabel = styled.h3`
-  text-align: left;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
+
+  font-size: ${(props) => props.theme.fontSize.small}; /* 28px */
 `;
 
 const NicknameInputBox = styled.input`
-  border: 1px solid; // 색상 변경
-  border-radius: 4px;
   width: 180px;
+  height: 45px;
+  margin: 0 10px 20px 0; /* 위 0, 오른쪽 0, 아래 40px, 왼쪽 0 */
+  padding: 12px 16px; // 안쪽 여백 (위아래: 12px, 좌우 16px)
 
-  margin-right: 10px;
+  border: 1px solid ${(props) => props.theme.colors.gray_L}; /* 연한 회색 테두리 */
+  border-radius: 8px;
+
+  font-family: ${(props) => props.theme.font.primary};
+  font-size: ${(props) => props.theme.fontSize.button.min};
+
+  background-color: white;
+  color: ${(props) => props.theme.colors.gray_D};
+
+  &::placeholder {
+    color: ${(props) => props.theme.colors.gray_M};
+    font-weight: 400;
+  }
+  &:focus {
+    outline: none; /* 기본 파란 테두리 제거 */
+    border-color: ${(props) => props.theme.colors.gray_D}; /* 파란색 테두리 */
+    box-shadow: ${(props) => props.theme.shadow.md};
+  }
 `;
 
-const NicknameCheckMessage = styled.div``;
+const NicknameCheckMessage = styled.div`
+  font-size: ${(props) => props.theme.fontSize.small.max}; /* 28px */
+  color: ${(props) => props.theme.colors.caution};
+  min-height: 20px; /* 메시지 공간 확보 */
+  padding-left: 4px;
+`;
 
 const SignupPage = () => {
   const [nickname, setNickname] = useState(""); //input에서 받은 nickname
@@ -141,8 +170,14 @@ const SignupPage = () => {
         <NicknameInputBox
           value={nickname}
           onChange={handleNicknameInput}
+          placeholder="nickname"
         ></NicknameInputBox>
-        <Button text="중복확인" onClick={checkNickname} />
+        <Button
+          text="중복확인"
+          onClick={checkNickname}
+          design={3}
+          fontWeight={400}
+        />
         <NicknameCheckMessage>{nicknameCheckMessage}</NicknameCheckMessage>
       </NicknameSection>
       <CategorySelect onCategoryChange={handleCategorySelection} />
@@ -150,7 +185,12 @@ const SignupPage = () => {
         selectedRole={selectedRole}
         onRoleChange={handleRoleSelection}
       />
-      <Button text="회원가입완료" onClick={signupClick} />
+      <Button
+        text="회원가입완료"
+        onClick={signupClick}
+        design={2}
+        fontWeight={400}
+      />
     </SignupContainer>
   );
 };
