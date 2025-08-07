@@ -12,9 +12,9 @@ import {
 const SignupContainer = styled.div`
   text-align: center;
   width: ${({ theme }) => theme.size.container_S};
-  margin: 10px auto; //위아래 50px, 좌우 중앙 정렬 */
-  padding: 60px 40px; // 내부 여백: 위아래 40px, 좌우 40px
-  border: 1px solid;
+  margin: 10px auto; // 위 오른쪽 아래 왼쪽
+  padding: 60px 40px;
+  border: 2px solid;
   border-radius: 8px;
   background-color: white;
 
@@ -22,10 +22,10 @@ const SignupContainer = styled.div`
 `;
 
 const SignupTitle = styled.h1`
-  margin: 10px 0 40px 0; /* 위 0, 오른쪽 0, 아래 40px, 왼쪽 0 */
+  margin: 10px 0 40px 0; // 위 오른쪽 아래 왼쪽
 
   text-align: center;
-  font-size: ${(props) => props.theme.fontSize.title.max}; /* 28px */
+  font-size: ${(props) => props.theme.fontSize.title.max};
   font-weight: 700;
 `;
 
@@ -37,16 +37,16 @@ const NicknameSection = styled.div`
 const NicknameLabel = styled.h3`
   margin-bottom: 30px;
 
-  font-size: ${(props) => props.theme.fontSize.small}; /* 28px */
+  font-size: ${(props) => props.theme.fontSize.small};
 `;
 
 const NicknameInputBox = styled.input`
   width: 180px;
   height: 45px;
-  margin: 0 10px 20px 0; /* 위 0, 오른쪽 0, 아래 40px, 왼쪽 0 */
-  padding: 12px 16px; // 안쪽 여백 (위아래: 12px, 좌우 16px)
+  margin: 0 10px 20px 0; // 위 오른쪽 아래 왼쪽
+  padding: 12px 16px;
 
-  border: 1px solid ${(props) => props.theme.colors.gray_L}; /* 연한 회색 테두리 */
+  border: 1px solid ${(props) => props.theme.colors.gray_L};
   border-radius: 8px;
 
   font-family: ${(props) => props.theme.font.primary};
@@ -67,9 +67,9 @@ const NicknameInputBox = styled.input`
 `;
 
 const NicknameCheckMessage = styled.div`
-  font-size: ${(props) => props.theme.fontSize.small.max}; /* 28px */
+  font-size: ${(props) => props.theme.fontSize.small.max};
   color: ${(props) => props.theme.colors.caution};
-  min-height: 20px; /* 메시지 공간 확보 */
+  min-height: 20px;
   padding-left: 4px;
 `;
 
