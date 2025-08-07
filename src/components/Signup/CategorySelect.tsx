@@ -13,7 +13,7 @@ const CategoryTitle = styled.h1`
   text-align: center;
   margin: 20px; // 위아래 간격
 
-  font-size: ${(props) => props.theme.fontSize.title.min}; /* 28px */
+  font-size: ${(props) => props.theme.fontSize.title.min};
 `;
 
 const CategorySubTitle = styled.text`
@@ -23,7 +23,7 @@ const CategorySubTitle = styled.text`
 const CategoryGrid = styled.div`
   text-align: center;
   padding: 20px;
-  margin: 30px 0 30px 0; /* 위 0, 오른쪽 0, 아래 40px, 왼쪽 0 */
+  margin: 30px 0 30px 0; // 위 오른쪽 아래 왼쪽
 `;
 
 export type Interest = {
