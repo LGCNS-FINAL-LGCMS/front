@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useMobileDetect from "../../hooks/useMobileDetect";
 import { theme } from "../../assets/styles/theme";
 import { PAGE_PATHS } from "../../constants/pagePaths";
 import AlertCell from "./AlertCell";
+import { useDispatch } from "react-redux";
+import { clearCategory } from "../../redux/Category/categorySlice";
 
 import {
   faCircleUser,
@@ -35,7 +36,7 @@ const HeaderWrapper = styled.header`
   background-color: ${theme.colors.header};
   height: ${HEADER_HEIGHT};
   backdrop-filter: blur(5px);
-  ipadding: 0 1rem;
+  padding: 0 1rem;
 `;
 
 const DropdownMenu = styled.div`
@@ -227,6 +228,7 @@ const Header = () => {
   };
 
   const handleLogoClick = () => {
+    dispatch(clearCategory());
     navigate(PAGE_PATHS.HOME);
   };
 
