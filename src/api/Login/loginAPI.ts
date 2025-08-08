@@ -30,12 +30,12 @@ export const googleLoginAPI = async (
       API_ENDPOINTS.AUTH.GOOGLE_LOGIN,
       { idTokenString }
     );
-    console.log("구글 로그인 API 응답 성공!", response.data);
+    console.log("구글 로그인 API 응답 성공!", response?.data);
     return response.data;
   } catch (error: any) {
-    console.log("구글 로그인 API 응답 못함.", error);
+    console.log("구글 로그인 API 응답 실패", error);
     const errorMessage =
-      error.response?.data?.message || "로그인 처리 중 오류가 발생했습니다.";
+      error.response?.data?.message || "구글에서 로그인하지 못했습니다.";
     throw new Error(errorMessage);
   }
 };

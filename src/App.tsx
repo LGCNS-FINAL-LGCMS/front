@@ -28,7 +28,7 @@ function App() {
         <Routes>
           {/* 일반 Layout */}
           <Route
-            path="/login"
+            path={PAGE_PATHS.LOGIN}
             element={
               <Layout>
                 <Login />
