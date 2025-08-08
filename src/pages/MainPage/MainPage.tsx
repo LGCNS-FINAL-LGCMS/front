@@ -9,6 +9,7 @@ import InfiniteScrollController from "../../components/InfiniteScrollController/
 import CategoryButtons from "../../components/CategoryButtons/CategoryButtons";
 import { login } from "../../redux/token/tokenSlice";
 import { PAGE_PATHS } from "../../constants/pagePaths";
+import Sidebar from "../../components/MainPageSideBar/MainPageSideBar";
 
 const CenteredWrapper = styled.div`
   justify-content: center;
@@ -99,6 +100,7 @@ const MainPage = () => {
   return (
     <CenteredWrapper>
       <Container>
+        <Sidebar />
         <button
           onClick={() =>
             handleLogin(
