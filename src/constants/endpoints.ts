@@ -14,4 +14,12 @@ export const API_ENDPOINTS = {
     INFO: "???",
     UPDATE: "????",
   },
+  CATEGORY: {
+    POST: "/api/category",
+    GET: "/api/category",
+    DELETE: "/api/category", // /{categoryId}
+  },
+  LECTURE: {
+    GET: "/api/lecture",
+  },
 };

@@ -1,23 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
+import { API_ENDPOINTS } from "../../constants/endpoints";
 import apiClient from "../../api/index";
+import type { Lecture as LectureType } from "../../types/lecture";
 
-// 강의 항목 타입 (임시, 수정 가능)
-interface Lecture {
-  id: number;
-  title: string;
-  description?: string;
-  imageUrl?: string;
-  lecturer?: string;
-  // 필요에 따라 추가
-}
-
-// 초기 상태 타입
 interface LectureDataState {
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
-  lectureList: Lecture[];
+  lectureList: LectureType[];
   totalCount: number;
   hasMore: boolean;
 }
@@ -32,15 +22,32 @@ const initialState: LectureDataState = {
 
 // 비동기 thunk
 export const fetchLectureData = createAsyncThunk<
-  { content: Lecture[]; totalElements: number },
+  { content: LectureType[]; totalElements: number },
   any,
   { rejectValue: string; state: any }
 >("lectureData/fetch", async (payload, { rejectWithValue }) => {
   try {
-    const response = await apiClient.get("/lecture/list", { params: payload });
+    const response = await apiClient.get(API_ENDPOINTS.LECTURE.GET, {
+      params: payload,
+    });
 
-    if (response.data?.code === "OK") {
-      return response.data.data;
+    if (response.data?.status === "OK") {
+      const { content, totalElements } = response.data.data;
+
+      // 강의 항목 처리
+      const lectures: LectureType[] = content.map((item: any) => ({
+        lectureId: item.lectureId,
+        nickname: item.nickname || "",
+        description: item.description || "",
+        title: item.title || "",
+        price: item.price,
+        thumbnail: item.thumbnail,
+        averageStar: item.averageStar,
+        reviewCount: item.reviewCount,
+        information: item.information,
+      }));
+
+      return { content: lectures, totalElements };
     } else {
       throw new Error(
         response.data.message || "강의 데이터를 불러오지 못했습니다."
@@ -51,6 +58,7 @@ export const fetchLectureData = createAsyncThunk<
       error?.response?.data?.message ||
       error.message ||
       "강의 데이터 요청 실패";
+    console.log(error);
     return rejectWithValue(message);
   }
 });
@@ -77,12 +85,24 @@ const lectureDataSlice = createSlice({
         fetchLectureData.fulfilled,
         (
           state,
-          action: PayloadAction<{ content: Lecture[]; totalElements: number }>
+          action: PayloadAction<{
+            content: LectureType[];
+            totalElements: number;
+          }>
         ) => {
           state.status = "succeeded";
           const { content, totalElements } = action.payload;
 
-          state.lectureList = [...state.lectureList, ...(content || [])];
+          // 기존 lectureList에서 lectureId를 기준으로 중복 제거
+          const newLectures = content.filter(
+            (newLecture) =>
+              !state.lectureList.some(
+                (existingLecture) =>
+                  existingLecture.lectureId === newLecture.lectureId
+              )
+          );
+
+          state.lectureList = [...state.lectureList, ...newLectures];
           state.totalCount = totalElements || 0;
           state.hasMore = totalElements > state.lectureList.length;
           state.error = null;

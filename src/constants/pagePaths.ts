@@ -4,8 +4,8 @@
 // 잘 모르겠으면 형균씨 찾아오세요
 
 export const PAGE_PATHS = {
-  HOME: "/",
+  HOME: "/home",
   LOGIN: "/login",
   USER_INFO: "/userinfo",
-  LECTUREWATCH: "/lecture_w"
+  LECTUREWATCH: "/lecture_w",
 };
