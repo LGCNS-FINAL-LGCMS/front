@@ -13,7 +13,7 @@ const CenteredWrapper = styled.div`
   display: flex;
   align-items: flex-start;
   padding: 20px;
-  min-height: calc(100vh - ${theme.size.header_Height});
+  min-height: calc(100vh - ${theme.size.header.height});
   width: 100%;
   box-sizing: border-box;
 `;

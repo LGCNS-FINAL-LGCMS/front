@@ -5,8 +5,10 @@
 
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGIN: "???",
-    LOGOUT: "/???",
+    LOGIN: "/api/auth/sign-in/google", // post
+    LOGOUT: "/api/auth/logout", // Delete
+    REFRESH: "/api/auth/refresh/token", // post
+    SIGN_OUT: "/api/auth/sign-out/google", // post
   },
   USER: {
     INFO: "???",

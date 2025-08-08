@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
 import GlobalStyle from "./assets/styles/globalstyle";
 import { theme } from "./assets/styles/theme";
 import { PAGE_PATHS } from "./constants/pagePaths";
 import Header from "./components/Header/Header";
-// import ChatWrapper from "./components/Common/Chat/ChatWrapper";
+import styled, { ThemeProvider } from "styled-components";
+import ChatWrapper from "./components/Common/Chat/ChatWrapper";
 
 // =========== 레이아웃 임포트 ===========
 import Layout from "./layouts/Layout";
@@ -12,9 +12,9 @@ import WideLayout from "./layouts/WideLayout";
 // =========== 레이아웃 임포트 ===========
 
 // =========== 페이지 임포트 ===========
-// import Login from "./Pages/Login";
 import MainPage from "./pages/MainPage/MainPage";
 import LessonViewPage from "./pages/LecturePage/LessonViewPage";
+import Login from "./pages/Login";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
       <Router>
         <GlobalStyle />
         <Header />
-        {/* <ChatWrapper /> */}
+        <ChatWrapper />
 
         <Routes>
           {/* 일반 Layout */}
@@ -31,7 +31,7 @@ function App() {
             path="/login"
             element={
               <Layout>
-                {/* <Login /> */}
+                <Login />
               </Layout>
             }
           />

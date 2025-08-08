@@ -6,11 +6,13 @@ import storage from "redux-persist/lib/storage"; // localStorage
 //slice 파일들
 import keywordSlice from "./keyword/keywordSlice";
 import lectureDataSlice from "./lectureData/lectureDataSlice";
+import tokenSlice from "./token/tokenSlice";
 
 // slice import 자리 (예: import userReducer from './slices/userSlice';)
 const rootReducer = combineReducers({
   keyword: keywordSlice,
   lectureData: lectureDataSlice,
+  token: tokenSlice,
 });
 
 // persist 설정 타입 지정
