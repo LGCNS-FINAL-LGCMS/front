@@ -37,7 +37,7 @@ function App() {
           />
 
           <Route
-            path={PAGE_PATHS.HOME}
+            path={`${PAGE_PATHS.HOME}/:keyword?/:category?`}
             element={
               <Layout>
                 <MainPage />

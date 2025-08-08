@@ -1,6 +1,6 @@
 // ChatWrapper.tsx
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, matchPath } from "react-router-dom";
 import styled from "styled-components";
 import { PAGE_PATHS } from "../../../constants/pagePaths";
 import ChatLauncher from "./ChatLauncher";
@@ -17,8 +17,14 @@ const ChatFixedWrapper = styled.div`
 const ChatWrapper = () => {
   const location = useLocation();
   const currentPath = location.pathname;
-  const chatVisiblePaths = [PAGE_PATHS.HOME, "/추후 결정하기"];
-  const shouldShowChat = chatVisiblePaths.includes(currentPath);
+  const chatVisiblePaths = [
+    `${PAGE_PATHS.HOME}/:keyword?/:category?`,
+    "/추후 결정하기",
+  ];
+
+  const shouldShowChat = chatVisiblePaths.some((path) =>
+    matchPath({ path, end: false }, currentPath)
+  );
 
   const [isChatOpen, setIsChatOpen] = useState(false);
   const { messages, sendMessage } = useChatSession("ws://localhost:8080");
