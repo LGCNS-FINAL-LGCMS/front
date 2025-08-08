@@ -8,4 +8,8 @@ export const PAGE_PATHS = {
   LOGIN: "/login",
   USER_INFO: "/userinfo",
   LECTUREWATCH: "/lecture_w",
+  MY_COURSES: "/??",
+  REPORT: "/??",
+  LEVEL_TEST: "/??",
+  FAQ: "/??",
 };
