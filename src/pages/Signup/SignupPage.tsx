@@ -1,8 +1,12 @@
 import styled from "styled-components";
 import { useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { PAGE_PATHS } from "../../constants/pagePaths";
+
 import Button from "../../components/Common/Button";
 import RoleSelect from "../../components/Signup/RoleSelect";
 import CategorySelect from "../../components/Signup/CategorySelect";
+import InfoCheckModal from "../../components/Signup/signupModal";
 import {
   checkNicknameDuplicate,
   signupAPI,
@@ -74,6 +78,8 @@ const NicknameCheckMessage = styled.div`
 `;
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+
   const [nickname, setNickname] = useState(""); //input에서 받은 nickname
   const [nicknameCheckMessage, setNicknameCheckMessage] = useState(""); // 중복확인 결과 메세지
   const [nicknameCheck, setNicknameCheck] = useState<boolean | null>(null); // 회원가입완료 시 중복확인 검사
@@ -82,6 +88,9 @@ const SignupPage = () => {
     CategoryFormat[]
   >([]); // 선택된 카테고리
   const [selectedRole, setSelectedRole] = useState<boolean | null>(null); // role 선택상태
+
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // 성공 모달
+  const [showFailModal, setShowFailModal] = useState(false); // 실패 모달
 
   const handleNicknameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
@@ -97,12 +106,12 @@ const SignupPage = () => {
     } else {
       try {
         const result = await checkNicknameDuplicate(nickname);
-
-        if (result.data.isUsed === true) {
-          setNicknameCheck(true);
-          setNicknameCheckMessage("사용할 수 없는 닉네임입니다.");
-        } else if (result.data.isUsed === false) {
+        console.log(result);
+        if (result.data.isUsed === false) {
           setNicknameCheck(false);
+          setNicknameCheckMessage("사용할 수 없는 닉네임입니다.");
+        } else if (result.data.isUsed === true) {
+          setNicknameCheck(true);
           setNicknameCheckMessage("사용가능한 닉네임입니다.");
         }
       } catch (error) {
@@ -133,7 +142,7 @@ const SignupPage = () => {
     } else if (nicknameCheck === null) {
       alert("닉네임 중복확인을 해주세요.");
       return;
-    } else if (nicknameCheck === true) {
+    } else if (nicknameCheck === false) {
       alert("사용할 수 없는 닉네임입니다.");
       return;
     } else if (selectedCategories.length === 0) {
@@ -142,7 +151,7 @@ const SignupPage = () => {
     } else if (selectedRole === null) {
       alert("사용자 역할을 선택해주세요.");
       return;
-    } else if (nicknameCheck === false) {
+    } else if (nicknameCheck === true) {
       try {
         const result = await signupAPI(
           nickname,
@@ -150,16 +159,34 @@ const SignupPage = () => {
           selectedRole
         );
         if (result.status === "OK") {
-          alert("회원가입완료");
-          console.log(nickname, selectedCategories, selectedRole);
+          console.log(
+            "회원가입 완료",
+            nickname,
+            selectedCategories,
+            selectedRole
+          );
+          setShowSuccessModal(true);
         } else {
-          alert("회원가입 중 오류가 발생했습니다.");
+          setShowFailModal(true);
+          console.log("회원가입 실패");
         }
       } catch (error) {
         console.error("회원가입 서버 오류 : ", error);
       }
       return;
     }
+  };
+
+  // 확인 누르면 메인으로
+  const handelConfirm = () => {
+    setShowSuccessModal(false);
+    navigate(PAGE_PATHS.HOME);
+  };
+
+  //취소 누르면 로그인 페이지로
+  const handelCancel = () => {
+    setShowFailModal(false);
+    navigate(PAGE_PATHS.LOGIN);
   };
 
   return (
@@ -190,6 +217,22 @@ const SignupPage = () => {
         onClick={signupClick}
         design={2}
         fontWeight={400}
+      />
+
+      <InfoCheckModal
+        isOpen={showSuccessModal}
+        message="회원가입을 축하드립니다."
+        onConfirm={handelConfirm}
+        onCancel={handelConfirm}
+        confirmText="확인"
+      />
+
+      <InfoCheckModal
+        isOpen={showFailModal}
+        message="회원가입에 실패했습니다."
+        onConfirm={handelCancel}
+        onCancel={handelCancel}
+        confirmText="확인"
       />
     </SignupContainer>
   );
