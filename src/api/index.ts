@@ -35,7 +35,6 @@ const apiClient: AxiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true,
 });
 
 let storeRef: { getState: () => RootState; dispatch: AppDispatch } | null =
@@ -48,15 +47,24 @@ export const injectStore = (_store: typeof storeRef): void => {
 // --- 요청 인터셉터 ---
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    if (!storeRef) throw new Error("Redux store is not injected.");
+    if (!storeRef) {
+      throw new Error("Redux store is not injected.");
+    }
 
     const accessToken = storeRef.getState().token.accessToken;
+
     if (accessToken && config.headers) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
+    } else {
+      console.warn("⚠️ Access token missing or headers not present");
     }
+
     return config;
   },
-  (error: AxiosError): Promise<AxiosError> => Promise.reject(error)
+  (error: AxiosError): Promise<AxiosError> => {
+    console.error("❌ Request Interceptor Error:", error);
+    return Promise.reject(error);
+  }
 );
 
 // --- 응답 인터셉터 ---
@@ -166,7 +174,6 @@ apiClient.interceptors.response.use(
           { refreshToken },
           {
             headers: { "Content-Type": "application/json" },
-            withCredentials: true,
           }
         );
 

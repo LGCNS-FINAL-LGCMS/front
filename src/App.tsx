@@ -14,6 +14,7 @@ import WideLayout from "./layouts/WideLayout";
 // =========== 페이지 임포트 ===========
 import Login from "./pages/Login";
 import SignupPage from "./pages/Signup/SignupPage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 import MainPage from "./pages/MainPage/MainPage";
 import LectureWatchingPage from "./pages/LectureWatchingPage";
 // =========== 페이지 임포트 ===========
@@ -27,6 +28,8 @@ function App() {
         <ChatWrapper />
 
         <Routes>
+          <Route path={PAGE_PATHS.LANDING} element={<LandingPage />} />
+
           {/* 일반 Layout */}
           <Route
             path={PAGE_PATHS.LOGIN}
@@ -47,7 +50,7 @@ function App() {
           />
 
           <Route
-            path={PAGE_PATHS.HOME}
+            path={`${PAGE_PATHS.HOME}/:keyword?/:category?`}
             element={
               <Layout>
                 <MainPage />
