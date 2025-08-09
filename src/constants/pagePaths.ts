@@ -4,9 +4,14 @@
 // 잘 모르겠으면 형균씨 찾아오세요
 
 export const PAGE_PATHS = {
-  HOME: "/",
+  LANDING: "/",
+  HOME: "/home",
   LOGIN: "/login",
   SIGNUP: "/signup",
   USER_INFO: "/userinfo",
   LECTUREWATCH: "/lecture_w",
+  MY_COURSES: "/??",
+  REPORT: "/??",
+  LEVEL_TEST: "/??",
+  FAQ: "/??",
 };

@@ -10,6 +10,7 @@ import {
 } from "../../redux/lectureData/lectureDataSlice";
 import type { RootState, AppDispatch } from "../../redux/store";
 import type { Lecture } from "../../types/lecture";
+import img from "../../assets/Imgs/기본이미지.gif";
 
 const CardsGrid = styled.div`
   display: grid;
@@ -39,6 +40,11 @@ const InfiniteScrollController: React.FC = () => {
     (state: RootState) => state.keyword.searchText
   );
 
+  // 카테고리
+  const currentCategoryFromStore = useSelector(
+    (state: RootState) => state.category.category
+  );
+
   // lectureData slice 상태 가져오기
   const {
     lectureList,
@@ -47,14 +53,14 @@ const InfiniteScrollController: React.FC = () => {
   } = useSelector((state: RootState) => state.lectureData);
 
   const isAuthenticated = useSelector(
-    // (state: RootState) => state.token.isAuthenticated
-    (state: RootState) => true
+    (state: RootState) => state.token.isAuthenticated
   );
 
   const [start, setStart] = useState<number>(INFO_START_INDEX);
   const dispatch = useDispatch<AppDispatch>();
 
   const prevKeywordRef = useRef<string | null>(null);
+  const prevCategoryRef = useRef<string | null>(null);
   const keywordFetchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
@@ -64,14 +70,13 @@ const InfiniteScrollController: React.FC = () => {
       clearTimeout(keywordFetchTimeoutRef.current);
     }
 
-    const currentOffset = isKeywordSearch ? INFO_START_INDEX : start;
+    // const currentOffset = isKeywordSearch ? INFO_START_INDEX : start;
 
     try {
       const lectureAction = await dispatch(
         fetchLectureData({
-          search: currentKeywordFromStore,
-          page: currentOffset,
-          size: INFO_DISPLAY_INDEX,
+          keyword: currentKeywordFromStore,
+          category: currentCategoryFromStore,
         })
       );
 
@@ -90,22 +95,11 @@ const InfiniteScrollController: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!currentKeywordFromStore) {
-      fetchLecture(true);
-    }
+    const keywordChanged = currentKeywordFromStore !== prevKeywordRef.current;
+    const categoryChanged =
+      currentCategoryFromStore !== prevCategoryRef.current;
 
-    return () => {
-      if (keywordFetchTimeoutRef.current) {
-        clearTimeout(keywordFetchTimeoutRef.current);
-      }
-    };
-  }, [currentKeywordFromStore]);
-
-  useEffect(() => {
-    if (
-      currentKeywordFromStore &&
-      currentKeywordFromStore !== prevKeywordRef.current
-    ) {
+    if (keywordChanged || categoryChanged) {
       if (keywordFetchTimeoutRef.current) {
         clearTimeout(keywordFetchTimeoutRef.current);
       }
@@ -113,16 +107,16 @@ const InfiniteScrollController: React.FC = () => {
       dispatch(resetLectureDataState());
       setStart(INFO_START_INDEX);
       fetchLecture(true);
+
       prevKeywordRef.current = currentKeywordFromStore;
-    } else if (!currentKeywordFromStore && prevKeywordRef.current) {
-      dispatch(resetLectureDataState());
-      prevKeywordRef.current = null;
-      setStart(INFO_START_INDEX);
+      prevCategoryRef.current = currentCategoryFromStore;
+    }
 
-      if (keywordFetchTimeoutRef.current) {
-        clearTimeout(keywordFetchTimeoutRef.current);
-        keywordFetchTimeoutRef.current = null;
-      }
+    // 키워드가 없고 이전에 키워드가 있었던 경우 초기화
+    if (!currentKeywordFromStore && prevKeywordRef.current) {
+      dispatch(resetLectureDataState());
+      setStart(INFO_START_INDEX);
+      prevKeywordRef.current = null;
     }
 
     return () => {
@@ -130,7 +124,7 @@ const InfiniteScrollController: React.FC = () => {
         clearTimeout(keywordFetchTimeoutRef.current);
       }
     };
-  }, [currentKeywordFromStore, dispatch]);
+  }, [currentKeywordFromStore, currentCategoryFromStore, dispatch]);
 
   const loadMoreLectures = () => {
     if (lectureStatus !== "loading" && lectureHasMore) {
@@ -151,26 +145,45 @@ const InfiniteScrollController: React.FC = () => {
         </CardsGrid>
       }
       endMessage={
-        lectureList.length > 0 &&
-        !lectureHasMore &&
-        lectureStatus !== "loading" ? (
+        lectureStatus === "succeeded" &&
+        (lectureList.length === 0 ? (
+          <p style={{ textAlign: "center" }}>
+            <b>검색 결과가 없습니다.</b>
+          </p>
+        ) : !lectureHasMore ? (
           <p style={{ textAlign: "center" }}>
             <b>더 이상 강의 정보가 없습니다.</b>
           </p>
-        ) : null
+        ) : null)
       }
-      scrollThreshold={"50%"}
+      scrollThreshold={"90%"}
     >
       <CardsGrid>
-        {lectureList.map((item: Lecture, index: number) => (
+        {lectureList.map((item: Lecture) => (
           <LectureCard
-            key={item.id}
-            imageUrl={item.imageUrl ?? "/default-image-path.jpg"}
-            title={item.description ?? "제목 없음"}
-            description={item.description}
-            lecturer={item.lecturer}
-            onClick={() => console.log(item.id)}
+            id={item.lectureId}
+            imageUrl={img}
+            title={item.title ?? "제목 없음"}
+            description={item.description ?? "설명이 없습니다"}
+            lecturer={item.nickname ?? "강사 미정"}
+            price={item.price}
+            rating={item.averageStar}
+            progress={24}
             design={1}
+            buttons={[
+              {
+                label: "등록하기",
+                onClick: () => {
+                  alert(item.title);
+                },
+              },
+              {
+                label: "자세히 보기",
+                onClick: () => {
+                  alert("자세히 보기 클릭");
+                },
+              },
+            ]}
           />
         ))}
       </CardsGrid>
