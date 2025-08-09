@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect } from "react";
 import InterestSelector from "../Common/InterestSelector";
 import { categoriesList } from "../../api/Signup/signupAPI";
 import type { CategoryFormat } from "../../api/Signup/signupAPI";
+
 // 카테고리 선택
 const CategorySection = styled.div`
   text-align: center;
@@ -16,7 +17,7 @@ const CategoryTitle = styled.h1`
   font-size: ${(props) => props.theme.fontSize.title.min};
 `;
 
-const CategorySubTitle = styled.text`
+const CategorySubTitle = styled.p`
   text-align: center;
 `;
 
@@ -53,7 +54,7 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
       setSelectedCategories(convertedCategories);
       onCategoryChange(convertedCategories);
     },
-    [onCategoryChange]
+    [onCategoryChange, selectedCategories]
   );
 
   // 카테고리 가져오기
@@ -61,6 +62,7 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
     try {
       const result = await categoriesList();
       if (result.status == "OK") {
+        console.log(result.status);
         const formattedCategories = result.data.categories.map(
           (category: CategoryFormat) => ({
             id: String(category.id),
