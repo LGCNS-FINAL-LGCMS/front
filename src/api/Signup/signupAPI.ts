@@ -1,7 +1,7 @@
 import { API_ENDPOINTS } from "../../constants/endpoints";
 import apiClient from "../index";
 
-interface ResponseFormat<T> {
+export interface ResponseFormat<T> {
   status: string;
   message: string;
   data: T;
@@ -12,11 +12,10 @@ export interface CategoryFormat {
   name: string;
 }
 
-// nickname API
 interface CheckNicknameDuplicateResponse {
   isUsed: boolean;
 }
-
+// nickname API
 export const checkNicknameDuplicate = async (
   nickname: string
 ): Promise<ResponseFormat<CheckNicknameDuplicateResponse>> => {
@@ -27,7 +26,7 @@ export const checkNicknameDuplicate = async (
 
     return response.data;
   } catch (error) {
-    console.log("호출 실패 -> 더미데이터", error);
+    console.log("닉네임 서버 호출 실패", error);
     throw new Error("닉네임 중복 체크 실패");
   }
 };
@@ -53,30 +52,8 @@ export const signupAPI = async (
 
     return response.data;
   } catch (error) {
-    console.log("호출 실패 -> 더미데이터", error);
-    // 더미 데이터
-    return {
-      status: "OK",
-      message: "",
-      data: {
-        nickname: nickname,
-        categories: [
-          {
-            id: 1,
-            name: "스프링",
-          },
-          {
-            id: 2,
-            name: "리액트",
-          },
-          {
-            id: 3,
-            name: "자바스크립트",
-          },
-        ],
-        wantTeacher: true,
-      },
-    };
+    console.log("회원정보 서버 호출 실패", error);
+    throw new Error("회원 서버 호출 실패");
   }
 };
 
@@ -85,28 +62,9 @@ export const categoriesList = async () => {
   try {
     const response = await apiClient.get(API_ENDPOINTS.USER.CATEGORY);
     console.log("받아온 데이터 :", response);
-    return response;
+    return response.data.categories;
   } catch (error) {
-    console.log("서버 에러임", error);
-    return {
-      status: "OK",
-      message: "호출에 성공했습니다",
-      data: {
-        categories: [
-          {
-            id: 1,
-            name: "스프링",
-          },
-          {
-            id: 2,
-            name: "리액트",
-          },
-          {
-            id: 3,
-            name: "자바스크립트",
-          },
-        ],
-      },
-    };
+    console.log("카테고리 서버 호출 실패", error);
+    throw new Error("카테고리 조회 실패");
   }
 };
