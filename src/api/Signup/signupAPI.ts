@@ -60,7 +60,7 @@ export const signupAPI = async (
 //category API (전체조회)
 export const categoriesList = async () => {
   try {
-    const response = await apiClient.get(API_ENDPOINTS.USER.CATEGORY);
+    const response = await apiClient.get(API_ENDPOINTS.USER.CATEGORY_LIST);
     console.log("받아온 데이터 :", response);
     return response.data.categories;
   } catch (error) {

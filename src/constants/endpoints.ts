@@ -15,6 +15,7 @@ export const API_ENDPOINTS = {
   USER: {
     INFO: "/api/member", //get
     UPDATE: "/api/member/change/info", // patch
+    CATEGORY_LIST: "api/member/categories",
   },
   CATEGORY: {
     POST: "/api/category",
