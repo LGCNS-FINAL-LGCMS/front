@@ -6,7 +6,8 @@ import { useState, useEffect } from "react";
 
 import LessonPlayer from "../../components/Lecture/LessonPlayer";
 import LessonList from "../../components/Lecture/LessonList";
-import Memo from "../../components/Memo/Memo";
+import MemoContainer from "../../components/Memo/MemoContainer";
+
 
 
 const LessonViewWrapper = styled.div`
@@ -172,7 +173,9 @@ const LessonViewPage = () => {
           </TopContent>
 
           <MemoArea>
-            {selectedLesson ? <Memo lessonId={selectedLesson.id} /> : <div style={{ padding: "10px", color: "#888" }}>강의를 선택하면 메모를 입력할 수 있습니다.</div>}
+           {selectedLesson
+              ? <MemoContainer lessonId={selectedLesson.id} />
+              : <div style={{ padding: "10px", color: "#888" }}>강의를 선택하면 메모를 입력할 수 있습니다.</div>}
           </MemoArea>
         </LessonMain>
       </LessonViewArea>
