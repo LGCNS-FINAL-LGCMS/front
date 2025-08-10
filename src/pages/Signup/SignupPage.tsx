@@ -106,7 +106,7 @@ const SignupPage = () => {
     } else {
       try {
         const result = await checkNicknameDuplicate(nickname);
-        console.log(result);
+        console.log(result.data.isUsed);
         if (result.data.isUsed === false) {
           setNicknameCheck(false);
           setNicknameCheckMessage("사용할 수 없는 닉네임입니다.");
