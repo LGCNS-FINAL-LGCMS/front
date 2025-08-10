@@ -62,7 +62,7 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
     try {
       const result = await categoriesList();
       if (result.status == "OK") {
-        console.log(result.status);
+        console.log("카테고리 서버연결성공", result.status);
         const formattedCategories = result.data.categories.map(
           (category: CategoryFormat) => ({
             id: String(category.id),
@@ -72,7 +72,7 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
         setInterests(formattedCategories);
       }
     } catch (error) {
-      console.log("서버에러발생", error);
+      console.log("카테고리 서버에러발생", error);
       setInterests([]); //에러 발생 시 빈배열로 초기화
     }
   };
