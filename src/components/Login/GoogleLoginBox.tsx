@@ -36,6 +36,8 @@ const GoogleLoginBox = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
+  console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
+
   const handleLogin = async (credentialResponse: CredentialResponse) => {
     try {
       if (!credentialResponse?.credential) {
@@ -50,6 +52,8 @@ const GoogleLoginBox = () => {
       }
 
       const response = await googleLoginAPI(credentialResponse?.credential);
+
+      console.log("백엔드 응답 받음 : ", response);
 
       if (response.status === "OK" && response.data?.tokens) {
         console.log("서버 연결 됨(토큰 받는 중)");
@@ -66,9 +70,9 @@ const GoogleLoginBox = () => {
         // 서버연결 성공 시 Nav로 이동시키기 (모달창 띄워서 확인하면 이동시켜야됨)
         if (alreadyMember) {
           console.log("기존 회원임 ! 메인페이지로 이동");
-          navigate("/", { replace: true });
+          navigate("/home", { replace: true });
         } else {
-          console.log("신규회원 -> ");
+          console.log("신규회원");
           navigate("/signup", { replace: true });
         }
       } else {
