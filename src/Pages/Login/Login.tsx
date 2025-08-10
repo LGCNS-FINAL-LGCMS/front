@@ -1,5 +1,4 @@
-import GoogleLoginBox from "../components/Login/GoogleLoginBox";
-
+import GoogleLoginBox from "../../components/Login/GoogleLoginBox";
 import styled from "styled-components";
 
 const LoginBoxContainer = styled.div`
