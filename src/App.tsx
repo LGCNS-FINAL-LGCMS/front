@@ -12,10 +12,11 @@ import WideLayout from "./layouts/WideLayout";
 // =========== 레이아웃 임포트 ===========
 
 // =========== 페이지 임포트 ===========
-import LandingPage from "./Pages/LandingPage/LandingPage";
+import Login from "./pages/Login";
+import SignupPage from "./pages/Signup/SignupPage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 import MainPage from "./pages/MainPage/MainPage";
 import LectureWatchingPage from "./pages/LectureWatchingPage";
-import Login from "./pages/Login";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -35,6 +36,15 @@ function App() {
             element={
               <Layout>
                 <Login />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.SIGNUP}
+            element={
+              <Layout>
+                <SignupPage />
               </Layout>
             }
           />
