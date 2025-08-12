@@ -20,7 +20,7 @@ const Container = styled.div`
   flex-wrap: wrap;
   gap: 6px;
   width: 500px;
-
+  justify-content: center;
   align-items: flex-start;
 `;
 

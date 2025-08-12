@@ -3,15 +3,24 @@
 import apiClient from "../index";
 import { API_ENDPOINTS } from "../../constants/endpoints";
 
-interface Category {
-  name: string;
-  id: number;
-}
-
 interface CategoryApiResponse {
   status: string;
   message: string;
-  data: Category[];
+  data: Member;
+}
+
+interface Member {
+  memberId: number;
+  email: string;
+  nickname: string;
+  role: string;
+  getDesireLecturer: boolean;
+  categories: Category[];
+}
+
+interface Category {
+  id: number;
+  name: string;
 }
 
 export const getCategorys = async (): Promise<Category[]> => {
@@ -19,7 +28,8 @@ export const getCategorys = async (): Promise<Category[]> => {
     const response = await apiClient.get<CategoryApiResponse>(
       API_ENDPOINTS.CATEGORY.GET
     );
-    return response.data.data;
+    console.log(response);
+    return response.data.data.categories;
   } catch (error: any) {
     const message =
       error.response?.data?.message ||
