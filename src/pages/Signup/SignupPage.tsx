@@ -141,8 +141,8 @@ const SignupPage = () => {
   );
 
   // role 선택 핸들러
-  const handleRoleSelection = (wantTeacher: boolean | null) => {
-    setSelectedRole(wantTeacher);
+  const handleRoleSelection = (getDesireLecturer: boolean | null) => {
+    setSelectedRole(getDesireLecturer);
   };
 
   const signupClick = async () => {
