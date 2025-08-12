@@ -83,7 +83,7 @@ const RoleCheckMessage = styled.div`
 `;
 
 interface RoleSelectProps {
-  onRoleChange: (wantTeacher: boolean | null) => void;
+  onRoleChange: (getDesireLecturer: boolean | null) => void;
   selectedRole: boolean | null;
 }
 

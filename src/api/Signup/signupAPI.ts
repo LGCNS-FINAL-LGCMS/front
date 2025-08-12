@@ -35,19 +35,19 @@ export const checkNicknameDuplicate = async (
 interface SignupResponse {
   nickname: string;
   categories: CategoryFormat[];
-  wantTeacher: boolean;
+  getDesireLecturer: boolean;
 }
 
 export const signupAPI = async (
   nickname: string,
   categories: CategoryFormat[],
-  wantTeacher: boolean | null
+  getDesireLecturer: boolean | null
 ): Promise<ResponseFormat<SignupResponse>> => {
   try {
     const response = await apiClient.post(API_ENDPOINTS.USER.INFO, {
       nickname: nickname.trim(),
-      categories: categories,
-      wantTeacher: wantTeacher,
+      categories,
+      getDesireLecturer,
     });
 
     return response.data;
