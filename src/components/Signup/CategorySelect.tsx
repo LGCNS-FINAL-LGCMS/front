@@ -37,7 +37,7 @@ interface CategorySelectProps {
 }
 
 const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
-  const [selectedCategories, setSelectedCategories] = useState<
+  const [_selectedCategories, setSelectedCategories] = useState<
     CategoryFormat[]
   >([]);
 
@@ -50,11 +50,10 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
         id: Number(item.id),
         name: item.name,
       }));
-      console.log("Categories[] : ", selectedCategories);
       setSelectedCategories(convertedCategories);
       onCategoryChange(convertedCategories);
     },
-    [onCategoryChange, selectedCategories]
+    [onCategoryChange]
   );
 
   // 카테고리 가져오기
@@ -62,7 +61,6 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
     try {
       const result = await categoriesList();
       if (result.status == "OK") {
-        console.log("카테고리 서버연결성공", result.status);
         const formattedCategories = result.data.categories.map(
           (category: CategoryFormat) => ({
             id: String(category.id),
