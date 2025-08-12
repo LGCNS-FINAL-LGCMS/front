@@ -7,6 +7,7 @@ export const PAGE_PATHS = {
   LANDING: "/",
   HOME: "/home",
   LOGIN: "/login",
+  SIGNUP: "/signup",
   USER_INFO: "/userinfo",
   LECTUREWATCH: "/lecture_w",
   MY_COURSES: "/??",
