@@ -3,6 +3,7 @@ import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { googleLoginAPI } from "../../api/Login/loginAPI";
+import { PAGE_PATHS } from "../../constants/pagePaths";
 
 import { login } from "../../redux/token/tokenSlice";
 import { useDispatch } from "react-redux";
@@ -66,10 +67,10 @@ const GoogleLoginBox = () => {
         // 서버연결 성공 시 Nav로 이동시키기 (모달창 띄워서 확인하면 이동시켜야됨)
         if (alreadyMember) {
           console.log("기존 회원임 ! 메인페이지로 이동");
-          navigate("/", { replace: true });
+          navigate(PAGE_PATHS.HOME, { replace: true });
         } else {
-          console.log("신규회원 -> ");
-          navigate("/signup", { replace: true });
+          console.log("신규회원");
+          navigate(PAGE_PATHS.SIGNUP, { replace: true });
         }
       } else {
         console.log("서버연결 못함...");
