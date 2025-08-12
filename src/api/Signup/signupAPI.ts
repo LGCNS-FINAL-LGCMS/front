@@ -44,10 +44,10 @@ export const signupAPI = async (
   getDesireLecturer: boolean | null
 ): Promise<ResponseFormat<SignupResponse>> => {
   try {
-    const response = await apiClient.post(API_ENDPOINTS.USER.INFO, {
+    const response = await apiClient.patch(API_ENDPOINTS.USER.UPDATE, {
       nickname: nickname.trim(),
       categories,
-      getDesireLecturer,
+      desireLecturer: getDesireLecturer,
     });
 
     return response.data;
@@ -61,8 +61,7 @@ export const signupAPI = async (
 export const categoriesList = async () => {
   try {
     const response = await apiClient.get(API_ENDPOINTS.USER.CATEGORY_LIST);
-    console.log("받아온 데이터 :", response);
-    return response.data.categories;
+    return response.data;
   } catch (error) {
     console.log("카테고리 서버 호출 실패", error);
     throw new Error("카테고리 조회 실패");
