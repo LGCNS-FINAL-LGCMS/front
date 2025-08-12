@@ -135,7 +135,6 @@ const SignupPage = () => {
   const handleCategorySelection = useCallback(
     (categories: CategoryFormat[]) => {
       setSelectedCategories(categories);
-      console.log("선택된 카테고리 :", categories);
     },
     []
   );
@@ -169,12 +168,7 @@ const SignupPage = () => {
           selectedRole
         );
         if (result.status === "OK") {
-          console.log(
-            "회원가입 완료",
-            nickname,
-            selectedCategories,
-            selectedRole
-          );
+          console.log("회원가입 완료");
           setShowSuccessModal(true);
         } else {
           setShowFailModal(true);
