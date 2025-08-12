@@ -9,10 +9,12 @@ export const API_ENDPOINTS = {
     GOOGLE_LOGIN: "/api/auth/sign-in/google", //post
     REFRESH: "/api/auth/refresh/token", // post
     SIGN_OUT: "/api/auth/sign-out/google", // post
+    CHECK_NICKNAME: "/api/member/check/nickname", // post
   },
   USER: {
     INFO: "/api/member", //get
     UPDATE: "/api/member/change/info", // patch
+    CATEGORY_LIST: "/api/member/categories",
   },
   CATEGORY: {
     POST: "/api/category",
