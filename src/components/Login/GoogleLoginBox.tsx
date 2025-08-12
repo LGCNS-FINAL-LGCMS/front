@@ -52,8 +52,6 @@ const GoogleLoginBox = () => {
 
       const response = await googleLoginAPI(credentialResponse?.credential);
 
-      console.log("백엔드 응답 받음 : ", response);
-
       if (response.status === "OK" && response.data?.tokens) {
         console.log("서버 연결 됨(토큰 받는 중)");
         const { accessToken, refreshToken } = response.data.tokens;
