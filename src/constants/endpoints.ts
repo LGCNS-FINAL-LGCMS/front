@@ -23,4 +23,7 @@ export const API_ENDPOINTS = {
   LECTURE: {
     GET: "/api/lecture",
   },
+  GUIDE: {
+    POST: "/api/guide/ask",
+  },
 };
