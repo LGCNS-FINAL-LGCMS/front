@@ -17,6 +17,7 @@ import LectureWatchingPage from "./pages/LectureWatchingPage";
 import Login from "./pages/Login/Login";
 import SignupPage from "./pages/Signup/SignupPage";
 import MainPage from "./pages/MainPage/MainPage";
+import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -45,6 +46,15 @@ function App() {
             element={
               <Layout>
                 <SignupPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_INFO}
+            element={
+              <Layout>
+                <UpdateUserInfoPage />
               </Layout>
             }
           />
