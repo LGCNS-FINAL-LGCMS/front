@@ -11,6 +11,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  font-family: ${({ theme }) => theme.font.primary};
+  color: ${({ theme }) => theme.colors.text_D};
+  font-weight: 400;
+  font-size: ${({ theme }) => theme.fontSize.display};
 `;
 
 const DropArea = styled.div<{ $isDragActive: boolean }>`
@@ -105,7 +109,11 @@ type UploadedImage = {
   preview: string;
 };
 
-const ImageUploader: React.FC = () => {
+type ImageUploaderProps = {
+  onFileSelect: (file: File | null, preview?: string) => void;
+};
+
+const ImageUploader: React.FC<ImageUploaderProps> = ({ onFileSelect }) => {
   const [originalImage, setOriginalImage] = useState<UploadedImage | null>(
     null
   );
@@ -147,7 +155,8 @@ const ImageUploader: React.FC = () => {
     );
     setCroppedImage(imageUrl);
     setIsModalOpen(false);
-  }, [croppedAreaPixels, originalImage]);
+    onFileSelect(originalImage.file, imageUrl);
+  }, [croppedAreaPixels, originalImage, onFileSelect]);
 
   const displayedImage = croppedImage || originalImage?.preview || "";
 
@@ -170,7 +179,8 @@ const ImageUploader: React.FC = () => {
     setCroppedImage(null);
     setIsModalOpen(false);
 
-    // 선택 후 input value 초기화해서 같은 파일 재선택도 가능하게
+    onFileSelect(file, preview);
+
     e.target.value = "";
   };
 
