@@ -5,15 +5,16 @@ import styled from "styled-components";
 import { PAGE_PATHS } from "../../../constants/pagePaths";
 import ChatLauncher from "./ChatLauncher";
 import ChatWindow from "./ChatWindow";
-import { postGuides } from "../../../api/Guide/guideAPI";
+import { postGuides, type ResponseData } from "../../../api/Guide/guideAPI";
 import type { ChatMessage } from "../../../types/message";
+import { theme } from "../../../assets/styles/theme";
 
 
 const ChatFixedWrapper = styled.div`
   position: fixed;
   bottom: 0;
   right: 0;
-  z-index: 999;
+  z-index: ${theme.zIndex.modal};
 `;
 
 
@@ -36,6 +37,7 @@ const ChatWrapper = () => {
       content: "안녕하세요! 무엇을 도와드릴까요?",
       sender: "bot",
       timestamp: new Date().getTime(),
+      type: "text",
     },
   ]);
 
@@ -48,23 +50,50 @@ const ChatWrapper = () => {
     // 1. 사용자 메시지를 먼저 화면에 추가합니다.
     const userMessage: ChatMessage = {
       id: Date.now().toString() + '-user', // 고유 ID 생성
-      sender: 'user',
+      sender: "user",
       content: query,
       timestamp: new Date().getTime(),
+      type: "text",
     };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
 
     try {
       // 2. postGuides API를 호출합니다.
-      const responseData = await postGuides(query);
+      const responseData: ResponseData = await postGuides(query);
+      if (!responseData) {
+        throw new Error("No valid data received from the API.");
+      }
+      const botMessages: ChatMessage[] = [];
 
       // 3. API 응답 데이터를 화면에 추가할 메시지 형태로 변환합니다.
-      const botMessages: ChatMessage[] = responseData.map((data, index) => ({
-        id: Date.now().toString() + '-bot-' + index, // 고유 ID 생성
+      // image가 있을 경우 이미지 메시지도 추가합니다.
+      const botChatMessages: ChatMessage = {
+        id: Date.now().toString() + '-bot',
         sender: 'bot',
-        content: data.answer,
+        content: responseData.answer,
         timestamp: new Date().getTime(),
-      }));
+        type: "text",
+      }
+      botMessages.push(botChatMessages);
+
+      if (responseData.imageUrl) {
+        const botImageMessage: ChatMessage = {
+          id: Date.now().toString() + '-bot-image',
+          sender: 'bot',
+          content: "responseData.imageUrl",
+          timestamp: new Date().getTime(),
+          type: "image",
+        };
+        botMessages.push(botImageMessage);
+        botMessages.push({
+          id: Date.now().toString() + '-bot-image-tail',
+          sender: 'bot',
+          content: "참고 이미지를 따라 확인보세요.",
+          timestamp: new Date().getTime(),
+          type: "text",
+        });
+      }
+
       // 4. 기존 메시지 목록에 봇의 답변을 추가합니다.
       setMessages((prevMessages) => [...prevMessages, ...botMessages]);
 
@@ -77,6 +106,7 @@ const ChatWrapper = () => {
         sender: 'bot',
         content: "죄송합니다. 메시지를 처리하는 중 오류가 발생했습니다.",
         timestamp: new Date().getTime(),
+        type: "text",
       };
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
     }

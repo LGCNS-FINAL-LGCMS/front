@@ -3,6 +3,7 @@ import styled from "styled-components";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 import type { ChatMessage } from "../../../types/message";
+import { theme } from "../../../assets/styles/theme";
 
 interface ChatWindowProps {
   isOpen: boolean;
@@ -13,13 +14,13 @@ interface ChatWindowProps {
 
 const ChatContainer = styled.div<{ isOpen: boolean }>`
   position: fixed;
-  bottom: 90px;
+  bottom: max(90px, calc(env(safe-area-inset-bottom) + 16px));
   right: 20px;
-  width: 300px;
-  height: 400px;
-  background-color: ${({ theme }) => theme.colors.header};
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
+  width: min(500px, calc(100vw - 32px));
+  height: min(800px, calc(100vh - 115px));
+  background-color: ${theme.colors.header};
+  box-shadow: 0 12px 30px ${theme.shadow.md};
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
   z-index: 1000;
@@ -27,19 +28,26 @@ const ChatContainer = styled.div<{ isOpen: boolean }>`
 
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
   pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
+  transform: ${({ isOpen }) => (isOpen ? "translateY(0) scale(1)" : "translateY(10px) scale(0.98)")};
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  will-change: opacity, transform;
 
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  /* 스크롤바운스방지 */
+  overscroll-behavior: contain;
 `;
 
 const ChatHeader = styled.div`
-  padding: 10px;
-  color: ${({ theme }) => theme.colors.text_B};
+  padding: 12px 14px;
+  color: ${theme.colors.text_B};
   font-family: ${({ theme }) => theme.font.primary}, sans-serif;
   border-bottom: 2px solid ${({ theme }) => theme.colors.background_B};
   font-weight: 700;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  /* 헤더영역 또력하게 하기 */
+  backdrop-filter: saturate(110%) blur(6px);
 `;
 
 const CloseButton = styled.button`
@@ -48,6 +56,17 @@ const CloseButton = styled.button`
   color: ${({ theme }) => theme.colors.text_B};
   cursor: pointer;
   font-size: 16px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: background-color 0.16s ease, transform 0.06s ease;
+
+  &:hover { background-color: ${theme.colors.gray_M}; }
+  &:active { transform: scale(0.98); }
+  &:focus-visible {
+    outline: 2px solid rgba(99, 132, 255, 0.6);
+    outline-offset: 2px;
+    border-radius: 10px;
+  }
 `;
 
 const ChatWindow: React.FC<ChatWindowProps> = ({

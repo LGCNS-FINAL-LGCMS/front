@@ -10,17 +10,16 @@ export interface ResponseData {
 export interface GuideApiResponse {
   status: string;
   message: string;
-  data: ResponseData[];
+  data: ResponseData;
 }
 
 export const postGuides = async (
     query: string
-): Promise<ResponseData[]> => {
+): Promise<ResponseData> => {
   try {
     const response = await apiClient.post<GuideApiResponse>(
       API_ENDPOINTS.GUIDE.POST,
         { query },
-        {timeout: 3000} // 3초 타임아웃 설정
     );
     return response.data.data;
   } catch (error: any) {
