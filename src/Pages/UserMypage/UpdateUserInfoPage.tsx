@@ -6,7 +6,8 @@ import {
 } from "../../api/Signup/signupAPI";
 import Button from "../../components/Common/Button";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import CategorySelect from "../../components/Signup/CategorySelect";
 
 const UserInfoContainer = styled.div`
   font-family: ${(props) => props.theme.font.primary};
@@ -27,6 +28,10 @@ const UpdateUserInfoPage = () => {
   const [nicknameCheckMessage, setNicknameCheckMessage] = useState(""); // 중복확인 결과 메세지
   const [nicknameCheck, setNicknameCheck] = useState<boolean | null>(null); // 수정완료 시 중복확인 검사여부
   const [lastNickname, setLastNickname] = useState(""); // api중복으로 안보내게
+
+  const [selectedCategories, setSelectedCategories] = useState<
+    CategoryFormat[]
+  >([]); // 선택된 카테고리
 
   const handleNicknameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
@@ -66,6 +71,29 @@ const UpdateUserInfoPage = () => {
     }
   };
 
+  //카테고리 핸들러
+  const handleCategorySelection = useCallback(
+    (categories: CategoryFormat[]) => {
+      setSelectedCategories(categories);
+    },
+    []
+  );
+
+  //회원가입 완료 클릭
+  const InfoUpdateClick = async () => {
+    if (nickname.trim() == "") {
+      alert("닉네임을 입력해주세요");
+      return;
+    } else if (nicknameCheck === null) {
+      alert("닉네임 중복확인을 해주세요.");
+      return;
+    } else if (nicknameCheck === false) {
+      alert("사용할 수 없는 닉네임입니다.");
+    } else if (selectedCategories.length === 0) {
+      alert("관심있는 카테고리를 선택해주세요.");
+    }
+  };
+
   return (
     <UserInfoContainer>
       <UserInfoTitle></UserInfoTitle>
@@ -76,6 +104,7 @@ const UpdateUserInfoPage = () => {
           onChange={handleNicknameInput}
           placeholder="nickname"
         ></NicknameInputBox>
+
         <Button
           text="중복확인"
           onClick={checkNickname}
@@ -84,6 +113,15 @@ const UpdateUserInfoPage = () => {
         />
         <NicknameCheckMessage>{nicknameCheckMessage}</NicknameCheckMessage>
       </NicknameSection>
+
+      <CategorySelect onCategoryChange={handleCategorySelection} />
+
+      <Button
+        text="회원정보수정완료"
+        onClick={InfoUpdateClick}
+        design={2}
+        fontWeight={400}
+      />
     </UserInfoContainer>
   );
 };
