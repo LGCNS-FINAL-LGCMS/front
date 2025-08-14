@@ -43,11 +43,23 @@ export const SendButton = styled.button`
 
 const MessageInput: React.FC<MessageInputProps> = ({ onSend }) => {
   const [input, setInput] = useState("");
+  const [isSending, setIsSending] = useState(false);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim()) {
-      onSend(input.trim());
-      setInput("");
+      // 메시지 전송 중
+      setIsSending(true);
+
+      try {
+        // 메시지 전송
+        setInput("");
+        await onSend(input.trim());
+      } catch (error) {
+        console.error("전송버튼 중 오류 발생:", error);
+      } finally {
+        // 메시지 전송 완료
+        setIsSending(false);
+      }
     }
   };
 
@@ -56,11 +68,17 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSend }) => {
       <Input
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && handleSend()}
+        onKeyDown={(e) => {
+          if (isSending) {
+            e.preventDefault();
+          } else {
+            e.key === "Enter" && handleSend()
+          }
+        }}
         placeholder="메시지를 입력하세요"
         aria-label="메시지 입력"
       />
-      <SendButton onClick={handleSend} aria-label="메시지 전송">
+      <SendButton onClick={handleSend} aria-label="메시지 전송" disabled={isSending || !input.trim()}>
         <FontAwesomeIcon icon={faPaperPlane} />
       </SendButton>
     </Container>
