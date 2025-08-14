@@ -61,11 +61,6 @@ const CloseButton = styled.button`
 
   &:hover { background-color: ${({ theme }) => theme.colors.gray_M}; }
   &:active { transform: scale(0.98); }
-  &:focus-visible {
-    outline: 2px solid rgba(99, 132, 255, 0.6);
-    outline-offset: 2px;
-    border-radius: 10px;
-  }
 `;
 
 const ChatWindow: React.FC<ChatWindowProps> = ({
