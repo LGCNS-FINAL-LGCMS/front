@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import type { ChatMessage } from "../../../types/message";
-import { theme } from "../../../assets/styles/theme";
 import { ImagePreviewModal } from "./ImagePreviewModal";
 import UrlPortalCard from "./UrlPortalCard";
+
+import { useSelector } from 'react-redux';
+import type { RootState } from "../../../redux/store";
 
 interface MessageListProps {
   messages: ChatMessage[];
@@ -61,10 +63,46 @@ export const MessageBubble = styled.div<{ isUser: boolean }>`
   }
   `;
 
+const Dot = styled.span`
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin: 0 4px;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.colors.primary};
+  opacity: 0.6;
+  animation: blink 1s infinite;
+
+  &:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  &:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes blink {
+    0% {
+      opacity: 0.2;
+      transform: translateY(0);
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+    60% {
+      opacity: 0.4;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0.2;
+      transform: translateY(0);
+    }
+  }
+`;
 
 const MessageList: React.FC<MessageListProps> = ({ messages }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-
+  const status = useSelector((state: RootState) => state.guide.status);
 
 
   // 메시지 목록이 변경될 때마다 스크롤을 맨 아래로 이동
@@ -105,6 +143,14 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
             )}
           </MessageWrapper>
         ))}
+
+        {status === 'sending' && (
+          <MessageWrapper isUser={false}>
+            <MessageBubble isUser={false} aria-label="답변 작성 중">
+              <Dot /><Dot /><Dot />
+            </MessageBubble>
+          </MessageWrapper>
+        )}
       </Container>
       {previewSrc && (
         <ImagePreviewModal src={previewSrc} onClose={closePreview} />

@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../../../redux/store";
+import { setSending, setSuccess, setError, setIdle } from "../../../redux/GuideBot/guideBotSlice";
+
 
 interface MessageInputProps {
   onSend: (message: string) => void;
@@ -43,22 +47,28 @@ export const SendButton = styled.button`
 
 const MessageInput: React.FC<MessageInputProps> = ({ onSend }) => {
   const [input, setInput] = useState("");
-  const [isSending, setIsSending] = useState(false);
+  const dispatch = useDispatch();
+  // 최초 'idle' 상태
+  const status = useSelector((state: RootState) => state.guide.status);
 
   const handleSend = async () => {
     if (input.trim()) {
       // 메시지 전송 중
-      setIsSending(true);
+      dispatch(setSending());
 
       try {
         // 메시지 전송
         setInput("");
         await onSend(input.trim());
+
+        dispatch(setSuccess());
       } catch (error) {
         console.error("전송버튼 중 오류 발생:", error);
+
+        dispatch(setError());
       } finally {
         // 메시지 전송 완료
-        setIsSending(false);
+        dispatch(setIdle());
       }
     }
   };
@@ -69,7 +79,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSend }) => {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
-          if (isSending) {
+          if (status === "sending") {
             e.preventDefault();
           } else {
             e.key === "Enter" && handleSend()
@@ -78,7 +88,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSend }) => {
         placeholder="메시지를 입력하세요"
         aria-label="메시지 입력"
       />
-      <SendButton onClick={handleSend} aria-label="메시지 전송" disabled={isSending || !input.trim()}>
+      <SendButton onClick={handleSend} aria-label="메시지 전송" disabled={status === "sending" || !input.trim()}>
         <FontAwesomeIcon icon={faPaperPlane} />
       </SendButton>
     </Container>
