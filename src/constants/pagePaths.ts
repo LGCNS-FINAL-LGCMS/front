@@ -9,9 +9,9 @@ export const PAGE_PATHS = {
   LOGIN: "/login",
   SIGNUP: "/signup",
   USER_INFO: "/userinfo",
-  LECTUREWATCH: "/lecture_w",
   MY_COURSES: "/??",
   REPORT: "/??",
   LEVEL_TEST: "/??",
   FAQ: "/??",
+  CREATE_LECTURE: "/openlecture",
 };
