@@ -1,9 +1,10 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import ImageUploader from "../../components/CreateLecture/ImageUploader";
 import LectureMaterialsUploader from "../../components/CreateLecture/LectureMaterialUploader";
 import InterestSelector from "../../components/Common/InterestSelector";
 import Button from "../../components/Common/Button";
+import { categoriesList } from "../../api/Signup/signupAPI";
 
 interface Interest {
   id: string;
@@ -174,6 +175,14 @@ const ConfirmModalContent = styled.div`
   overflow-y: auto;
 `;
 
+const SectionSubtitle = styled.p`
+  font-size: ${({ theme }) => theme.fontSize.small.max};
+  color: ${({ theme }) => theme.colors.text_D};
+  margin-top: -10px;
+  margin-bottom: 15px;
+  line-height: 1.4;
+`;
+
 const ConfirmRow = styled.div`
   margin-bottom: 15px;
 `;
@@ -185,12 +194,13 @@ const CreateLecturePage = () => {
   const [priceStr, setPriceStr] = useState<string>(""); // 화면용
   const [priceNum, setPriceNum] = useState<number>(0); // 저장용
   const [isFree, setIsFree] = useState<boolean>(true);
-
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [selectedLevel, setSelectedLevel] = useState<"상" | "중" | "하" | "">(
     ""
   );
+  const [interests, setInterests] = useState<Interest[]>([]); // 여기를 빈 배열로 초기화
+  const [isLoadingInterests, setIsLoadingInterests] = useState<boolean>(true); // 로딩 여부 optional
 
   const levels: Array<"상" | "중" | "하"> = ["상", "중", "하"];
 
@@ -202,14 +212,6 @@ const CreateLecturePage = () => {
     description: "",
     materials: "",
   });
-
-  const interests = [
-    { id: "dash1", name: "리액트" },
-    { id: "dash2", name: "어쩌고 저쩌고" },
-    { id: "dash3", name: "궁시렁" },
-    { id: "dash4", name: "C#" },
-    { id: "dash5", name: "넵" },
-  ];
 
   const handleFileSelect = (file: File | null) => setSelectedFile(file);
   const handleImageSelect = (file: File | null) => setSelectedImageFile(file);
@@ -242,6 +244,28 @@ const CreateLecturePage = () => {
     return Object.values(newErrors).every((err) => err === "");
   };
 
+  useEffect(() => {
+    const fetchInterests = async () => {
+      try {
+        const data = await categoriesList();
+        console.log(data);
+        setInterests(
+          data.data.categories.map((cat: { id: number; name: string }) => ({
+            id: cat.id,
+            name: cat.name.replace(/^"|"$/g, ""),
+          }))
+        );
+      } catch (error) {
+        console.error("카테고리 불러오기 실패:", error);
+        setInterests([]);
+      } finally {
+        setIsLoadingInterests(false);
+      }
+    };
+
+    fetchInterests();
+  }, []);
+
   return (
     <Container>
       <PageTitle>강의 개설 신청</PageTitle>
@@ -250,6 +274,9 @@ const CreateLecturePage = () => {
         <ThumbnailWrapper>
           <Section>
             <SectionTitle>강의 썸네일</SectionTitle>
+            <SectionSubtitle>
+              강의 개설 시 보여질 썸네일을 업로드 해주세요
+            </SectionSubtitle>
             {errors.thumbnail && (
               <ErrorMessage>{errors.thumbnail}</ErrorMessage>
             )}
@@ -260,6 +287,7 @@ const CreateLecturePage = () => {
         <InfoWrapper>
           <Section>
             <SectionTitle>강의 난이도</SectionTitle>
+            <SectionSubtitle>강의 난이도를 선택해 주세요.</SectionSubtitle>
             {errors.level && <ErrorMessage>{errors.level}</ErrorMessage>}
             <RadioGroup>
               {levels.map((level) => (
@@ -310,6 +338,7 @@ const CreateLecturePage = () => {
 
       <Section>
         <SectionTitle>카테고리</SectionTitle>
+        <SectionSubtitle>강의 카테고리를 추가해주세요.</SectionSubtitle>
         {errors.category && <ErrorMessage>{errors.category}</ErrorMessage>}
         <InterestSelector
           interests={interests}
@@ -341,6 +370,7 @@ const CreateLecturePage = () => {
 
       <Section>
         <SectionTitle>강의 자료</SectionTitle>
+        <SectionSubtitle>강의 자료는 PDF 확장자만 가능합니다.</SectionSubtitle>
         {errors.materials && <ErrorMessage>{errors.materials}</ErrorMessage>}
         <LectureMaterialsUploader onFileSelect={handleFileSelect} />
       </Section>
