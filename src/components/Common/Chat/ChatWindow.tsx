@@ -3,7 +3,6 @@ import styled from "styled-components";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 import type { ChatMessage } from "../../../types/message";
-import { theme } from "../../../assets/styles/theme";
 
 interface ChatWindowProps {
   isOpen: boolean;
@@ -18,8 +17,8 @@ const ChatContainer = styled.div<{ isOpen: boolean }>`
   right: 20px;
   width: min(500px, calc(100vw - 32px));
   height: min(800px, calc(100vh - 115px));
-  background-color: ${theme.colors.header};
-  box-shadow: 0 12px 30px ${theme.shadow.md};
+  background-color: ${({ theme }) => theme.colors.header};
+  box-shadow: 0 12px 30px ${({ theme }) => theme.shadow.md};
   border-radius: 14px;
   display: flex;
   flex-direction: column;
@@ -38,7 +37,7 @@ const ChatContainer = styled.div<{ isOpen: boolean }>`
 
 const ChatHeader = styled.div`
   padding: 12px 14px;
-  color: ${theme.colors.text_B};
+  color: ${({ theme }) => theme.colors.text_B};
   font-family: ${({ theme }) => theme.font.primary}, sans-serif;
   border-bottom: 2px solid ${({ theme }) => theme.colors.background_B};
   font-weight: 700;
@@ -60,7 +59,7 @@ const CloseButton = styled.button`
   border-radius: 8px;
   transition: background-color 0.16s ease, transform 0.06s ease;
 
-  &:hover { background-color: ${theme.colors.gray_M}; }
+  &:hover { background-color: ${({ theme }) => theme.colors.gray_M}; }
   &:active { transform: scale(0.98); }
   &:focus-visible {
     outline: 2px solid rgba(99, 132, 255, 0.6);

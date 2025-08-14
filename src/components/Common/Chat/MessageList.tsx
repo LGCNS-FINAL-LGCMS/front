@@ -3,6 +3,7 @@ import styled from "styled-components";
 import type { ChatMessage } from "../../../types/message";
 import { theme } from "../../../assets/styles/theme";
 import { ImagePreviewModal } from "./ImagePreviewModal";
+import UrlPortalCard from "./UrlPortalCard";
 
 interface MessageListProps {
   messages: ChatMessage[];
@@ -29,37 +30,36 @@ export const MessageBubble = styled.div<{ isUser: boolean }>`
   line-height: 1.48;
   font-size: 14px;
   word-break: break-word;
-  box-shadow: 0 6px 18px ${theme.shadow.sm};
+  box-shadow: 0 6px 18px ${({ theme }) => theme.shadow.sm};
   animation: pop 180ms cubic-bezier(.2, .8, .2, 1);
 
   /* 역할별 바탕 */
-  color: ${({ isUser }) => (isUser ? '#ffffff' : '#1f2430')};
-  background: ${({ isUser }) =>
+  color: ${({ isUser, theme }) => (isUser ? theme.colors.text_B : theme.colors.text_D)};
+  background: ${({ isUser, theme }) =>
     isUser
-      ? 'linear-gradient(135deg, #5B86E5 0%, #36D1DC 100%)'
-      : '#ffffff'};
-  border: ${({ isUser }) => (isUser ? 'none' : '1px solid #E7ECFF')};
-
+      ? `linear-gradient(135deg, ${theme.colors.gray_L} 0%, ${theme.colors.primary} 100%)`
+      : theme.colors.background_B
+  };
+  
   left: ${({ isUser }) => (isUser ? 'auto' : '-11px')};
   right: ${({ isUser }) => (isUser ? '-11px' : 'auto')};
-  
+
   @keyframes pop {
-    0% {  
+    0 % {
       transform: scale(0.9);
       opacity: 0;
     }
-    100% {
+    100 % {
       transform: scale(1);
       opacity: 1;
     }
   }
-  transition: background-color 0.16s ease, transform 0.06s ease;
+  transition: background - color 0.16s ease, transform 0.06s ease;
   cursor: pointer;
   &:hover {
-    background-color: ${({ isUser }) => (isUser ? '#4a7cd9' : '#f0f0f0')};
     transform: scale(1.02);
   }
-    `;
+  `;
 
 
 const MessageList: React.FC<MessageListProps> = ({ messages }) => {
@@ -93,6 +93,11 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
                   onClick={() => openPreview(msg.content)}
                 />
               </MessageBubble>
+            ) : msg.type === "url" ? (
+              <UrlPortalCard
+                description="안녕하쇼ddjfksj아아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏijfidsjifjkfisjdfij"
+                url={msg.content}
+              />
             ) : (
               <MessageBubble isUser={msg.sender === "user"}>
                 {msg.content}

@@ -4,7 +4,7 @@ import React from 'react';
 const ModalOverlay = styled.div`
   position: fixed;
   inset: 0;
-  background: rgba(10, 14, 20, 0.6);
+  background: ${({ theme }) => theme.colors.background_Overlay};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,10 +22,10 @@ const ModalContent = styled.div`
   max-width: min(900px, 92vw);
   max-height: min(900px, 92vh);
 
-  background: #ffffff;
+  background: ${({ theme }) => theme.colors.background_B};
 
   border-radius: 12px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  box-shadow: 0 20px 50px ${({ theme }) => theme.shadow.lg};
   overflow: hidden;
 `;
 
@@ -74,3 +74,4 @@ export function ImagePreviewModal({ src, alt = '확대 이미지', onClose }: Im
         </ModalOverlay>
     );
 }
+export default ImagePreviewModal;

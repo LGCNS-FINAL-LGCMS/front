@@ -24,16 +24,17 @@ const Input = styled.input`
 `;
 
 export const SendButton = styled.button`
-  height: 40px;
-  padding: 0 14px;
+  margin-left: 8px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, ${({ theme }) => theme.colors.secondary} 0%, ${({ theme }) => theme.colors.primary} 100%);
+  color: ${({ theme }) => theme.colors.text_B};
   border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #5b86e5 0%, #36d1dc 100%);
-  color: #ffffff;
-  font-weight: 700;
+  border-radius: 4px;
   cursor: pointer;
-  transition: filter 0.12s ease, transform 0.06s ease;
-  box-shadow: 0 8px 18px rgba(91, 134, 229, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
 
   &:hover { filter: brightness(1.03); }
   &:active { transform: translateY(1px); }
