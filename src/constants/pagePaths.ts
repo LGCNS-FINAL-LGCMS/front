@@ -14,4 +14,5 @@ export const PAGE_PATHS = {
   LEVEL_TEST: "/??",
   FAQ: "/??",
   CREATE_LECTURE: "/openlecture",
+  Lesson_Management: "/member/lecturer/lessons",
 };
