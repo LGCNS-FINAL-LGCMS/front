@@ -13,7 +13,6 @@ const shimmer = keyframes`
 
 const Container = styled.div`
   width: 100%;
-  max-width: 600px;
   margin: 0 auto;
   font-family: ${({ theme }) => theme.font.primary};
   color: ${({ theme }) => theme.colors.text_D};

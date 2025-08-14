@@ -13,10 +13,10 @@ import WideLayout from "./layouts/WideLayout";
 
 // =========== 페이지 임포트 ===========
 import LandingPage from "./pages/LandingPage/LandingPage";
-import LectureWatchingPage from "./pages/LectureWatchingPage";
 import Login from "./pages/Login/Login";
 import SignupPage from "./pages/Signup/SignupPage";
 import MainPage from "./pages/MainPage/MainPage";
+import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -57,17 +57,18 @@ function App() {
               </Layout>
             }
           />
+
+          <Route
+            path={`${PAGE_PATHS.CREATE_LECTURE}`}
+            element={
+              <Layout>
+                <CreateLecturePage />
+              </Layout>
+            }
+          />
           {/* =========================== */}
 
           {/* 와이드 Layout */}
-          <Route
-            path={PAGE_PATHS.LECTUREWATCH}
-            element={
-              <WideLayout>
-                <LectureWatchingPage />
-              </WideLayout>
-            }
-          />
         </Routes>
       </Router>
     </ThemeProvider>

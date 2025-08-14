@@ -67,10 +67,11 @@ const ModalOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: ${({ theme }) => theme.colors.background_Overlay};
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: ${({ theme }) => theme.zIndex.modal};
 `;
 
 const ModalContent = styled.div`
@@ -81,6 +82,7 @@ const ModalContent = styled.div`
   max-width: 600px;
   height: 400px;
   display: flex;
+
   flex-direction: column;
 `;
 
