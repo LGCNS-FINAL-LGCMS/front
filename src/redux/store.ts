@@ -11,6 +11,7 @@ import keywordSlice from "./keyword/keywordSlice";
 import lectureDataSlice from "./lectureData/lectureDataSlice";
 import tokenSlice from "./token/tokenSlice";
 import categorySlice from "./Category/categorySlice";
+import authSlice from "./Auth/authSlice";
 
 // slice import 자리 (예: import userReducer from './slices/userSlice';)
 const rootReducer = combineReducers({
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   lectureData: lectureDataSlice,
   token: tokenSlice,
   category: categorySlice,
+  auth: authSlice,
 });
 
 // persist 설정 타입 지정

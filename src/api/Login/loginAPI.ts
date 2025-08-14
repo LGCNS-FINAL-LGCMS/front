@@ -1,27 +1,16 @@
 import axios from "axios";
 import { API_ENDPOINTS } from "../../constants/endpoints";
+import type { LoginResponse } from "../../types/authInfo";
 
 export interface GoogleLoginRequest {
   idTokenString: string; // 구글에서 받은 JWT 토큰
 }
 
-export interface GoogleLoginResponse {
-  status: string;
-  message: string;
-  data: {
-    alreadyMember: boolean;
-    tokens: {
-      accessToken: string;
-      refreshToken: string;
-    };
-  };
-}
-
 export const googleLoginAPI = async (
   idTokenString: string
-): Promise<GoogleLoginResponse> => {
+): Promise<LoginResponse> => {
   try {
-    const response = await axios.post<GoogleLoginResponse>(
+    const response = await axios.post<LoginResponse>(
       `${import.meta.env.VITE_API_URL}${API_ENDPOINTS.AUTH.GOOGLE_LOGIN}`,
       { idTokenString },
       {
