@@ -70,17 +70,22 @@ const InfiniteScrollController: React.FC = () => {
       clearTimeout(keywordFetchTimeoutRef.current);
     }
 
-    // const currentOffset = isKeywordSearch ? INFO_START_INDEX : start;
-
     try {
       const lectureAction = await dispatch(
         fetchLectureData({
           keyword: currentKeywordFromStore,
           category: currentCategoryFromStore,
+          page: isKeywordSearch ? INFO_START_INDEX : start,
         })
       );
 
       if (fetchLectureData.fulfilled.match(lectureAction)) {
+        if (isKeywordSearch) {
+          setStart(INFO_START_INDEX + 1);
+        } else {
+          setStart((prev) => prev + 1);
+        }
+
         if (isAuthenticated) {
           keywordFetchTimeoutRef.current = setTimeout(() => {
             keywordFetchTimeoutRef.current = null;
@@ -90,8 +95,6 @@ const InfiniteScrollController: React.FC = () => {
     } catch (error) {
       console.error(error);
     }
-
-    setStart((prev) => (isKeywordSearch ? INFO_START_INDEX + 1 : prev + 1));
   };
 
   useEffect(() => {
@@ -156,7 +159,8 @@ const InfiniteScrollController: React.FC = () => {
           </p>
         ) : null)
       }
-      scrollThreshold={"90%"}
+      scrollThreshold={"35%"}
+      scrollableTarget="scrollableDiv"
     >
       <CardsGrid>
         {lectureList.map((item: Lecture) => (
