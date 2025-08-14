@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import React from 'react';
+import { createPortal } from 'react-dom';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -8,7 +9,7 @@ const ModalOverlay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1100;
+  z-index: ${({ theme }) => theme.zIndex.modal};
   padding: 24px;
   backdrop-filter: blur(2px);
 `;
@@ -66,12 +67,13 @@ export function ImagePreviewModal({ src, alt = '확대 이미지', onClose }: Im
         if (e.target === e.currentTarget) onClose();
     };
 
-    return (
+    return createPortal(
         <ModalOverlay role="dialog" onClick={onBackdropClick}>
             <ModalContent onClick={(e) => e.stopPropagation()}>
                 <ModalImage src={src} alt={alt} />
             </ModalContent>
-        </ModalOverlay>
+        </ModalOverlay>,
+        document.body
     );
 }
 export default ImagePreviewModal;

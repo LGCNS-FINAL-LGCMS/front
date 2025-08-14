@@ -95,7 +95,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
               </MessageBubble>
             ) : msg.type === "url" ? (
               <UrlPortalCard
-                description="안녕하쇼ddjfksj아아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏijfidsjifjkfisjdfij"
+                description="링크를 클릭하여 자세히 알아보세요."
                 url={msg.content}
               />
             ) : (
