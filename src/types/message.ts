@@ -3,4 +3,5 @@ export interface ChatMessage {
   sender: "user" | "bot";
   content: string;
   timestamp: number;
+  type: "text" | "image" | "url";
 }
