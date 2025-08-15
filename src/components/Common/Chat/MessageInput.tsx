@@ -9,6 +9,7 @@ import { setSending, setSuccess, setError, setIdle } from "../../../redux/GuideB
 
 interface MessageInputProps {
   onSend: (message: string) => void;
+  initialSuggestions?: string[];
 }
 
 const Container = styled.div`
@@ -25,6 +26,12 @@ const Input = styled.input`
   font-weight: 400;
   font-size: 14px;
   font-family: ${({ theme }) => theme.font.primary};
+`;
+
+const InputGroup = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
 `;
 
 export const SendButton = styled.button`
@@ -45,21 +52,57 @@ export const SendButton = styled.button`
   &:disabled { opacity: 0.6; cursor: default; box-shadow: none; }
 `;
 
-const MessageInput: React.FC<MessageInputProps> = ({ onSend }) => {
+// 검색어 버블 컨테이너
+const SuggestionContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  /* 위치를 입력창 위에 고정 */
+  position: absolute;
+  bottom: 60px; /* 입력창 높이와 간격을 고려해 조절 */
+  left: 10px;
+  right: 10px;
+
+  margin-bottom: 10px;
+  /* 오른쪽 정렬 */
+  justify-content: flex-end;
+`;
+
+// 검색어 칩
+const SuggestionChip = styled.div`
+  padding: 6px 12px;
+  border-radius: 20px;
+  background-color: ${({ theme }) => theme.colors.background_Overlay};
+  color: ${({ theme }) => theme.colors.text_B};
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray_M};
+  }
+`;
+
+const MessageInput: React.FC<MessageInputProps> = ({ onSend, initialSuggestions = ['이것은 더미데이터로 하드코딩되어있습니다.', '자동으로 검색을 수행합니다.', '자동으로 사라집니다.'] }) => {
   const [input, setInput] = useState("");
   const dispatch = useDispatch();
   // 최초 'idle' 상태
   const status = useSelector((state: RootState) => state.guide.status);
+  const [showSuggestions, setShowSuggestions] = useState(true); // 추천 검색어 표시 상태 추가
 
-  const handleSend = async () => {
-    if (input.trim()) {
+
+
+  const handleSend = async (message: string) => {
+    if (message.trim()) {
       // 메시지 전송 중
       dispatch(setSending());
+      setShowSuggestions(false);
 
       try {
         // 메시지 전송
         setInput("");
-        await onSend(input.trim());
+        await onSend(message.trim());
 
         dispatch(setSuccess());
       } catch (error) {
@@ -73,24 +116,43 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSend }) => {
     }
   };
 
+  const handleSuggestionClick = (suggestion: string) => {
+    if (status === "sending") return; // 전송 중에는 클릭 무시
+    handleSend(suggestion);
+  }
+
   return (
     <Container>
-      <Input
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (status === "sending") {
-            e.preventDefault();
-          } else {
-            e.key === "Enter" && handleSend()
-          }
-        }}
-        placeholder="메시지를 입력하세요"
-        aria-label="메시지 입력"
-      />
-      <SendButton onClick={handleSend} aria-label="메시지 전송" disabled={status === "sending" || !input.trim()}>
-        <FontAwesomeIcon icon={faPaperPlane} />
-      </SendButton>
+      {showSuggestions && initialSuggestions && initialSuggestions.length > 0 && (
+        <SuggestionContainer>
+          {initialSuggestions.map((suggestion, index) => (
+            <SuggestionChip
+              key={index}
+              onClick={() => handleSuggestionClick(suggestion)}
+            >
+              {suggestion}
+            </SuggestionChip>
+          ))}
+        </SuggestionContainer>
+      )}
+      <InputGroup>
+        <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (status === "sending") {
+              e.preventDefault();
+            } else {
+              e.key === "Enter" && handleSend(input)
+            }
+          }}
+          placeholder="메시지를 입력하세요"
+          aria-label="메시지 입력"
+        />
+        <SendButton onClick={() => handleSend(input)} aria-label="메시지 전송" disabled={status === "sending" || !input.trim()}>
+          <FontAwesomeIcon icon={faPaperPlane} />
+        </SendButton>
+      </InputGroup>
     </Container>
   );
 };

@@ -39,7 +39,7 @@ export const MessageBubble = styled.div<{ isUser: boolean }>`
   color: ${({ isUser, theme }) => (isUser ? theme.colors.text_B : theme.colors.text_D)};
   background: ${({ isUser, theme }) =>
     isUser
-      ? `linear-gradient(135deg, ${theme.colors.gray_L} 0%, ${theme.colors.primary} 100%)`
+      ? `linear-gradient(135deg, ${theme.colors.background_D} 0%, ${theme.colors.primary} 100%)`
       : theme.colors.background_B
   };
   
@@ -61,6 +61,8 @@ export const MessageBubble = styled.div<{ isUser: boolean }>`
   &:hover {
     transform: scale(1.02);
   }
+
+  font-famliy: ${({ theme }) => theme.font.primary}, sans-serif;
   `;
 
 const Dot = styled.span`
@@ -127,6 +129,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
                 <img
                   src={msg.content}
                   alt="챗봇 이미지"
+                  // TODO : 고정이미지로 하기
                   style={{ maxWidth: '100%', borderRadius: '8px' }}
                   onClick={() => openPreview(msg.content)}
                 />

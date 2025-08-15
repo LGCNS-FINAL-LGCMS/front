@@ -15,7 +15,7 @@ const ChatContainer = styled.div<{ isOpen: boolean }>`
   position: fixed;
   bottom: max(90px, calc(env(safe-area-inset-bottom) + 16px));
   right: 20px;
-  width: min(500px, calc(100vw - 32px));
+  width: min(400px, calc(100vw - 32px));
   height: min(800px, calc(100vh - 115px));
   background-color: ${({ theme }) => theme.colors.header};
   box-shadow: 0 12px 30px ${({ theme }) => theme.shadow.md};
