@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faStop } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../../redux/store";
 import { setSending, setSuccess, setError, setIdle } from "../../../redux/GuideBot/guideBotSlice";
@@ -150,7 +150,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSend, initialSuggestions 
           aria-label="메시지 입력"
         />
         <SendButton onClick={() => handleSend(input)} aria-label="메시지 전송" disabled={status === "sending" || !input.trim()}>
-          <FontAwesomeIcon icon={faPaperPlane} />
+          <FontAwesomeIcon icon={status === "sending" ? faStop : faPaperPlane} />
         </SendButton>
       </InputGroup>
     </Container>
