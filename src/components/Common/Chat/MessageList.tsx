@@ -15,7 +15,26 @@ const Container = styled.div`
   flex: 1;
   padding: 10px;
   overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.background_Overlay};
+    border-radius: 4px;
+    
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.gray_M};
+    }
+  }
 `;
+
 
 export const MessageWrapper = styled.div<{ isUser: boolean }>`
   display: flex;
@@ -24,7 +43,7 @@ export const MessageWrapper = styled.div<{ isUser: boolean }>`
   margin: 10px 0;
 `;
 
-export const MessageBubble = styled.div<{ isUser: boolean }>`
+export const MessageBubble = styled.div<{ isUser: boolean; isImage: boolean }>`
   position: relative;
   max-width: 78%;
   padding: 10px 14px;
@@ -57,11 +76,11 @@ export const MessageBubble = styled.div<{ isUser: boolean }>`
     }
   }
   transition: background - color 0.16s ease, transform 0.06s ease;
-  cursor: pointer;
+  
+  cursor: ${({ isImage }) => (isImage ? 'pointer' : 'default')};
   &:hover {
-    transform: scale(1.02);
+     ${({ isImage }) => isImage && 'transform: scale(1.02);'}
   }
-
   font-famliy: ${({ theme }) => theme.font.primary}, sans-serif;
   `;
 
@@ -125,12 +144,12 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
         {messages.map((msg) => (
           <MessageWrapper key={msg.id} isUser={msg.sender === "user"}>
             {msg.type === "image" ? (
-              <MessageBubble isUser={msg.sender === "user"}>
+              <MessageBubble isUser={msg.sender === "user"} isImage={true}>
                 <img
                   src={msg.content}
                   alt="챗봇 이미지"
                   // TODO : 고정이미지로 하기
-                  style={{ maxWidth: '100%', borderRadius: '8px' }}
+                  style={{ maxWidth: '256px', maxHeight: '186px', borderRadius: '8px' }}
                   onClick={() => openPreview(msg.content)}
                 />
               </MessageBubble>
@@ -140,7 +159,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
                 url={msg.content}
               />
             ) : (
-              <MessageBubble isUser={msg.sender === "user"}>
+              <MessageBubble isUser={msg.sender === "user"} isImage={false}>
                 {msg.content}
               </MessageBubble>
             )}
@@ -149,11 +168,12 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
 
         {status === 'sending' && (
           <MessageWrapper isUser={false}>
-            <MessageBubble isUser={false} aria-label="답변 작성 중">
+            <MessageBubble isUser={false} aria-label="답변 작성 중" isImage={false}>
               <Dot /><Dot /><Dot />
             </MessageBubble>
           </MessageWrapper>
         )}
+
       </Container>
       {previewSrc && (
         <ImagePreviewModal src={previewSrc} onClose={closePreview} />
