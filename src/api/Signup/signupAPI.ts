@@ -1,22 +1,19 @@
 import { API_ENDPOINTS } from "../../constants/endpoints";
 import apiClient from "../index";
 
+import type { UserCategoriesList } from "../../types/authInfo";
+
 export interface ResponseFormat<T> {
   status: string;
   message: string;
   data: T;
 }
 
-export interface CategoryFormat {
-  id: number;
-  name: string;
-}
-
 interface CheckNicknameDuplicateResponse {
   isUsed: boolean;
 }
 // nickname API
-export const checkNicknameDuplicate = async (
+export const checkNicknameAPI = async (
   nickname: string
 ): Promise<ResponseFormat<CheckNicknameDuplicateResponse>> => {
   try {
@@ -32,22 +29,22 @@ export const checkNicknameDuplicate = async (
 };
 
 //회원가입 api (회원정보수정)
-interface SignupResponse {
+export interface SignupResponse {
   nickname: string;
-  categories: CategoryFormat[];
-  getDesireLecturer: boolean;
+  categories: UserCategoriesList[];
+  desireLecturer: boolean;
 }
 
 export const signupAPI = async (
   nickname: string,
-  categories: CategoryFormat[],
-  getDesireLecturer: boolean | null
+  categories: UserCategoriesList[],
+  desireLecturer: boolean | null
 ): Promise<ResponseFormat<SignupResponse>> => {
   try {
     const response = await apiClient.patch(API_ENDPOINTS.USER.UPDATE, {
       nickname: nickname.trim(),
-      categories,
-      desireLecturer: getDesireLecturer,
+      categoryIds: categories.map((category) => category.id),
+      desireLecturer: desireLecturer,
     });
 
     return response.data;
@@ -58,7 +55,7 @@ export const signupAPI = async (
 };
 
 //category API (전체조회)
-export const categoriesList = async () => {
+export const getcategoriesList = async () => {
   try {
     const response = await apiClient.get(API_ENDPOINTS.USER.CATEGORY_LIST);
     return response.data;
