@@ -11,6 +11,7 @@ interface Props {
   onDelete: (id: string) => void;
   checked: boolean;
   onCheckChange: (checked: boolean) => void;
+  onEditClick: (lesson: Lesson) => void;
 }
 
 // Row 스타일
@@ -139,7 +140,12 @@ const IndexCell = styled.div`
   font-size: ${({ theme }) => theme.fontSize.body.min};
 `;
 
-const LessonCell: React.FC<Props> = ({ lesson, onUpdate, onDelete }) => {
+const LessonCell: React.FC<Props> = ({
+  lesson,
+  onUpdate,
+  onDelete,
+  onEditClick,
+}) => {
   return (
     <Row>
       <IndexCell>
@@ -154,7 +160,8 @@ const LessonCell: React.FC<Props> = ({ lesson, onUpdate, onDelete }) => {
       </div>
       <div>{lesson.date}</div>
       <Actions>
-        <UpdateButton onClick={() => onUpdate(lesson.id, {})}>
+        <UpdateButton onClick={() => onEditClick(lesson)}>
+          {" "}
           <FontAwesomeIcon icon={faPen} />
         </UpdateButton>
         <DeleteButton onClick={() => onDelete(lesson.id)}>
