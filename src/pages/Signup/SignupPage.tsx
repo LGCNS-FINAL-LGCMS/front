@@ -108,7 +108,7 @@ const SignupPage = () => {
       setNicknameCheck(null); // 중복확인 다시 눌러야됨
       return;
     }
-    // 중복확인 중복 클릭 불가
+    // 중복확인 연속 클릭 불가
     if (nickname === lastNickname) {
       setNicknameCheck(null);
       return;
@@ -171,6 +171,7 @@ const SignupPage = () => {
         );
 
         if (result.status === "OK") {
+          console.log("서버연결 성공");
           const { memberId, nickname, role, getDesireLecturer, categories } =
             result.data;
 
