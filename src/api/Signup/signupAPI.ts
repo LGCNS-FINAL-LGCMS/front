@@ -1,7 +1,7 @@
 import { API_ENDPOINTS } from "../../constants/endpoints";
 import apiClient from "../index";
 
-import type { UserCategoriesList } from "../../types/authInfo";
+import type { UserCategoriesList, SignupResponse } from "../../types/authInfo";
 
 export interface ResponseFormat<T> {
   status: string;
@@ -28,18 +28,11 @@ export const checkNicknameAPI = async (
   }
 };
 
-//회원가입 api (회원정보수정)
-export interface SignupResponse {
-  nickname: string;
-  categories: UserCategoriesList[];
-  desireLecturer: boolean;
-}
-
 export const signupAPI = async (
   nickname: string,
   categories: UserCategoriesList[],
   desireLecturer: boolean | null
-): Promise<ResponseFormat<SignupResponse>> => {
+): Promise<SignupResponse> => {
   try {
     const response = await apiClient.patch(API_ENDPOINTS.USER.UPDATE, {
       nickname: nickname.trim(),

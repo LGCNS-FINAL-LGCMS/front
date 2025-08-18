@@ -29,13 +29,11 @@ export interface SignupResponse {
   status: string;
   message: string;
   data: {
-    memberInfo: {
-      memberId: number;
-      nickname: string;
-      role: "ADMIN" | "LECTURER" | "STUDENT";
-      getDesireLecturer: boolean;
-      categories: UserCategoriesList[];
-    };
+    memberId: number;
+    nickname: string;
+    role: "ADMIN" | "LECTURER" | "STUDENT";
+    getDesireLecturer: boolean;
+    categories: UserCategoriesList[];
   };
 }
 
