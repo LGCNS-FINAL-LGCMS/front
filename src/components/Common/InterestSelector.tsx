@@ -4,15 +4,12 @@ import styled from "styled-components";
 import { theme } from "../../assets/styles/theme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";
-
-type Interest = {
-  id: string;
-  name: string;
-};
+import type { Interest } from "../../types/interset";
 
 type Props = {
   interests: Interest[];
   onSelectionChange?: (selected: Interest[]) => void;
+  initialSelected?: Interest[];
 };
 
 const Container = styled.div`
@@ -20,7 +17,7 @@ const Container = styled.div`
   flex-wrap: wrap;
   gap: 6px;
   width: 500px;
-
+  justify-content: center;
   align-items: flex-start;
 `;
 
@@ -31,10 +28,12 @@ const InterestButton = styled.button<{ selected: boolean }>`
   font-family: ${({ theme }) => theme.font.primary}, sans-serif;
   font-weight: 700;
   border: 3px solid
-    ${({ selected }) => (selected ? theme.colors.primary : "#ccc")};
+    ${({ selected }) =>
+      selected ? theme.colors.border_Dark : theme.colors.gray_M};
   background-color: ${({ selected }) =>
-    selected ? "rgba(90, 155, 240, 1)" : "#fff"};
-  color: ${theme.colors.text_D};
+    selected ? theme.colors.header : theme.colors.background_B};
+  color: ${({ selected }) =>
+    selected ? theme.colors.text_B : theme.colors.text_D};
   font-size: 13px;
   cursor: pointer;
   display: flex;
@@ -44,59 +43,62 @@ const InterestButton = styled.button<{ selected: boolean }>`
   span {
     margin-right: 3px;
     color: ${({ selected }) =>
-      selected ? "rgba(255, 255, 255, 1)" : "#000000ff"};
+      selected ? theme.colors.text_B : theme.colors.text_D};
     font-weight: 700;
   }
 
   &:hover {
     background-color: ${({ selected }) =>
-      selected ? "rgba(130, 184, 255, 0.85)" : theme.colors.background_B};
+      selected ? theme.colors.gray_D : theme.colors.background_B};
   }
 `;
 
 /**
- * 공통 관심사 컴포넌트입니다. *
- * @param interests 관심사 아이템들 (필수!!)
- * @param onSelectionChange 체크값 변경될때 발생하는 이벤트 (필수!)
- * 
- * 예시:
- * 
- * // 타입 지정(따로 빼도 됨)
- * type Interest = {
-     id: string;
-     name: string;
-   };
-
-   // 관심사 예시
-   const interests = [
-    { id: "dash1", name: "리액트" },
-    { id: "dash2", name: "어쩌고 저쩌고" },
-    { id: "dash3", name: "궁시렁" },
-    { id: "dash4", name: "C#" },
-    { id: "dash5", name: "넵" },
-  ];
-
-  // 이벤트
-   const [selectedInterests, setSelectedInterests] = useState<Interest[]>([]);
-   const handleSelectionChange = useCallback((selected: Interest[]) => {
-     setSelectedInterests(selected);
-   }, []);
-
-
+ * 공통 관심사 컴포넌트입니다.
+ *
+ * @param interests 관심사 아이템들 (필수)
+ * @param onSelectionChange 선택값이 변경될 때 호출되는 콜백 (선택)
+ * @param initialSelected 처음부터 선택된 관심사 배열 (선택)
+ *
+ * 사용 예시:
+ *
+ * import { useState, useCallback } from "react";
+ * import InterestSelector from "./InterestSelector";
+ * import type { Interest } from "../../types/interest";
+ *
+ * const interests: Interest[] = [
+ *   { id: 1, name: "리액트" },
+ *   { id: 2, name: "자바스크립트" },
+ *   { id: 3, name: "CSS" },
+ *   { id: 4, name: "C#" },
+ *   { id: 5, name: "넵" },
+ * ];
+ *
+ * const [selectedInterests, setSelectedInterests] = useState<Interest[]>([]);
+ *
+ * const handleSelectionChange = useCallback((selected: Interest[]) => {
+ *   setSelectedInterests(selected);
+ * }, []);
+ *
  */
+
 const InterestSelector: React.FC<Props> = ({
   interests,
   onSelectionChange,
+  initialSelected = [],
 }) => {
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const prevSelectedRef = useRef<string[]>([]);
+  const [selected, setSelected] = useState<Set<number>>(
+    new Set(initialSelected.map((i) => i.id))
+  );
+  const prevSelectedRef = useRef<number[]>([]);
 
   useEffect(() => {
     if (!onSelectionChange) return;
 
     const selectedItems = interests.filter((i) => selected.has(i.id));
-    const selectedIds = selectedItems.map((i) => i.id).sort();
-    const prevIds = [...prevSelectedRef.current].sort();
+    const selectedIds = selectedItems.map((i) => i.id).sort((a, b) => a - b);
+    const prevIds = [...prevSelectedRef.current].sort((a, b) => a - b);
+
     const isSame =
       selectedIds.length === prevIds.length &&
       selectedIds.every((id, index) => id === prevIds[index]);
@@ -107,7 +109,7 @@ const InterestSelector: React.FC<Props> = ({
     }
   }, [selected, interests, onSelectionChange]);
 
-  const toggleInterest = (id: string) => {
+  const toggleInterest = (id: number) => {
     setSelected((prev) => {
       const newSet = new Set(prev);
       newSet.has(id) ? newSet.delete(id) : newSet.add(id);

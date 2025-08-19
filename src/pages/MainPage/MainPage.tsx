@@ -7,7 +7,6 @@ import SearchBar from "../../components/Common/SearchBar";
 import { theme } from "../../assets/styles/theme";
 import InfiniteScrollController from "../../components/InfiniteScrollController/InfiniteScrollController";
 import CategoryButtons from "../../components/CategoryButtons/CategoryButtons";
-import { login } from "../../redux/token/tokenSlice";
 import { PAGE_PATHS } from "../../constants/pagePaths";
 import Sidebar from "../../components/MainPageSideBar/MainPageSideBar";
 
@@ -28,7 +27,7 @@ const Container = styled.div`
   max-width: 1200px;
 `;
 
-const ScrollableContainer = styled.div`
+const ScrollableContainer = styled.div.attrs({ id: "scrollableDiv" })`
   height: calc(100vh - ${theme.size.header.height} - 195px);
   overflow-y: auto;
   &::-webkit-scrollbar {
@@ -64,13 +63,7 @@ const MainPage = () => {
 
   const handleKeywordSearch = () => {};
 
-  const handleLogin = (accessToken: string, refreshToken: string) => {
-    dispatch(login({ accessToken, refreshToken }));
-  };
-
-  // urlKeyword가 바뀔 때마다 localSearchKeyword 동기화 및 redux 상태 설정
   useEffect(() => {
-    // keyword 동기화
     if (keyword) {
       setLocalSearchKeyword(keyword);
       dispatch(setKeyword(keyword));
@@ -101,16 +94,7 @@ const MainPage = () => {
     <CenteredWrapper>
       <Container>
         <Sidebar />
-        <button
-          onClick={() =>
-            handleLogin(
-              "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJsZ2NtcyIsInN1YiI6IjIiLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJqdGkiOiIxZjc1NWU5NC04MjY2LTRhYTgtOGYwNy1hNGI3ZDUzYjZhNDQiLCJpYXQiOjE3NTQ2NDYxOTUsImV4cCI6MTc1NDY1Njk5NX0._hDj2BUXcX42xU4J3T4bdBrRztoyHQChD9BwkrCTWA_KszIN52l6ANBOsfYfQDvZiSq4W6xWzjx4T-IZNiVEQg",
-              "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJsZ2NtcyIsInN1YiI6IjIiLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwianRpIjoiMWY3NTVlOTQtODI2Ni00YWE4LThmMDctYTRiN2Q1M2I2YTQ0IiwiaWF0IjoxNzU0NjQ2MTk1LCJleHAiOjE3NTQ3MzI1OTV9.jums51S06H-9FigLF3jdeu5vBAhfs8eW4vrtlZ-CmGY9fK6Ixt2imSQzwzGDbJ0pu93DYtXmhH7YYNBEWgSpRA"
-            )
-          }
-        >
-          add token
-        </button>
+
         <SearchBar
           value={localSearchKeyword}
           onChange={handleInputChange}

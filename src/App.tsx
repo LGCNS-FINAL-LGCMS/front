@@ -13,11 +13,12 @@ import WideLayout from "./layouts/WideLayout";
 
 // =========== 페이지 임포트 ===========
 import LandingPage from "./pages/LandingPage/LandingPage";
-import LectureWatchingPage from "./pages/LectureWatchingPage";
 import Login from "./pages/Login/Login";
 import SignupPage from "./pages/Signup/SignupPage";
 import MainPage from "./pages/MainPage/MainPage";
 import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
+import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
+import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -67,17 +68,27 @@ function App() {
               </Layout>
             }
           />
+
+          <Route
+            path={`${PAGE_PATHS.CREATE_LECTURE}`}
+            element={
+              <Layout>
+                <CreateLecturePage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={`${PAGE_PATHS.Lesson_Management}/:lactureId?`}
+            element={
+              <Layout>
+                <LessonManagementPage />
+              </Layout>
+            }
+          />
           {/* =========================== */}
 
           {/* 와이드 Layout */}
-          <Route
-            path={PAGE_PATHS.LECTUREWATCH}
-            element={
-              <WideLayout>
-                <LectureWatchingPage />
-              </WideLayout>
-            }
-          />
         </Routes>
       </Router>
     </ThemeProvider>
