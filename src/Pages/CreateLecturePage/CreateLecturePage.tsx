@@ -4,7 +4,7 @@ import ImageUploader from "../../components/CreateLecture/ImageUploader";
 import LectureMaterialsUploader from "../../components/CreateLecture/LectureMaterialUploader";
 import InterestSelector from "../../components/Common/InterestSelector";
 import Button from "../../components/Common/Button";
-import { categoriesList } from "../../api/Signup/signupAPI";
+import { getcategoriesList } from "../../api/Signup/signupAPI";
 
 interface Interest {
   id: string;
@@ -247,7 +247,7 @@ const CreateLecturePage = () => {
   useEffect(() => {
     const fetchInterests = async () => {
       try {
-        const data = await categoriesList();
+        const data = await getcategoriesList();
         console.log(data);
         setInterests(
           data.data.categories.map((cat: { id: number; name: string }) => ({
