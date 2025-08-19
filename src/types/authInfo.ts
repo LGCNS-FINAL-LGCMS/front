@@ -18,7 +18,7 @@ export interface LoginResponse {
       memberId: number;
       nickname: string;
       role: "ADMIN" | "LECTURER" | "STUDENT";
-      getDesireLecturer: boolean;
+      desireLecturer: boolean;
       categories: UserCategoriesList[];
     };
   };
@@ -32,7 +32,7 @@ export interface SignupResponse {
     memberId: number;
     nickname: string;
     role: "ADMIN" | "LECTURER" | "STUDENT";
-    getDesireLecturer: boolean;
+    desireLecturer: boolean;
     categories: UserCategoriesList[];
   };
 }
@@ -41,6 +41,6 @@ export interface UserInfo {
   memberId: number;
   nickname: string;
   role: "ADMIN" | "LECTURER" | "STUDENT";
-  getDesireLecturer: boolean;
+  desireLecturer: boolean;
   categories: UserCategoriesList[];
 }

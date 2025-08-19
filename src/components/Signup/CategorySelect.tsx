@@ -3,6 +3,9 @@ import { useState, useCallback, useEffect } from "react";
 import InterestSelector from "../Common/InterestSelector";
 import { getcategoriesList } from "../../api/Signup/signupAPI";
 import type { UserCategoriesList } from "../../types/authInfo";
+import type { Interest } from "../../types/interset";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../redux/store"; // store 타입 확인
 
 // 카테고리 선택
 const CategorySection = styled.div`
@@ -27,16 +30,15 @@ const CategoryGrid = styled.div`
   margin: 30px 0 30px 0; // 위 오른쪽 아래 왼쪽
 `;
 
-export type Interest = {
-  id: string;
-  name: string;
-};
-
 interface CategorySelectProps {
   onCategoryChange: (categories: UserCategoriesList[]) => void;
 }
 
 const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
+  const reduxCategories = useSelector(
+    (state: RootState) => state.auth.categories
+  );
+
   // string로 category
   const [_selectedCategories, setSelectedCategories] = useState<
     UserCategoriesList[]
@@ -67,7 +69,7 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
       if (result.status == "OK") {
         const formattedCategories = result.data.categories.map(
           (category: Interest) => ({
-            id: String(category.id),
+            id: category.id,
             name: category.name,
           })
         );
@@ -90,6 +92,7 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
 
       <CategoryGrid>
         <InterestSelector
+          initialSelected={reduxCategories}
           interests={interests}
           onSelectionChange={handleSelectionChange}
         />
