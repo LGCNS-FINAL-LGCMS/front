@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { googleLoginAPI } from "../../api/Login/loginAPI";
 import { PAGE_PATHS } from "../../constants/pagePaths";
 
+import { setUserInfo } from "../../redux/Auth/authSlice";
 import { login } from "../../redux/token/tokenSlice";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../redux/store";
@@ -55,7 +56,7 @@ const GoogleLoginBox = () => {
       if (response.status === "OK" && response.data?.tokens) {
         console.log("서버 연결 됨(토큰 받는 중)");
         const { accessToken, refreshToken } = response.data.tokens;
-        const { alreadyMember } = response.data;
+
         dispatch(
           login({
             accessToken,
@@ -65,8 +66,11 @@ const GoogleLoginBox = () => {
         console.log("로그인/토큰 스토리지 저장됨");
 
         // 서버연결 성공 시 Nav로 이동시키기 (모달창 띄워서 확인하면 이동시켜야됨)
-        if (alreadyMember) {
+        const { memberInfo } = response.data;
+        const { alreadyMember } = response.data;
+        if (alreadyMember && memberInfo) {
           console.log("기존 회원임 ! 메인페이지로 이동");
+          dispatch(setUserInfo(memberInfo));
           navigate(PAGE_PATHS.HOME, { replace: true });
         } else {
           console.log("신규회원");

@@ -2,16 +2,16 @@ import styled from "styled-components";
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PAGE_PATHS } from "../../constants/pagePaths";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../redux/store";
 
 import Button from "../../components/Common/Button";
 import RoleSelect from "../../components/Signup/RoleSelect";
 import CategorySelect from "../../components/Signup/CategorySelect";
 import InfoCheckModal from "../../components/Signup/signupModal";
-import {
-  checkNicknameDuplicate,
-  signupAPI,
-  type CategoryFormat,
-} from "../../api/Signup/signupAPI";
+import { checkNicknameAPI, signupAPI } from "../../api/Signup/signupAPI";
+import type { UserCategoriesList } from "../../types/authInfo";
+import { setUserInfo } from "../../redux/Auth/authSlice";
 
 const SignupContainer = styled.div`
   text-align: center;
@@ -79,14 +79,15 @@ const NicknameCheckMessage = styled.div`
 
 const SignupPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [nickname, setNickname] = useState(""); //input에서 받은 nickname
   const [nicknameCheckMessage, setNicknameCheckMessage] = useState(""); // 중복확인 결과 메세지
-  const [nicknameCheck, setNicknameCheck] = useState<boolean | null>(null); // 회원가입완료 시 중복확인 검사여부
+  const [nicknameCheck, setNicknameCheck] = useState<boolean | null>(null); // 중복확인버튼 눌렀는지 아닌지(로컬에서)
   const [lastNickname, setLastNickname] = useState(""); // api중복으로 안보내게
 
   const [selectedCategories, setSelectedCategories] = useState<
-    CategoryFormat[]
+    UserCategoriesList[]
   >([]); // 선택된 카테고리
   const [selectedRole, setSelectedRole] = useState<boolean | null>(null); // role 선택상태
 
@@ -104,25 +105,26 @@ const SignupPage = () => {
   const checkNickname = async () => {
     if (nickname === "") {
       setNicknameCheckMessage("닉네임을 입력해주세요.");
+      setNicknameCheck(null); // 중복확인 다시 눌러야됨
       return;
-    } // 마지막 쓴 nickname과 같고, 체크도 되어있을 때
-    if (nickname === lastNickname && nicknameCheck !== null) {
-      setNicknameCheckMessage(
-        nicknameCheck
-          ? "사용가능한 닉네임입니다."
-          : "사용할 수 없는 닉네임입니다."
-      );
+    }
+    // 중복확인 연속 클릭 불가
+    if (nickname === lastNickname) {
+      setNicknameCheck(null);
       return;
     }
     try {
-      const result = await checkNicknameDuplicate(nickname);
-      console.log(result.data.isUsed);
+      const result = await checkNicknameAPI(nickname);
       setLastNickname(nickname);
-      if (result.data.isUsed === false) {
+      if (result.data.isUsed === true) {
+        console.log("사용중인 닉네임", result.data.isUsed);
+        setLastNickname(nickname);
         setNicknameCheck(false);
         setNicknameCheckMessage("사용할 수 없는 닉네임입니다.");
-      } else if (result.data.isUsed === true) {
+      } else if (result.data.isUsed === false) {
+        setLastNickname(nickname);
         setNicknameCheck(true);
+        console.log("사용안하고 있는 닉네임", result.data.isUsed);
         setNicknameCheckMessage("사용가능한 닉네임입니다.");
       }
     } catch (error) {
@@ -133,7 +135,7 @@ const SignupPage = () => {
 
   //카테고리 핸들러
   const handleCategorySelection = useCallback(
-    (categories: CategoryFormat[]) => {
+    (categories: UserCategoriesList[]) => {
       setSelectedCategories(categories);
     },
     []
@@ -167,11 +169,26 @@ const SignupPage = () => {
           selectedCategories,
           selectedRole
         );
+
         if (result.status === "OK") {
-          console.log("회원가입 완료");
+          console.log("서버연결 성공");
+          const { memberId, nickname, role, getDesireLecturer, categories } =
+            result.data;
+
+          dispatch(
+            setUserInfo({
+              memberId: memberId,
+              nickname: nickname,
+              role: role,
+              getDesireLecturer: getDesireLecturer,
+              categories,
+            })
+          );
+          setNicknameCheck(true);
           setShowSuccessModal(true);
         } else {
           setShowFailModal(true);
+          setNicknameCheck(false);
           console.log("회원가입 실패");
         }
       } catch (error) {

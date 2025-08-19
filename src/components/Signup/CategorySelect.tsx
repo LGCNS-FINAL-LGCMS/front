@@ -1,8 +1,11 @@
 import styled from "styled-components";
 import { useState, useCallback, useEffect } from "react";
 import InterestSelector from "../Common/InterestSelector";
-import { categoriesList } from "../../api/Signup/signupAPI";
-import type { CategoryFormat } from "../../api/Signup/signupAPI";
+import { getcategoriesList } from "../../api/Signup/signupAPI";
+import type { UserCategoriesList } from "../../types/authInfo";
+import type { Interest } from "../../types/interset";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../redux/store"; // store 타입 확인
 
 // 카테고리 선택
 const CategorySection = styled.div`
@@ -27,29 +30,32 @@ const CategoryGrid = styled.div`
   margin: 30px 0 30px 0; // 위 오른쪽 아래 왼쪽
 `;
 
-export type Interest = {
-  id: string;
-  name: string;
-};
-
 interface CategorySelectProps {
-  onCategoryChange: (categories: CategoryFormat[]) => void;
+  onCategoryChange: (categories: UserCategoriesList[]) => void;
 }
 
 const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
-  const [_selectedCategories, setSelectedCategories] = useState<
-    CategoryFormat[]
-  >([]);
+  const reduxCategories = useSelector(
+    (state: RootState) => state.auth.categories
+  );
 
+  // string로 category
+  const [_selectedCategories, setSelectedCategories] = useState<
+    UserCategoriesList[]
+  >([]);
+  // numebr로 category
   const [interests, setInterests] = useState<Interest[]>([]);
 
+  //선택된 카테고리들
   const handleSelectionChange = useCallback(
     (selected: Interest[]) => {
       // id 타입 변경
-      const convertedCategories: CategoryFormat[] = selected.map((item) => ({
-        id: Number(item.id),
-        name: item.name,
-      }));
+      const convertedCategories: UserCategoriesList[] = selected.map(
+        (item) => ({
+          id: Number(item.id),
+          name: item.name,
+        })
+      );
       setSelectedCategories(convertedCategories);
       onCategoryChange(convertedCategories);
     },
@@ -59,11 +65,11 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
   // 카테고리 가져오기
   const getCategories = async () => {
     try {
-      const result = await categoriesList();
+      const result = await getcategoriesList();
       if (result.status == "OK") {
         const formattedCategories = result.data.categories.map(
-          (category: CategoryFormat) => ({
-            id: String(category.id),
+          (category: Interest) => ({
+            id: category.id,
             name: category.name,
           })
         );
@@ -86,6 +92,7 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
 
       <CategoryGrid>
         <InterestSelector
+          initialSelected={reduxCategories}
           interests={interests}
           onSelectionChange={handleSelectionChange}
         />
