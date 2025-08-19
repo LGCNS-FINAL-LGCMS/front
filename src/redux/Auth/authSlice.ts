@@ -6,15 +6,15 @@ interface UserInfo {
   memberId: number;
   nickname: string;
   role: "ADMIN" | "LECTURER" | "STUDENT";
-  getDesireLecturer: boolean;
+  desireLecturer: boolean;
   categories: UserCategoriesList[];
 }
 
 const initialState: UserInfo = {
-  memberId: 0,
+  memberId: -1,
   nickname: "",
   role: "STUDENT",
-  getDesireLecturer: false,
+  desireLecturer: false,
   categories: [],
 };
 
@@ -28,21 +28,21 @@ export const authSlice = createSlice({
         memberId: number;
         nickname: string;
         role: "ADMIN" | "LECTURER" | "STUDENT";
-        getDesireLecturer: boolean;
+        desireLecturer: boolean;
         categories: UserCategoriesList[];
       }>
     ) => {
       state.memberId = action.payload.memberId;
       state.nickname = action.payload.nickname;
       state.role = action.payload.role;
-      state.getDesireLecturer = action.payload.getDesireLecturer;
+      state.desireLecturer = action.payload.desireLecturer;
       state.categories = action.payload.categories;
     },
     resetUserInfo: (state) => {
-      state.memberId = 0;
+      state.memberId = -1;
       state.nickname = "";
       state.role = "STUDENT";
-      state.getDesireLecturer = false;
+      state.desireLecturer = false;
       state.categories = [];
     },
 
@@ -53,7 +53,7 @@ export const authSlice = createSlice({
       state.categories = action.payload;
     },
     updateIsLecturer: (state, action: PayloadAction<boolean>) => {
-      state.getDesireLecturer = action.payload;
+      state.desireLecturer = action.payload;
     },
   },
 });
