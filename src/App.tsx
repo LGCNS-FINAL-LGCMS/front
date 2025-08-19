@@ -16,6 +16,7 @@ import LandingPage from "./pages/LandingPage/LandingPage";
 import Login from "./pages/Login/Login";
 import SignupPage from "./pages/Signup/SignupPage";
 import MainPage from "./pages/MainPage/MainPage";
+import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
 // =========== 페이지 임포트 ===========
@@ -46,6 +47,15 @@ function App() {
             element={
               <Layout>
                 <SignupPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_INFO}
+            element={
+              <Layout>
+                <UpdateUserInfoPage />
               </Layout>
             }
           />

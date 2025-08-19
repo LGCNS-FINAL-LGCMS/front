@@ -11,6 +11,7 @@ import keywordSlice from "./keyword/keywordSlice";
 import lectureDataSlice from "./lectureData/lectureDataSlice";
 import tokenSlice from "./token/tokenSlice";
 import categorySlice from "./Category/categorySlice";
+import authSlice from "./Auth/authSlice";
 import guideBotSlice from "./GuideBot/guideBotSlice";
 
 // slice import 자리 (예: import userReducer from './slices/userSlice';)
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   lectureData: lectureDataSlice,
   token: tokenSlice,
   category: categorySlice,
+  auth: authSlice,
   guide: guideBotSlice,
 });
 
