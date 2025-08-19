@@ -17,9 +17,9 @@ export const API_ENDPOINTS = {
     CATEGORY_LIST: "/api/member/categories",
   },
   CATEGORY: {
-    POST: "/api/category",
-    GET: "/api/category",
-    DELETE: "/api/category", // /{categoryId}
+    POST: "/api/member",
+    GET: "/api/member",
+    DELETE: "/api/member", // /{categoryId}
   },
   LECTURE: {
     GET: "/api/lecture",
