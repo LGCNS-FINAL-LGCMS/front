@@ -7,8 +7,6 @@ import { theme } from "../assets/styles/theme";
 const HEADER_HEIGHT: string = theme.size.header.height;
 
 import { useState } from "react";
-import { useChatSession } from "../hooks/useChatSession";
-
 import { PAGE_PATHS } from "../constants/pagePaths";
 
 const AppWrapper = styled.div`

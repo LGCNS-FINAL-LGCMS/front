@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import { theme } from "../../assets/styles/theme";
 
 type QnaCardProps = {
+  id: number;
   question: string;
   answer?: string;
   author?: string;
@@ -133,12 +134,14 @@ const ContentInner = styled.div`
 
 /**
  * 공통 Q&A 카드 컴포넌트입니다. *
+ * @param id 아이디(필수!!)
  * @param question 질문 (필수!!)
  * @param answer 답변
  * @param author 답변 작성자
  * @param design 스타일 디자인 번호(1,2,3)
  */
 const QnaCard: React.FC<QnaCardProps> = ({
+  id,
   question,
   answer,
   author,
@@ -155,7 +158,7 @@ const QnaCard: React.FC<QnaCardProps> = ({
   }, [answer, author]);
 
   return (
-    <CardContainer design={design}>
+    <CardContainer id={id.toString()} design={design}>
       <QuestionText>{question}</QuestionText>
 
       {answer && (
