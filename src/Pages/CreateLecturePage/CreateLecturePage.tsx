@@ -200,7 +200,6 @@ const CreateLecturePage = () => {
     ""
   );
   const [interests, setInterests] = useState<Interest[]>([]); // 여기를 빈 배열로 초기화
-  const [isLoadingInterests, setIsLoadingInterests] = useState<boolean>(true); // 로딩 여부 optional
 
   const levels: Array<"상" | "중" | "하"> = ["상", "중", "하"];
 
@@ -258,8 +257,6 @@ const CreateLecturePage = () => {
       } catch (error) {
         console.error("카테고리 불러오기 실패:", error);
         setInterests([]);
-      } finally {
-        setIsLoadingInterests(false);
       }
     };
 

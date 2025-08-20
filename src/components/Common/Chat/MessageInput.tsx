@@ -4,8 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faStop } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../../redux/store";
-import { setSending, setSuccess, setError, setIdle } from "../../../redux/GuideBot/guideBotSlice";
-
+import {
+  setSending,
+  setSuccess,
+  setError,
+  setIdle,
+} from "../../../redux/GuideBot/guideBotSlice";
 
 interface MessageInputProps {
   onSend: (message: string) => void;
@@ -37,7 +41,11 @@ const InputGroup = styled.div`
 export const SendButton = styled.button`
   margin-left: 8px;
   padding: 8px 12px;
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.secondary} 0%, ${({ theme }) => theme.colors.primary} 100%);
+  background: linear-gradient(
+    135deg,
+    ${({ theme }) => theme.colors.secondary} 0%,
+    ${({ theme }) => theme.colors.primary} 100%
+  );
   color: ${({ theme }) => theme.colors.text_B};
   border: none;
   border-radius: 4px;
@@ -47,9 +55,17 @@ export const SendButton = styled.button`
   justify-content: center;
   font-size: 14px;
 
-  &:hover { filter: brightness(1.03); }
-  &:active { transform: translateY(1px); }
-  &:disabled { opacity: 0.6; cursor: default; box-shadow: none; }
+  &:hover {
+    filter: brightness(1.03);
+  }
+  &:active {
+    transform: translateY(1px);
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+    box-shadow: none;
+  }
 `;
 
 // 검색어 버블 컨테이너
@@ -84,14 +100,19 @@ const SuggestionChip = styled.div`
   }
 `;
 
-const MessageInput: React.FC<MessageInputProps> = ({ onSend, initialSuggestions = ['이것은 더미데이터로 하드코딩되어있습니다.', '자동으로 검색을 수행합니다.', '자동으로 사라집니다.'] }) => {
+const MessageInput: React.FC<MessageInputProps> = ({
+  onSend,
+  initialSuggestions = [
+    "이것은 더미데이터로 하드코딩되어있습니다.",
+    "자동으로 검색을 수행합니다.",
+    "자동으로 사라집니다.",
+  ],
+}) => {
   const [input, setInput] = useState("");
   const dispatch = useDispatch();
   // 최초 'idle' 상태
   const status = useSelector((state: RootState) => state.guide.status);
   const [showSuggestions, setShowSuggestions] = useState(true); // 추천 검색어 표시 상태 추가
-
-
 
   const handleSend = async (message: string) => {
     if (message.trim()) {
@@ -119,22 +140,24 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSend, initialSuggestions 
   const handleSuggestionClick = (suggestion: string) => {
     if (status === "sending") return; // 전송 중에는 클릭 무시
     handleSend(suggestion);
-  }
+  };
 
   return (
     <Container>
-      {showSuggestions && initialSuggestions && initialSuggestions.length > 0 && (
-        <SuggestionContainer>
-          {initialSuggestions.map((suggestion, index) => (
-            <SuggestionChip
-              key={index}
-              onClick={() => handleSuggestionClick(suggestion)}
-            >
-              {suggestion}
-            </SuggestionChip>
-          ))}
-        </SuggestionContainer>
-      )}
+      {showSuggestions &&
+        initialSuggestions &&
+        initialSuggestions.length > 0 && (
+          <SuggestionContainer>
+            {initialSuggestions.map((suggestion, index) => (
+              <SuggestionChip
+                key={index}
+                onClick={() => handleSuggestionClick(suggestion)}
+              >
+                {suggestion}
+              </SuggestionChip>
+            ))}
+          </SuggestionContainer>
+        )}
       <InputGroup>
         <Input
           value={input}
@@ -142,15 +165,21 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSend, initialSuggestions 
           onKeyDown={(e) => {
             if (status === "sending") {
               e.preventDefault();
-            } else {
-              e.key === "Enter" && handleSend(input)
+            } else if (e.key === "Enter") {
+              handleSend(input);
             }
           }}
           placeholder="메시지를 입력하세요"
           aria-label="메시지 입력"
         />
-        <SendButton onClick={() => handleSend(input)} aria-label="메시지 전송" disabled={status === "sending" || !input.trim()}>
-          <FontAwesomeIcon icon={status === "sending" ? faStop : faPaperPlane} />
+        <SendButton
+          onClick={() => handleSend(input)}
+          aria-label="메시지 전송"
+          disabled={status === "sending" || !input.trim()}
+        >
+          <FontAwesomeIcon
+            icon={status === "sending" ? faStop : faPaperPlane}
+          />
         </SendButton>
       </InputGroup>
     </Container>

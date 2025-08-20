@@ -27,10 +27,8 @@ export const logoutUsingToken = createAsyncThunk(
     try {
       const data = await logoutRequest();
       return data;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || error.message || "Logout failed"
-      );
+    } catch (error) {
+      return rejectWithValue(error || "Logout failed");
     }
   }
 );

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import LessonContainer from "../../components/LessonManagement/LessonContainer";
 import type { Lesson } from "../../types/lesson";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import VideoUploadModal from "../../components/LessonManagement/VideoUploadModal";
 
 const contentWidth = "800px";
@@ -135,7 +135,7 @@ const LessonManagementPage = () => {
           setIsModalOpen(false);
           setEditingLesson(null);
         }}
-        onSubmit={({ title, description, file }) => {
+        onSubmit={({ title, description }) => {
           if (editingLesson) {
             setLessons((prev) =>
               prev.map((l) =>
