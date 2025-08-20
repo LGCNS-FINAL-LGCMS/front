@@ -13,11 +13,13 @@ import tokenSlice from "./token/tokenSlice";
 import categorySlice from "./Category/categorySlice";
 import authSlice from "./Auth/authSlice";
 import guideBotSlice from "./GuideBot/guideBotSlice";
+import lecturePaginationSlice from "./lectureData/lecturerPageData/lecturerPageData";
 
 // slice import 자리 (예: import userReducer from './slices/userSlice';)
 const rootReducer = combineReducers({
   keyword: keywordSlice,
   lectureData: lectureDataSlice,
+  lecturerLectureData: lecturePaginationSlice,
   token: tokenSlice,
   category: categorySlice,
   auth: authSlice,
