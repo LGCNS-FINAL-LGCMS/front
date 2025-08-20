@@ -9,6 +9,7 @@ import InfiniteScrollController from "../../components/InfiniteScrollController/
 import CategoryButtons from "../../components/CategoryButtons/CategoryButtons";
 import { PAGE_PATHS } from "../../constants/pagePaths";
 import Sidebar from "../../components/MainPageSideBar/MainPageSideBar";
+import type { RootState } from "../../redux/store";
 
 const CenteredWrapper = styled.div`
   justify-content: center;
@@ -58,7 +59,7 @@ const MainPage = () => {
   const [localSearchKeyword, setLocalSearchKeyword] = useState(keyword || "");
 
   const currentCategoryFromStore = useSelector(
-    (state: any) => state.category.category
+    (state: RootState) => state.category.category
   );
 
   const handleKeywordSearch = () => {};

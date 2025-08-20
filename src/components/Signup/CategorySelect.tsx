@@ -6,6 +6,7 @@ import type { UserCategoriesList } from "../../types/authInfo";
 import type { Interest } from "../../types/interset";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store"; // store 타입 확인
+import { getErrorMessage } from "../../utils/handleApiError";
 
 // 카테고리 선택
 const CategorySection = styled.div`
@@ -39,24 +40,19 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
     (state: RootState) => state.auth.categories
   );
 
-  // string로 category
-  const [_selectedCategories, setSelectedCategories] = useState<
-    UserCategoriesList[]
-  >([]);
   // numebr로 category
   const [interests, setInterests] = useState<Interest[]>([]);
 
   //선택된 카테고리들
   const handleSelectionChange = useCallback(
     (selected: Interest[]) => {
-      // id 타입 변경
       const convertedCategories: UserCategoriesList[] = selected.map(
         (item) => ({
           id: Number(item.id),
           name: item.name,
         })
       );
-      setSelectedCategories(convertedCategories);
+      console.log(convertedCategories); // 바로 변환된 값 출력
       onCategoryChange(convertedCategories);
     },
     [onCategoryChange]
@@ -66,7 +62,7 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
   const getCategories = async () => {
     try {
       const result = await getcategoriesList();
-      if (result.status == "OK") {
+      if (result.status === "OK") {
         const formattedCategories = result.data.categories.map(
           (category: Interest) => ({
             id: category.id,
@@ -75,9 +71,10 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
         );
         setInterests(formattedCategories);
       }
-    } catch (error) {
-      console.log("카테고리 서버에러발생", error);
-      setInterests([]); //에러 발생 시 빈배열로 초기화
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, "카테고리 서버 에러 발생");
+      console.error(message);
+      setInterests([]);
     }
   };
 

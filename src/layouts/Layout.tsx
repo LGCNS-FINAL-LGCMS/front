@@ -1,13 +1,9 @@
 // Layout.tsx
 import type { ReactNode } from "react";
-import { useLocation } from "react-router-dom";
-import styled, { ThemeProvider } from "styled-components";
+import styled from "styled-components";
 import { theme } from "../assets/styles/theme";
 
 const HEADER_HEIGHT: string = theme.size.header.height;
-
-import { useState } from "react";
-import { PAGE_PATHS } from "../constants/pagePaths";
 
 const AppWrapper = styled.div`
   padding-top: ${HEADER_HEIGHT};
@@ -39,12 +35,12 @@ const MainContent = styled.main`
 `;
 
 // 채팅 관련 포지션 고정
-const ChatFixedWrapper = styled.div`
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  z-index: 999;
-`;
+// const ChatFixedWrapper = styled.div`
+//   position: fixed;
+//   bottom: 0;
+//   right: 0;
+//   z-index: 999;
+// `;
 
 // children 타입 지정
 interface LayoutProps {

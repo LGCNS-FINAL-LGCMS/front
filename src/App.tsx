@@ -3,12 +3,12 @@ import GlobalStyle from "./assets/styles/globalstyle";
 import { theme } from "./assets/styles/theme";
 import { PAGE_PATHS } from "./constants/pagePaths";
 import Header from "./components/Header/Header";
-import styled, { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "styled-components";
 import ChatWrapper from "./components/Common/Chat/ChatWrapper";
 
 // =========== 레이아웃 임포트 ===========
 import Layout from "./layouts/Layout";
-import WideLayout from "./layouts/WideLayout";
+// import WideLayout from "./layouts/WideLayout";
 // =========== 레이아웃 임포트 ===========
 
 // =========== 페이지 임포트 ===========
