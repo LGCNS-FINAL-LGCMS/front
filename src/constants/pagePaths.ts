@@ -17,7 +17,7 @@ export const PAGE_PATHS = {
   Lesson_Management: "/member/lecturer/lessons",
   CART: "/cart",
   USER_PAGE: {
-    STUDENT: "/dd",
-    LECTURER: "/oo",
+    STUDENT: "/userpage/student",
+    LECTURER: "/userpage/lecturer",
   },
 };

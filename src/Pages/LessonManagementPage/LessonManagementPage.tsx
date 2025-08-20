@@ -5,7 +5,6 @@ import type { Lesson } from "../../types/lesson";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import VideoUploadModal from "../../components/LessonManagement/VideoUploadModal";
-
 const contentWidth = "800px";
 
 const PageWrapper = styled.div`

@@ -16,6 +16,9 @@ export const API_ENDPOINTS = {
     UPDATE: "/api/member/change/info", // patch
     CATEGORY_LIST: "/api/member/categories",
   },
+  LECTURER: {
+    GET_LECTURE: "/api/lecture",
+  },
   CATEGORY: {
     POST: "/api/member",
     GET: "/api/member",
@@ -24,6 +27,7 @@ export const API_ENDPOINTS = {
   LECTURE: {
     GET: "/api/lecture",
   },
+
   GUIDE: {
     POST: "/api/guide/ask",
   },
