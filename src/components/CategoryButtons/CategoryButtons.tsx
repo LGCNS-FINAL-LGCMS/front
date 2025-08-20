@@ -74,9 +74,7 @@ interface CategoryButtonsProps {
   onCategoryClick: (keyword: string, category: string) => void;
 }
 
-const CategoryButtons: React.FC<CategoryButtonsProps> = ({
-  onCategoryClick,
-}) => {
+const CategoryButtons: React.FC<CategoryButtonsProps> = () => {
   const dispatch = useDispatch();
   const selectedCategory = useSelector((state: RootState) => state.category);
 
@@ -96,6 +94,7 @@ const CategoryButtons: React.FC<CategoryButtonsProps> = ({
         const data = await getCategorys();
         setCategories(data);
       } catch (error) {
+        console.log(error);
         setCategories([
           { name: "백엔드", id: 1 },
           { name: "Spring", id: 2 },

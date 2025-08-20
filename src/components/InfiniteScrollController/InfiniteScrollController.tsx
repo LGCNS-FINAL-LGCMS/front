@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import LectureCard from "../Common/LectureCard";
@@ -65,37 +65,46 @@ const InfiniteScrollController: React.FC = () => {
     null
   );
 
-  const fetchLecture = async (isKeywordSearch = false) => {
-    if (keywordFetchTimeoutRef.current) {
-      clearTimeout(keywordFetchTimeoutRef.current);
-    }
-
-    try {
-      const lectureAction = await dispatch(
-        fetchLectureData({
-          keyword: currentKeywordFromStore,
-          category: currentCategoryFromStore,
-          page: isKeywordSearch ? INFO_START_INDEX : start,
-        })
-      );
-
-      if (fetchLectureData.fulfilled.match(lectureAction)) {
-        if (isKeywordSearch) {
-          setStart(INFO_START_INDEX + 1);
-        } else {
-          setStart((prev) => prev + 1);
-        }
-
-        if (isAuthenticated) {
-          keywordFetchTimeoutRef.current = setTimeout(() => {
-            keywordFetchTimeoutRef.current = null;
-          }, KEYWORD_FETCH_DELAY);
-        }
+  const fetchLecture = useCallback(
+    async (isKeywordSearch = false) => {
+      if (keywordFetchTimeoutRef.current) {
+        clearTimeout(keywordFetchTimeoutRef.current);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
+      try {
+        const lectureAction = await dispatch(
+          fetchLectureData({
+            keyword: currentKeywordFromStore,
+            category: currentCategoryFromStore,
+            page: isKeywordSearch ? INFO_START_INDEX : start,
+          })
+        );
+
+        if (fetchLectureData.fulfilled.match(lectureAction)) {
+          if (isKeywordSearch) {
+            setStart(INFO_START_INDEX + 1);
+          } else {
+            setStart((prev) => prev + 1);
+          }
+
+          if (isAuthenticated) {
+            keywordFetchTimeoutRef.current = setTimeout(() => {
+              keywordFetchTimeoutRef.current = null;
+            }, KEYWORD_FETCH_DELAY);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [
+      currentKeywordFromStore,
+      currentCategoryFromStore,
+      start,
+      dispatch,
+      isAuthenticated,
+    ]
+  );
 
   useEffect(() => {
     const keywordChanged = currentKeywordFromStore !== prevKeywordRef.current;
@@ -115,7 +124,6 @@ const InfiniteScrollController: React.FC = () => {
       prevCategoryRef.current = currentCategoryFromStore;
     }
 
-    // 키워드가 없고 이전에 키워드가 있었던 경우 초기화
     if (!currentKeywordFromStore && prevKeywordRef.current) {
       dispatch(resetLectureDataState());
       setStart(INFO_START_INDEX);
@@ -127,7 +135,12 @@ const InfiniteScrollController: React.FC = () => {
         clearTimeout(keywordFetchTimeoutRef.current);
       }
     };
-  }, [currentKeywordFromStore, currentCategoryFromStore, dispatch]);
+  }, [
+    currentKeywordFromStore,
+    currentCategoryFromStore,
+    dispatch,
+    fetchLecture,
+  ]);
 
   const loadMoreLectures = () => {
     if (lectureStatus !== "loading" && lectureHasMore) {
