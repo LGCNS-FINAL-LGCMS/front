@@ -15,4 +15,9 @@ export const PAGE_PATHS = {
   FAQ: "/??",
   CREATE_LECTURE: "/openlecture",
   Lesson_Management: "/member/lecturer/lessons",
+  CART: "/cart",
+  USER_PAGE: {
+    STUDENT: "/dd",
+    LECTURER: "/oo",
+  },
 };
