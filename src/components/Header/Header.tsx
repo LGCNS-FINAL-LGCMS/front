@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
+import { useState, useEffect, useRef } from "react";
+import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useMobileDetect from "../../hooks/useMobileDetect";
-import { theme } from "../../assets/styles/theme";
 import { PAGE_PATHS } from "../../constants/pagePaths";
 import AlertCell from "./AlertCell";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "../../redux/store";
 import { clearCategory } from "../../redux/Category/categorySlice";
+import { logoutUsingToken } from "../../redux/token/tokenSlice";
+import { resetUserInfo } from "../../redux/Auth/authSlice";
 
 import {
   faCircleUser,
@@ -17,8 +19,7 @@ import {
   faBell,
   faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
-
-const HEADER_HEIGHT: string = theme.size.header.height;
+import { theme } from "../../assets/styles/theme";
 
 interface Alert {
   id: number;
@@ -32,9 +33,9 @@ const HeaderWrapper = styled.header`
   top: 0;
   left: 0;
   right: 0;
-  z-index: ${theme.zIndex.header};
-  background-color: ${theme.colors.header};
-  height: ${HEADER_HEIGHT};
+  z-index: ${({ theme }) => theme.zIndex.header};
+  background-color: ${({ theme }) => theme.colors.header};
+  height: ${({ theme }) => theme.size.header.height};
   backdrop-filter: blur(5px);
   padding: 0 1rem;
 `;
@@ -44,7 +45,7 @@ const DropdownMenu = styled.div`
   right: 0;
   top: calc(100% + 0.5rem);
   width: 150px;
-  background-color: ${theme.colors.header};
+  background-color: ${({ theme }) => theme.colors.header};
   backdrop-filter: blur(8px);
   box-shadow: 0 10px 10px -3px rgba(130, 130, 130, 0.35);
   border: 3px solid rgba(104, 104, 104, 0.5);
@@ -58,15 +59,15 @@ const DropdownItem = styled.button`
   text-align: left;
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
-  color: ${theme.colors.text_B};
+  color: ${({ theme }) => theme.colors.text_B};
   background: none;
   font-weight: 400;
-  font-family: ${theme.font.primary};
+  font-family: ${({ theme }) => theme.font.primary};
   border: none;
   cursor: pointer;
 
   &:hover {
-    background-color: ${theme.colors.background_D};
+    background-color: ${({ theme }) => theme.colors.background_D};
   }
 
   svg {
@@ -75,19 +76,20 @@ const DropdownItem = styled.button`
 `;
 
 const UserButton = styled.button`
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 1.3rem;
   font-weight: 500;
-  color: ${theme.colors.text_D};
+  color: ${({ theme }) => theme.colors.text_D};
   background: none;
   border: none;
   cursor: pointer;
   padding: 0.5rem;
 
   &:hover {
-    color: ${theme.colors.text_B};
+    color: ${({ theme }) => theme.colors.text_B};
   }
 `;
 
@@ -102,12 +104,10 @@ const Container = styled.nav`
 
 const ActionButton = styled.div`
   padding: 0 16px;
-  font-size: 0.875rem;
+  font-size: ${({ theme }) => theme.fontSize.button.max};
   border-radius: 25px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out,
-    border-color 0.2s ease-in-out, box-shadow 0.25s ease-in-out;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -124,11 +124,12 @@ const ActionButton = styled.div`
   }
 
   background-color: rgba(0, 0, 0, 0.25);
-  color: ${theme.colors.text_B};
+  color: ${({ theme }) => theme.colors.text_B};
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.45);
   }
+
   &:active {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
@@ -150,13 +151,14 @@ const LogoLink = styled.div`
 `;
 
 const LogoText = styled.span`
-  font-size: 1.7rem;
+  font-size: ${({ theme }) => theme.fontSize.title.max};
   font-family: ${({ theme }) => theme.font.logo};
   cursor: pointer;
   font-weight: bold;
-  color: ${theme.colors.text_B};
+  color: ${({ theme }) => theme.colors.text_B};
+
   &:hover {
-    color: ${theme.colors.text_D};
+    color: ${({ theme }) => theme.colors.text_D};
   }
 `;
 
@@ -176,10 +178,54 @@ const AlertItem = styled.div`
     background-color: ${theme.colors.header};
   }
 `;
+const Nickname = styled.span`
+  font-size: ${theme.fontSize.small.max};
+  font-weight: 700;
+  color: inherit;
+`;
+
+const ping = keyframes`
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+`;
+
+const DotWrapper = styled.span`
+  position: absolute;
+  top: 0px; // 아이콘 크기에 맞게 미세 조정
+  right: 5px;
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+`;
+
+const Ping = styled.span`
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.colors.primary || "skyblue"};
+  opacity: 0.75;
+  animation: ${ping} 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+`;
+
+const Dot = styled.span`
+  pointer-events: none;
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.colors.primary || "deepskyblue"};
+`;
 
 const Header = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     setAlerts([
@@ -223,20 +269,18 @@ const Header = () => {
     }
   };
 
-  const onNavigate = (url: string) => {
-    navigate(url);
-  };
-
   const handleLogoClick = () => {
     dispatch(clearCategory());
     navigate(PAGE_PATHS.HOME);
   };
 
-  const isAuthenticated: boolean = true;
-  const nickname: string = "형균";
-
-  const isLecturer: boolean = true;
-
+  const auth = useSelector((state: RootState) => state.auth);
+  const isAuthenticated: boolean = useSelector(
+    (state: RootState) => state.token.isAuthenticated
+  );
+  const nickname: string = auth.nickname;
+  const isLecturer: boolean = auth.role === "LECTURER";
+  const hasUnreadAlerts = true;
   const dropdownRef = useRef<HTMLDivElement>(null);
   const alertRef = useRef<HTMLDivElement>(null);
   const isMobile: boolean = useMobileDetect();
@@ -271,6 +315,15 @@ const Header = () => {
     navigate(PAGE_PATHS.LOGIN);
   };
 
+  const handleLogout = () => {
+    dispatch(logoutUsingToken())
+      .unwrap()
+      .then(() => {
+        dispatch(resetUserInfo());
+        navigate(PAGE_PATHS.LOGIN);
+      });
+  };
+
   return (
     <HeaderWrapper>
       <Container>
@@ -292,7 +345,11 @@ const Header = () => {
                 </UserButton>
               ) : (
                 <>
-                  <UserButton>
+                  <UserButton
+                    onClick={() => {
+                      navigate(PAGE_PATHS.CART);
+                    }}
+                  >
                     <FontAwesomeIcon icon={faShoppingCart} />
                   </UserButton>
 
@@ -303,10 +360,22 @@ const Header = () => {
                     }}
                   >
                     <FontAwesomeIcon icon={faBell} />
+                    {hasUnreadAlerts && (
+                      <DotWrapper>
+                        <Ping />
+                        <Dot />
+                      </DotWrapper>
+                    )}
                   </UserButton>
 
                   <UserButton onClick={toggleDropdown}>
                     <FontAwesomeIcon icon={faCircleUser} />
+                    {!isMobile && (
+                      <Nickname>
+                        {nickname}
+                        {isAuthenticated && "님"}
+                      </Nickname>
+                    )}
                   </UserButton>
                 </>
               )}
@@ -316,7 +385,7 @@ const Header = () => {
                   <DropdownItem
                     onClick={() => {
                       setIsDropdownOpen(false);
-                      // 로그아웃 로직
+                      handleLogout();
                     }}
                   >
                     <FontAwesomeIcon icon={faSignOutAlt} />
@@ -325,7 +394,7 @@ const Header = () => {
 
                   <DropdownItem
                     onClick={() => {
-                      // onNavigate("/userinfo");
+                      navigate(PAGE_PATHS.USER_PAGE.STUDENT);
                       setIsDropdownOpen(false);
                     }}
                   >
@@ -336,7 +405,7 @@ const Header = () => {
                   {isLecturer && (
                     <DropdownItem
                       onClick={() => {
-                        // onNavigate(PAGE_PATHS.LECTURER_PAGE); // 강사 페이지로 이동
+                        navigate(PAGE_PATHS.USER_PAGE.LECTURER);
                         setIsDropdownOpen(false);
                       }}
                     >
@@ -360,8 +429,8 @@ const Header = () => {
 
                       <DropdownItem
                         onClick={() => {
+                          navigate(PAGE_PATHS.CART);
                           setIsDropdownOpen(false);
-                          // 장바구니 로직
                         }}
                       >
                         <FontAwesomeIcon icon={faShoppingCart} />

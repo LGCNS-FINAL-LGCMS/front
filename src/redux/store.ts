@@ -4,7 +4,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import type { PersistConfig } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // localStorage
-import apiClient, { injectStore } from "../api/index";
+import { injectStore } from "../api/index";
 
 //slice 파일들
 import keywordSlice from "./keyword/keywordSlice";
