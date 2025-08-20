@@ -19,6 +19,7 @@ import MainPage from "./pages/MainPage/MainPage";
 import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
+import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -74,6 +75,15 @@ function App() {
             element={
               <Layout>
                 <CreateLecturePage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={`${PAGE_PATHS.USER_PAGE.LECTURER}`}
+            element={
+              <Layout>
+                <LecturerMainPage />
               </Layout>
             }
           />
