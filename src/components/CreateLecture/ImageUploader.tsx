@@ -136,7 +136,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onFileSelect }) => {
     setIsModalOpen(true);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: { "image/*": [] },
     multiple: false,

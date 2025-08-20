@@ -1,5 +1,4 @@
 import { createGlobalStyle } from "styled-components";
-import { theme } from "./theme";
 
 // ======폰트=======
 import BlackHanSans from "../fonts/BlackHanSans-Regular.ttf";

@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { API_ENDPOINTS } from "../../constants/endpoints";
 import apiClient from "../../api/index";
 import type { Lecture as LectureType } from "../../types/lecture";
+import type { RootState } from "../../redux/store";
 
 interface LectureDataState {
   status: "idle" | "loading" | "succeeded" | "failed";
@@ -20,11 +21,18 @@ const initialState: LectureDataState = {
   hasMore: true,
 };
 
+interface FetchLectureParams {
+  keyword?: string;
+  category?: string;
+  page?: number;
+  size?: number;
+}
+
 // 비동기 thunk
 export const fetchLectureData = createAsyncThunk<
   { content: LectureType[]; totalElements: number },
-  any,
-  { rejectValue: string; state: any }
+  FetchLectureParams,
+  { rejectValue: string; state: RootState }
 >("lectureData/fetch", async (payload, { rejectWithValue }) => {
   try {
     const response = await apiClient.get(API_ENDPOINTS.LECTURE.GET, {
@@ -35,7 +43,7 @@ export const fetchLectureData = createAsyncThunk<
       const { content, totalElements } = response.data.data;
 
       // 강의 항목 처리
-      const lectures: LectureType[] = content.map((item: any) => ({
+      const lectures: LectureType[] = content.map((item: LectureType) => ({
         lectureId: item.lectureId,
         nickname: item.nickname || "",
         description: item.description || "",
@@ -53,13 +61,9 @@ export const fetchLectureData = createAsyncThunk<
         response.data.message || "강의 데이터를 불러오지 못했습니다."
       );
     }
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message ||
-      error.message ||
-      "강의 데이터 요청 실패";
+  } catch (error: unknown) {
     console.log(error);
-    return rejectWithValue(message);
+    return rejectWithValue("강의 데이터 요청 실패");
   }
 });
 

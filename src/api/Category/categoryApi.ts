@@ -2,6 +2,7 @@
 
 import apiClient from "../index";
 import { API_ENDPOINTS } from "../../constants/endpoints";
+import { getErrorMessage } from "../../utils/handleApiError";
 
 interface CategoryApiResponse {
   status: string;
@@ -30,11 +31,8 @@ export const getCategorys = async (): Promise<Category[]> => {
     );
     console.log(response);
     return response.data.data.categories;
-  } catch (error: any) {
-    const message =
-      error.response?.data?.message ||
-      error.message ||
-      "카테고리 불러오기 실패";
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, "카테고리 불러오기 실패");
     console.error("Category API error:", message);
     throw new Error(message);
   }
