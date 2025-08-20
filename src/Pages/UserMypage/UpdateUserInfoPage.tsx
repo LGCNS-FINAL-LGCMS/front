@@ -126,9 +126,11 @@ const UpdateUserInfoPage = () => {
 
   const [selectedCategories, setSelectedCategories] = useState<
     UserCategoriesList[]
-  >([]); // 선택된 카테고리
+  >(userInfo.categories); // 선택된 카테고리
 
-  const [selectedRole, setSelectedRole] = useState<boolean | null>(null); // role 선택상태
+  const [selectedRole, setSelectedRole] = useState<boolean | null>(
+    userInfo.desireLecturer
+  ); // role 선택상태
 
   const [showSuccessModal, setShowSuccessModal] = useState(false); // 성공 모달
   const [showFailModal, setShowFailModal] = useState(false); // 실패 모달
@@ -196,16 +198,29 @@ const UpdateUserInfoPage = () => {
 
   //회원수정 완료 클릭
   const infoUpdateClick = async () => {
-    if (nickname === userInfo.nickname) {
-      setNicknameCheck(true);
+    // 변경사항 확인
+    const nicknameChanged = nickname !== userInfo.nickname;
+    const categoryChanged =
+      JSON.stringify(selectedCategories) !==
+      JSON.stringify(userInfo.categories);
+    const roleChanged = selectedRole !== userInfo.desireLecturer;
+
+    if (!nicknameChanged && !categoryChanged && !roleChanged) {
+      alert("변경된 정보가 없습니다.");
       return;
-    } else {
-      if (nickname.trim() == "") {
-        alert("닉네임을 입력해주세요");
-        return;
-      } else if (nicknameCheck !== true && nickname !== userInfo.nickname) {
-        alert("닉네임 중복확인을 해주세요.");
-        return;
+    }
+
+    if (nicknameChanged) {
+      if (nickname === userInfo.nickname) {
+        setNicknameCheck(true);
+      } else {
+        if (nickname.trim() == "") {
+          alert("닉네임을 입력해주세요");
+          return;
+        } else if (nicknameCheck !== true && nickname !== userInfo.nickname) {
+          alert("닉네임 중복확인을 해주세요.");
+          return;
+        }
       }
     }
 
@@ -292,6 +307,7 @@ const UpdateUserInfoPage = () => {
           <RoleSelect
             onRoleChange={handleRoleSelection}
             selectedRole={selectedRole}
+            styleType="checkbox"
           />
         </RoleSection>
 
