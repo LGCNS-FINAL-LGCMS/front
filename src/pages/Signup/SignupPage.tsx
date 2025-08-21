@@ -77,6 +77,20 @@ const NicknameCheckMessage = styled.div`
   padding-left: 4px;
 `;
 
+const CategorySection = styled.div`
+  margin-bottom: 20px;
+`;
+const CategoryTitle = styled.h1`
+  text-align: center;
+  margin: 10px; // 위아래 간격
+
+  font-size: ${(props) => props.theme.fontSize.title.min};
+`;
+
+const CategorySubTitle = styled.p`
+  text-align: center;
+`;
+
 const SignupPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -226,7 +240,12 @@ const SignupPage = () => {
         />
         <NicknameCheckMessage>{nicknameCheckMessage}</NicknameCheckMessage>
       </NicknameSection>
-      <CategorySelect onCategoryChange={handleCategorySelection} />
+
+      <CategorySection>
+        <CategoryTitle>Category</CategoryTitle>
+        <CategorySubTitle>관심있는 카테고리를 추가하세요.</CategorySubTitle>
+        <CategorySelect onCategoryChange={handleCategorySelection} />
+      </CategorySection>
 
       <RoleSelect
         selectedRole={selectedRole}

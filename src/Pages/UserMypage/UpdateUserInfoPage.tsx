@@ -105,6 +105,18 @@ const NicknameCheckMessage = styled.p`
 const CategorySection = styled.div`
   margin-bottom: 30px;
 `;
+const CategoryTitle = styled.h1`
+  text-align: center;
+  margin: 20px; // 위아래 간격
+
+  font-size: ${(props) => props.theme.fontSize.title.min};
+`;
+
+const CategorySubTitle = styled.p`
+  text-align: center;
+`;
+
+const RoleSelectSubtitle = styled.p``;
 
 const RoleSection = styled.div`
   margin-bottom: 30px;
@@ -307,10 +319,14 @@ const UpdateUserInfoPage = () => {
         </NicknameSection>
 
         <CategorySection>
+          <CategoryTitle>Category</CategoryTitle>
+          <CategorySubTitle>관심있는 카테고리를 추가하세요.</CategorySubTitle>
           <CategorySelect onCategoryChange={handleCategorySelection} />
         </CategorySection>
 
         <RoleSection>
+          <RoleSelectSubtitle>강사로 전환하시겠습니까?</RoleSelectSubtitle>
+
           <RoleSelect
             onRoleChange={handleRoleSelection}
             selectedRole={selectedRole}
