@@ -19,6 +19,9 @@ export const API_ENDPOINTS = {
   LECTURER: {
     GET_LECTURE: "/api/lecture",
   },
+  STUDENT: {
+    GET_LECTURE: "/???",
+  },
   CATEGORY: {
     POST: "/api/member",
     GET: "/api/member",
