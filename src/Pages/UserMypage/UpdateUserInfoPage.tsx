@@ -105,6 +105,18 @@ const NicknameCheckMessage = styled.p`
 const CategorySection = styled.div`
   margin-bottom: 30px;
 `;
+const CategoryTitle = styled.h1`
+  text-align: center;
+  margin: 20px; // 위아래 간격
+
+  font-size: ${(props) => props.theme.fontSize.title.min};
+`;
+
+const CategorySubTitle = styled.p`
+  text-align: center;
+`;
+
+const RoleSelectSubtitle = styled.p``;
 
 const RoleSection = styled.div`
   margin-bottom: 30px;
@@ -122,13 +134,15 @@ const UpdateUserInfoPage = () => {
   const [nickname, setNickname] = useState(userInfo.nickname); // 회원수정 전 기존 닉네임
   const [nicknameCheckMessage, setNicknameCheckMessage] = useState(""); // 중복확인 결과 메세지
   const [nicknameCheck, setNicknameCheck] = useState<boolean | null>(null); // 중복확인 여부 확인
-  const [lastNickname, setLastNickname] = useState(""); // api중복으로 안보내게
+  const [isCheckingNickname, setIsCheckingNickname] = useState(false); // api 중복 실행 방지
 
   const [selectedCategories, setSelectedCategories] = useState<
     UserCategoriesList[]
-  >([]); // 선택된 카테고리
+  >(userInfo.categories); // 선택된 카테고리
 
-  const [selectedRole, setSelectedRole] = useState<boolean | null>(null); // role 선택상태
+  const [selectedRole, setSelectedRole] = useState<boolean | null>(
+    userInfo.desireLecturer
+  ); // role 선택상태
 
   const [showSuccessModal, setShowSuccessModal] = useState(false); // 성공 모달
   const [showFailModal, setShowFailModal] = useState(false); // 실패 모달
@@ -156,15 +170,11 @@ const UpdateUserInfoPage = () => {
       setNicknameCheckMessage("현재 사용 중인 닉네임과 같습니다.");
       setNicknameCheck(true);
     }
-    // 중복확인 연속 클릭 불가
-    if (nickname === lastNickname) {
-      setNicknameCheck(null);
-      return;
-    }
+
     if (nickname !== userInfo.nickname) {
+      setIsCheckingNickname(true);
       try {
         const result = await checkNicknameAPI(nickname);
-        setLastNickname(nickname);
         if (result.data.isUsed === true) {
           setNicknameCheck(false);
           setNicknameCheckMessage("사용할 수 없는 닉네임입니다.");
@@ -177,6 +187,8 @@ const UpdateUserInfoPage = () => {
       } catch (error) {
         console.error("닉네임중복확인 오류:", error);
         setNicknameCheckMessage("오류가 발생했습니다. 다시 시도해주세요.");
+      } finally {
+        setIsCheckingNickname(false);
       }
     }
   };
@@ -196,15 +208,36 @@ const UpdateUserInfoPage = () => {
 
   //회원수정 완료 클릭
   const infoUpdateClick = async () => {
-    if (nickname === userInfo.nickname) {
-      setNicknameCheck(true);
+    // 변경사항 확인
+    const nicknameChanged = nickname !== userInfo.nickname;
+    const categoryChanged =
+      JSON.stringify(selectedCategories) !==
+      JSON.stringify(userInfo.categories);
+    const roleChanged = selectedRole !== userInfo.desireLecturer;
+
+    if (!nicknameChanged && !categoryChanged && !roleChanged) {
+      alert("변경된 정보가 없습니다.");
       return;
-    } else {
-      if (nickname.trim() == "") {
-        alert("닉네임을 입력해주세요");
-        return;
-      } else if (nicknameCheck !== true && nickname !== userInfo.nickname) {
-        alert("닉네임 중복확인을 해주세요.");
+    }
+
+    if (nicknameChanged) {
+      if (nickname === userInfo.nickname) {
+        setNicknameCheck(true);
+      } else {
+        if (nickname.trim() == "") {
+          alert("닉네임을 입력해주세요");
+          return;
+        } else if (nicknameCheck !== true && nickname !== userInfo.nickname) {
+          alert("닉네임 중복확인을 해주세요.");
+          return;
+        }
+      }
+    }
+
+    if (categoryChanged) {
+      // 카테고리 5개이상이면 리스트에 안보냄
+      if (selectedCategories.length === 0) {
+        alert("카테고리를 다시 선택해주세요.");
         return;
       }
     }
@@ -280,18 +313,24 @@ const UpdateUserInfoPage = () => {
             onClick={checkNickname}
             design={3}
             fontWeight={400}
+            disabled={isCheckingNickname}
           />
           <NicknameCheckMessage>{nicknameCheckMessage}</NicknameCheckMessage>
         </NicknameSection>
 
         <CategorySection>
+          <CategoryTitle>Category</CategoryTitle>
+          <CategorySubTitle>관심있는 카테고리를 추가하세요.</CategorySubTitle>
           <CategorySelect onCategoryChange={handleCategorySelection} />
         </CategorySection>
 
         <RoleSection>
+          <RoleSelectSubtitle>강사로 전환하시겠습니까?</RoleSelectSubtitle>
+
           <RoleSelect
             onRoleChange={handleRoleSelection}
             selectedRole={selectedRole}
+            styleType="checkbox"
           />
         </RoleSection>
 
