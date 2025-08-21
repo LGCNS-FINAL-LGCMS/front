@@ -77,6 +77,20 @@ const NicknameCheckMessage = styled.div`
   padding-left: 4px;
 `;
 
+const CategorySection = styled.div`
+  margin-bottom: 20px;
+`;
+const CategoryTitle = styled.h1`
+  text-align: center;
+  margin: 10px; // 위아래 간격
+
+  font-size: ${(props) => props.theme.fontSize.title.min};
+`;
+
+const CategorySubTitle = styled.p`
+  text-align: center;
+`;
+
 const SignupPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -84,11 +98,12 @@ const SignupPage = () => {
   const [nickname, setNickname] = useState(""); //input에서 받은 nickname
   const [nicknameCheckMessage, setNicknameCheckMessage] = useState(""); // 중복확인 결과 메세지
   const [nicknameCheck, setNicknameCheck] = useState<boolean | null>(null); // 중복확인버튼 눌렀는지 아닌지(로컬에서)
-  const [lastNickname, setLastNickname] = useState(""); // api중복으로 안보내게
+  const [isCheckingNickname, setIsCheckingNickname] = useState(false); // api 중복 실행 방지
 
   const [selectedCategories, setSelectedCategories] = useState<
     UserCategoriesList[]
   >([]); // 선택된 카테고리
+
   const [selectedRole, setSelectedRole] = useState<boolean | null>(null); // role 선택상태
 
   const [showSuccessModal, setShowSuccessModal] = useState(false); // 성공 모달
@@ -98,7 +113,6 @@ const SignupPage = () => {
     setNickname(e.target.value);
     setNicknameCheck(null); // input 바뀌면 중복확인 다시해야됨
     setNicknameCheckMessage("");
-    setLastNickname("");
   };
 
   //중복버튼 클릭 시
@@ -108,21 +122,16 @@ const SignupPage = () => {
       setNicknameCheck(null); // 중복확인 다시 눌러야됨
       return;
     }
-    // 중복확인 연속 클릭 불가
-    if (nickname === lastNickname) {
-      setNicknameCheck(null);
-      return;
-    }
+
+    setIsCheckingNickname(true);
+
     try {
       const result = await checkNicknameAPI(nickname);
-      setLastNickname(nickname);
       if (result.data.isUsed === true) {
         console.log("사용중인 닉네임", result.data.isUsed);
-        setLastNickname(nickname);
         setNicknameCheck(false);
         setNicknameCheckMessage("사용할 수 없는 닉네임입니다.");
       } else if (result.data.isUsed === false) {
-        setLastNickname(nickname);
         setNicknameCheck(true);
         console.log("사용안하고 있는 닉네임", result.data.isUsed);
         setNicknameCheckMessage("사용가능한 닉네임입니다.");
@@ -130,6 +139,8 @@ const SignupPage = () => {
     } catch (error) {
       console.error("중복확인 오류:", error);
       setNicknameCheckMessage("오류가 발생했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsCheckingNickname(false);
     }
   };
 
@@ -142,8 +153,8 @@ const SignupPage = () => {
   );
 
   // role 선택 핸들러
-  const handleRoleSelection = (getDesireLecturer: boolean | null) => {
-    setSelectedRole(getDesireLecturer);
+  const handleRoleSelection = (desireLecturer: boolean | null) => {
+    setSelectedRole(desireLecturer);
   };
 
   const signupClick = async () => {
@@ -157,7 +168,7 @@ const SignupPage = () => {
       alert("사용할 수 없는 닉네임입니다.");
       return;
     } else if (selectedCategories.length === 0) {
-      alert("관심있는 카테고리를 선택해주세요.");
+      alert("카테고리가 많거나 없습니다.");
       return;
     } else if (selectedRole === null) {
       alert("사용자 역할을 선택해주세요.");
@@ -172,7 +183,7 @@ const SignupPage = () => {
 
         if (result.status === "OK") {
           console.log("서버연결 성공");
-          const { memberId, nickname, role, getDesireLecturer, categories } =
+          const { memberId, nickname, role, desireLecturer, categories } =
             result.data;
 
           dispatch(
@@ -180,7 +191,7 @@ const SignupPage = () => {
               memberId: memberId,
               nickname: nickname,
               role: role,
-              getDesireLecturer: getDesireLecturer,
+              desireLecturer: desireLecturer,
               categories,
             })
           );
@@ -225,10 +236,17 @@ const SignupPage = () => {
           onClick={checkNickname}
           design={3}
           fontWeight={400}
+          disabled={isCheckingNickname}
         />
         <NicknameCheckMessage>{nicknameCheckMessage}</NicknameCheckMessage>
       </NicknameSection>
-      <CategorySelect onCategoryChange={handleCategorySelection} />
+
+      <CategorySection>
+        <CategoryTitle>Category</CategoryTitle>
+        <CategorySubTitle>관심있는 카테고리를 추가하세요.</CategorySubTitle>
+        <CategorySelect onCategoryChange={handleCategorySelection} />
+      </CategorySection>
+
       <RoleSelect
         selectedRole={selectedRole}
         onRoleChange={handleRoleSelection}
