@@ -122,7 +122,7 @@ const UpdateUserInfoPage = () => {
   const [nickname, setNickname] = useState(userInfo.nickname); // 회원수정 전 기존 닉네임
   const [nicknameCheckMessage, setNicknameCheckMessage] = useState(""); // 중복확인 결과 메세지
   const [nicknameCheck, setNicknameCheck] = useState<boolean | null>(null); // 중복확인 여부 확인
-  const [lastNickname, setLastNickname] = useState(""); // api중복으로 안보내게
+  const [isCheckingNickname, setIsCheckingNickname] = useState(false); // api 중복 실행 방지
 
   const [selectedCategories, setSelectedCategories] = useState<
     UserCategoriesList[]
@@ -158,15 +158,11 @@ const UpdateUserInfoPage = () => {
       setNicknameCheckMessage("현재 사용 중인 닉네임과 같습니다.");
       setNicknameCheck(true);
     }
-    // 중복확인 연속 클릭 불가
-    if (nickname === lastNickname) {
-      setNicknameCheck(null);
-      return;
-    }
+
     if (nickname !== userInfo.nickname) {
+      setIsCheckingNickname(true);
       try {
         const result = await checkNicknameAPI(nickname);
-        setLastNickname(nickname);
         if (result.data.isUsed === true) {
           setNicknameCheck(false);
           setNicknameCheckMessage("사용할 수 없는 닉네임입니다.");
@@ -179,6 +175,8 @@ const UpdateUserInfoPage = () => {
       } catch (error) {
         console.error("닉네임중복확인 오류:", error);
         setNicknameCheckMessage("오류가 발생했습니다. 다시 시도해주세요.");
+      } finally {
+        setIsCheckingNickname(false);
       }
     }
   };
@@ -221,6 +219,14 @@ const UpdateUserInfoPage = () => {
           alert("닉네임 중복확인을 해주세요.");
           return;
         }
+      }
+    }
+
+    if (categoryChanged) {
+      // 카테고리 5개이상이면 리스트에 안보냄
+      if (selectedCategories.length === 0) {
+        alert("카테고리를 다시 선택해주세요.");
+        return;
       }
     }
 
@@ -295,6 +301,7 @@ const UpdateUserInfoPage = () => {
             onClick={checkNickname}
             design={3}
             fontWeight={400}
+            disabled={isCheckingNickname}
           />
           <NicknameCheckMessage>{nicknameCheckMessage}</NicknameCheckMessage>
         </NicknameSection>

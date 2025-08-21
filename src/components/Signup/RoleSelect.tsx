@@ -6,7 +6,7 @@ import type { RootState } from "../../redux/store";
 
 const RollSection = styled.div``;
 
-const RoleCardType = styled.div`
+const RoleCardContainer = styled.div`
   padding: 10px;
   text-align: center;
   margin-bottom: 30px;
@@ -82,8 +82,14 @@ const RoleCheckMessage = styled.div`
   min-height: 20px;
 `;
 
+//체크박스
+const CheckboxContainer = styled.div``;
+
+const CheckboxWrapper = styled.div``;
+
+// 부모에서 데이터 전달 받기
 interface RoleSelectProps {
-  onRoleChange: (getDesireLecturer: boolean | null) => void;
+  onRoleChange: (desireLecturer: boolean | null) => void;
   selectedRole: boolean | null;
   styleType?: "card" | "checkbox";
 }
@@ -91,12 +97,14 @@ interface RoleSelectProps {
 const RoleSelect = ({
   onRoleChange,
   selectedRole,
-  styleType = "card",
+  styleType = "card", // 기본값 카드임
 }: RoleSelectProps) => {
+  //학생일 때만 체크박스 보여주려고 리덕스에서 데이터 가져오기
   const isDesireLecturer = useSelector(
     (state: RootState) => state.auth.desireLecturer
   );
 
+  // role card 선택 핸들러
   const handleRoleSelect = (roleType: string) => {
     if (roleType === "student") {
       onRoleChange(false);
@@ -107,6 +115,16 @@ const RoleSelect = ({
     }
   };
 
+  //role checkbox 핸들러
+  const handleCheckbox = () => {
+    if (selectedRole == true) {
+      onRoleChange(false); // 체크가 되어있으면 학생으로 role change
+    } else {
+      onRoleChange(true);
+    }
+  };
+
+  // role 선택 시 각각 메세지 보여줌
   const getDescriptionText = () => {
     if (styleType === "checkbox") {
       if (selectedRole === true) {
@@ -127,34 +145,49 @@ const RoleSelect = ({
     <RollSection>
       {isDesireLecturer ? null : (
         <>
-          {
-            <RoleCardType>
-              <RoleTitle>사용하시는 분이 누구인가요 ?</RoleTitle>
-              <RoleOptionContainer>
-                <RoleOption
-                  selected={selectedRole === false}
-                  onClick={() => handleRoleSelect("student")}
-                >
-                  <RoleIcon selected={selectedRole === false}>
-                    <img src={studentImage} alt="학생" />
-                  </RoleIcon>
-                  <RoleLabel selected={selectedRole === false}>학생</RoleLabel>
-                </RoleOption>
-
-                <RoleOption
-                  selected={selectedRole === true}
-                  onClick={() => handleRoleSelect("teacher")}
-                >
-                  <RoleIcon selected={selectedRole === true}>
-                    <img src={teacherImage} alt="선생님" />
-                  </RoleIcon>
-                  <RoleLabel selected={selectedRole === true}>선생님</RoleLabel>
-                </RoleOption>
-              </RoleOptionContainer>
-              <RoleCheckMessage>{getDescriptionText()}</RoleCheckMessage>
-            </RoleCardType>
-          }
+          {styleType === "checkbox" && (
+            <CheckboxContainer>
+              <CheckboxWrapper>
+                <input
+                  type="checkbox"
+                  id="lecturerDesire"
+                  checked={selectedRole === true}
+                  onChange={handleCheckbox}
+                />
+                <label htmlFor="lecturerDesire">
+                  강사가 되어서 영상 올리기 🙋‍♀️
+                </label>
+              </CheckboxWrapper>
+            </CheckboxContainer>
+          )}
         </>
+      )}
+      {styleType === "card" && (
+        <RoleCardContainer>
+          <RoleTitle>사용하시는 분이 누구인가요 ?</RoleTitle>
+          <RoleOptionContainer>
+            <RoleOption
+              selected={selectedRole === false}
+              onClick={() => handleRoleSelect("student")}
+            >
+              <RoleIcon selected={selectedRole === false}>
+                <img src={studentImage} alt="학생" />
+              </RoleIcon>
+              <RoleLabel selected={selectedRole === false}>학생</RoleLabel>
+            </RoleOption>
+
+            <RoleOption
+              selected={selectedRole === true}
+              onClick={() => handleRoleSelect("teacher")}
+            >
+              <RoleIcon selected={selectedRole === true}>
+                <img src={teacherImage} alt="선생님" />
+              </RoleIcon>
+              <RoleLabel selected={selectedRole === true}>선생님</RoleLabel>
+            </RoleOption>
+          </RoleOptionContainer>
+          <RoleCheckMessage>{getDescriptionText()}</RoleCheckMessage>
+        </RoleCardContainer>
       )}
     </RollSection>
   );

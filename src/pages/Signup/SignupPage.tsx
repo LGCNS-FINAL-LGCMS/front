@@ -84,11 +84,12 @@ const SignupPage = () => {
   const [nickname, setNickname] = useState(""); //input에서 받은 nickname
   const [nicknameCheckMessage, setNicknameCheckMessage] = useState(""); // 중복확인 결과 메세지
   const [nicknameCheck, setNicknameCheck] = useState<boolean | null>(null); // 중복확인버튼 눌렀는지 아닌지(로컬에서)
-  const [isCheckingNickname, setIsCheckingNickname] = useState(false);
+  const [isCheckingNickname, setIsCheckingNickname] = useState(false); // api 중복 실행 방지
 
   const [selectedCategories, setSelectedCategories] = useState<
     UserCategoriesList[]
   >([]); // 선택된 카테고리
+
   const [selectedRole, setSelectedRole] = useState<boolean | null>(null); // role 선택상태
 
   const [showSuccessModal, setShowSuccessModal] = useState(false); // 성공 모달
@@ -153,7 +154,7 @@ const SignupPage = () => {
       alert("사용할 수 없는 닉네임입니다.");
       return;
     } else if (selectedCategories.length === 0) {
-      alert("관심있는 카테고리를 선택해주세요.");
+      alert("카테고리가 많거나 없습니다.");
       return;
     } else if (selectedRole === null) {
       alert("사용자 역할을 선택해주세요.");
@@ -226,6 +227,7 @@ const SignupPage = () => {
         <NicknameCheckMessage>{nicknameCheckMessage}</NicknameCheckMessage>
       </NicknameSection>
       <CategorySelect onCategoryChange={handleCategorySelection} />
+
       <RoleSelect
         selectedRole={selectedRole}
         onRoleChange={handleRoleSelection}
