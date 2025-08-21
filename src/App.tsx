@@ -20,6 +20,7 @@ import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
 import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
+import AdminPage from "./Pages/AdminPage/AdminPage";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -96,6 +97,16 @@ function App() {
               </Layout>
             }
           />
+
+          <Route
+            path={PAGE_PATHS.ADMIN}
+            element={
+              <Layout>
+                <AdminPage />
+              </Layout>
+            }
+          />
+
           {/* =========================== */}
 
           {/* 와이드 Layout */}

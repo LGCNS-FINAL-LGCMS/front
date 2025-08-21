@@ -31,4 +31,8 @@ export const API_ENDPOINTS = {
   GUIDE: {
     POST: "/api/guide/ask",
   },
+  MEMBER: {
+    DESIRER: "/api/admin/member/lecturer/desirer", // get
+    CONFIRM: "/api/admin/member/lecturer/confirm", // post
+  }
 };
