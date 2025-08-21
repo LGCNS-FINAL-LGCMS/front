@@ -20,4 +20,5 @@ export const PAGE_PATHS = {
     STUDENT: "/userpage/student",
     LECTURER: "/userpage/lecturer",
   },
+  ADMIN: "/admin",
 };
