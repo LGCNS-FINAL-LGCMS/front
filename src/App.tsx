@@ -15,6 +15,7 @@ import Layout from "./layouts/Layout";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Login from "./pages/Login/Login";
 import SignupPage from "./pages/Signup/SignupPage";
+import StudentLecturePage from "./pages/UserMypage/StudentLecturePage";
 import MainPage from "./pages/MainPage/MainPage";
 import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
@@ -57,6 +58,15 @@ function App() {
             element={
               <Layout>
                 <UpdateUserInfoPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_PAGE.STUDENT}
+            element={
+              <Layout>
+                <StudentLecturePage />
               </Layout>
             }
           />
