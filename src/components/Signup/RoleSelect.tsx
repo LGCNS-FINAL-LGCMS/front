@@ -82,10 +82,57 @@ const RoleCheckMessage = styled.div`
   min-height: 20px;
 `;
 
-//체크박스
-const CheckboxContainer = styled.div``;
+// 체크박스 컨테이너
+const CheckboxContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  margin-bottom: 30px;
+  padding: 20px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  width: 250px;
+  height: 70px;
+`;
 
-const CheckboxWrapper = styled.div``;
+// 숨겨진 실제 체크박스
+const HiddenCheckbox = styled.input.attrs({ type: "checkbox" })`
+  display: none;
+`;
+
+// 체크박스
+const CustomCheckbox = styled.div<{ checked: boolean }>`
+  width: 20px;
+  height: 20px;
+  border: 2px solid ${(props) => props.theme.colors.disable};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  background-color: white;
+
+  &::after {
+    content: "✓";
+    font-size: 14px;
+    color: ${(props) => props.theme.colors.gray_D};
+    opacity: ${(props) => (props.checked ? 1 : 0)};
+    transition: opacity 0.2s ease;
+  }
+`;
+
+// 라벨
+const CheckboxLabel = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: ${(props) => props.theme.fontSize.body.min};
+  color: ${(props) => props.theme.colors.text_D};
+`;
 
 // 부모에서 데이터 전달 받기
 interface RoleSelectProps {
@@ -147,17 +194,15 @@ const RoleSelect = ({
         <>
           {styleType === "checkbox" && (
             <CheckboxContainer>
-              <CheckboxWrapper>
-                <input
-                  type="checkbox"
+              <CheckboxLabel>
+                <HiddenCheckbox
                   id="lecturerDesire"
                   checked={selectedRole === true}
                   onChange={handleCheckbox}
                 />
-                <label htmlFor="lecturerDesire">
-                  강사가 되어서 영상 올리기 🙋‍♀️
-                </label>
-              </CheckboxWrapper>
+                <CustomCheckbox checked={selectedRole === true} />
+                강사로 전환하기
+              </CheckboxLabel>
             </CheckboxContainer>
           )}
         </>
