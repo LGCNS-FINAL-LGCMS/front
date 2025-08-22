@@ -49,4 +49,7 @@ export const API_ENDPOINTS = {
   GUIDE: {
     POST: "/api/guide/ask",
   },
+  FAQ: {
+    GET: "/api/core/faq",
+  },
 };
