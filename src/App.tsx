@@ -21,6 +21,7 @@ import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
 import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
+import QnaPage from "./pages/QnaPage/QnaPage";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -103,6 +104,15 @@ function App() {
             element={
               <Layout>
                 <LessonManagementPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={`${PAGE_PATHS.QNA}/:qnaId?`}
+            element={
+              <Layout>
+                <QnaPage />
               </Layout>
             }
           />
