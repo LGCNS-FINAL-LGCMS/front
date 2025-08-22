@@ -26,9 +26,23 @@ export const API_ENDPOINTS = {
   },
   LECTURE: {
     GET: "/api/lecture",
+    REVIEW: {
+      GET: "/review/ilst", // /{lectureId}
+      POST: "/review/ilst", // /{lectureId}
+    },
+  },
+  QNA: {
+    GET: "/",
+    POST: "/qna",
   },
 
   GUIDE: {
     POST: "/api/guide/ask",
+  },
+  PAYMENT: {
+    CART: {
+      GET: "/cart",
+      POST: "/cart",
+    },
   },
 };
