@@ -20,7 +20,7 @@ const FaqCardSection = styled.div`
   margin: 0 auto;
 `;
 
-const FaqSubtitle = styled.div`
+const FaqTitle = styled.div`
   border-bottom: 2px solid;
   width: 1080px;
   font-size: ${(props) => props.theme.fontSize.title.max};
@@ -34,7 +34,7 @@ const FaqPage = () => {
 
   return (
     <FAQContainer>
-      <FaqSubtitle>MY PAGE</FaqSubtitle>
+      <FaqTitle>FAQ</FaqTitle>
       <FaqCardSection>
         {faqList.map((faq: FaqItem) => (
           <QnaCard
