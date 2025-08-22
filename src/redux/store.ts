@@ -15,7 +15,9 @@ import authSlice from "./Auth/authSlice";
 import guideBotSlice from "./GuideBot/guideBotSlice";
 import lecturePaginationSlice from "./lectureData/lecturerPageData/lecturerPageData";
 import studentLecturePagenationSlice from "./lectureData/studentPageData/studentPageDataSlice";
-// slice import 자리 (예: import userReducer from './slices/userSlice';)
+import currentLectureSlice from "./lectureData/currentLectureData/currentLectureSlice";
+import currentQnaSlice from "./qna/currentQnaSlice";
+
 const rootReducer = combineReducers({
   keyword: keywordSlice,
   lectureData: lectureDataSlice,
@@ -25,6 +27,8 @@ const rootReducer = combineReducers({
   category: categorySlice,
   auth: authSlice,
   guide: guideBotSlice,
+  currentLecture: currentLectureSlice,
+  currentQna: currentQnaSlice,
 });
 
 // persist 설정 타입 지정
