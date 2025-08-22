@@ -30,6 +30,21 @@ export const API_ENDPOINTS = {
   LECTURE: {
     GET: "/api/lecture",
   },
+  QNA: {
+    GET: "/api/qna", // /{lectureId}
+    POST: "/qna",
+    DELETE: "/api/qna", // /{lectureId}
+    PATCH: "/api/qna", // /{lectureId}
+
+    MEMBER: {
+      GET: "/api/qna//member", // 해당 맴버의 QNA
+
+      LECTURE: {
+        POST: "/api/qna/answer", // /{questionId} 답변 작성
+        PUT: "/api/qna/answer", // /{answerId} 답변 수정
+      },
+    },
+  },
 
   GUIDE: {
     POST: "/api/guide/ask",
