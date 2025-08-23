@@ -1,9 +1,7 @@
-import axios from "axios";
+
 import { API_ENDPOINTS } from "../../constants/endpoints";
 import { getErrorMessage } from "../../utils/handleApiError";
 import apiClient from "../index";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../redux/store";
 
 
 export interface cartResponse {

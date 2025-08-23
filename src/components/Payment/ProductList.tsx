@@ -1,12 +1,10 @@
-import React, { use, useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import {
-    getCart,
     deleteCart,
 } from '../../api/Payment/cartAPI';
 
 import { getTableKit } from './Table';
-import type { RootState } from '../../redux/store';
 import type { LectureItem } from '../../Pages/PaymentPage/PaymentPage';
 const T = getTableKit('v2');
 

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { API_ENDPOINTS } from "../../constants/endpoints";
 import { getErrorMessage } from "../../utils/handleApiError";
 import apiClient from "../index";

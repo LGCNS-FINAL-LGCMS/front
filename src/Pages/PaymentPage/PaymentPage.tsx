@@ -4,7 +4,7 @@ import ProductList from '../../components/Payment/ProductList';
 import styled, { keyframes, css } from 'styled-components';
 import { getCart } from '../../api/Payment/cartAPI';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setCancelled, setFailure, setPaymentInfo, setPending, setSuccess } from '../../redux/Payment/paymentSlice';
 
 
@@ -15,11 +15,9 @@ import {
   postPaymentBundleReady,
   postPaymentReady,
   type paymentData,
-  type lectureData,
 } from '../../api/Payment/paymentAPI';
 import { PAGE_PATHS } from '../../constants/pagePaths';
 import { useNavigate } from 'react-router-dom';
-import type { RootState } from '../../redux/store';
 
 
 const PaymentContainer = styled.div`
