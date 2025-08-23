@@ -20,6 +20,9 @@ import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
 import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
+import PaymentResultPage from "./Pages/PaymentPage/PaymentResultPage";
+import PaymentPage from "./Pages/PaymentPage/PaymentPage";
+import PaymentSuccess from "./Pages/PaymentPage/PaymentSuccess";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -89,6 +92,23 @@ function App() {
           />
 
           <Route
+            path={PAGE_PATHS.PAYMENT.PAYMENT}
+            element={
+              <Layout>
+                <PaymentPage />
+              </Layout>
+            }
+          />
+          <Route
+            path={PAGE_PATHS.PAYMENT.RESULT}
+            element={
+              <Layout>
+                <PaymentResultPage />
+              </Layout>
+            }
+          />
+
+          <Route
             path={`${PAGE_PATHS.Lesson_Management}/:lactureId?`}
             element={
               <Layout>
@@ -99,6 +119,21 @@ function App() {
           {/* =========================== */}
 
           {/* 와이드 Layout */}
+
+          {/* =========================== */}
+          <Route
+            path={`${PAGE_PATHS.PAYMENT.SUCCESS}`}
+            element={<PaymentSuccess />}
+          />
+          <Route
+            path={`${PAGE_PATHS.PAYMENT.FAIL}`}
+            element={<PaymentSuccess />}
+          />
+          <Route
+            path={`${PAGE_PATHS.PAYMENT.CANCEL}`}
+            element={<PaymentSuccess />}
+          />
+
         </Routes>
       </Router>
     </ThemeProvider>
