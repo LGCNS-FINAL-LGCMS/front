@@ -14,6 +14,7 @@ import categorySlice from "./Category/categorySlice";
 import authSlice from "./Auth/authSlice";
 import guideBotSlice from "./GuideBot/guideBotSlice";
 import lecturePaginationSlice from "./lectureData/lecturerPageData/lecturerPageData";
+import PaymentSlice from "./Payment/paymentSlice";
 
 // slice import 자리 (예: import userReducer from './slices/userSlice';)
 const rootReducer = combineReducers({
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   category: categorySlice,
   auth: authSlice,
   guide: guideBotSlice,
+  payment: PaymentSlice,
 });
 
 // persist 설정 타입 지정
