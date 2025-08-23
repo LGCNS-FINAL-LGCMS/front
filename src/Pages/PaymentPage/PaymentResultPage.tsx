@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import CheckMarkIcon from '/green-check-mark.svg';
 import ErrorMarkIcon from '/error-mark.svg';
@@ -39,7 +39,6 @@ function FailIcon() {
 
 
 const PaymentResultPage: React.FC = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     // 세션 제거
