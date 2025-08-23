@@ -6,9 +6,9 @@ import CheckMarkIcon from '/green-check-mark.svg';
 import ErrorMarkIcon from '/error-mark.svg';
 import WarningMarkIcon from '/warning-mark.svg';
 import Button from '../../components/Common/Button';
-import { setCancelled, setFailure, setPaymentInfo, setPending, setSuccess } from '../../redux/Payment/paymentSlice';
 import { useNavigate } from 'react-router-dom';
 import { PAGE_PATHS } from '../../constants/pagePaths';
+import type { RootState } from '../../redux/store';
 
 export type PaymentResultStatus = 'success' | 'failure' | 'pending';
 
@@ -47,10 +47,10 @@ const PaymentResultPage: React.FC = () => {
     sessionStorage.removeItem('itemIds');
 
 
-    const paymentStatus = useSelector((state: any) => state.payment.paymentStatus);
-    const totalAmount = useSelector((state: any) => state.payment.totalAmount);
-    const paymentMethod = useSelector((state: any) => state.payment.paymentMethod);
-    const transactionId = useSelector((state: any) => state.payment.transactionId);
+    const paymentStatus = useSelector((state: RootState) => state.payment.paymentStatus);
+    const totalAmount = useSelector((state: RootState) => state.payment.totalAmount);
+    const paymentMethod = useSelector((state: RootState) => state.payment.paymentMethod);
+    const transactionId = useSelector((state: RootState) => state.payment.transactionId);
 
     return (
         <PageWrap>

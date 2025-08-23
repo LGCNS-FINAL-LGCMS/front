@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import kakaoPayIcon from '/payment_icon_yellow_small.png';
 
