@@ -347,7 +347,7 @@ const Header = () => {
                 <>
                   <UserButton
                     onClick={() => {
-                      navigate(PAGE_PATHS.CART);
+                      navigate(PAGE_PATHS.PAYMENT.PAYMENT);
                     }}
                   >
                     <FontAwesomeIcon icon={faShoppingCart} />
@@ -429,7 +429,7 @@ const Header = () => {
 
                       <DropdownItem
                         onClick={() => {
-                          navigate(PAGE_PATHS.CART);
+                          navigate(PAGE_PATHS.PAYMENT.PAYMENT);
                           setIsDropdownOpen(false);
                         }}
                       >
