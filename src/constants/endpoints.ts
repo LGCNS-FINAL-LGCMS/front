@@ -22,16 +22,20 @@ export const API_ENDPOINTS = {
   STUDENT: {
     GET_LECTURE: "/???",
   },
+  LECTURE: {
+    GET: "/api/lecture",
+  },
   CATEGORY: {
     POST: "/api/member",
     GET: "/api/member",
     DELETE: "/api/member", // /{categoryId}
   },
-  LECTURE: {
-    GET: "/api/lecture",
-  },
 
   GUIDE: {
     POST: "/api/guide/ask",
+  },
+  LEVEL_TEST: {
+    GET_QUESTIONS: "/student/leveltest/questions/generate",
+    SUBMIT_ANSWERS: "/student/leveltest/answers/submit-all",
   },
 };
