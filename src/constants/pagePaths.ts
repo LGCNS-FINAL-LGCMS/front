@@ -11,7 +11,10 @@ export const PAGE_PATHS = {
   USER_INFO: "/userinfo",
   MY_COURSES: "/??",
   REPORT: "/??",
-  LEVEL_TEST: "/??",
+  LEVEL_TEST: {
+    DASHBOARD: "/member/student/leveltest/dashboard",
+    TEST: "/member/student/leveltest/:categoryId",
+  },
   FAQ: "/??",
   CREATE_LECTURE: "/openlecture",
   Lesson_Management: "/member/lecturer/lessons",

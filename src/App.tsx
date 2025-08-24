@@ -13,14 +13,16 @@ import Layout from "./layouts/Layout";
 
 // =========== 페이지 임포트 ===========
 import LandingPage from "./pages/LandingPage/LandingPage";
-import Login from "./pages/Login/Login";
-import SignupPage from "./pages/Signup/SignupPage";
+import Login from "./pages/LoginPage/Login";
+import SignupPage from "./pages/SignupPage/SignupPage";
 import StudentLecturePage from "./pages/UserMypage/StudentLecturePage";
 import MainPage from "./pages/MainPage/MainPage";
 import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
 import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
+import LevelTestPage from "./pages/LevelTestPage/LevelTestPage";
+import LevelTestDashboardPage from "./pages/LevelTestPage/LevelTestDashboardPage";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -58,6 +60,24 @@ function App() {
             element={
               <Layout>
                 <UpdateUserInfoPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.LEVEL_TEST.DASHBOARD}
+            element={
+              <Layout>
+                <LevelTestDashboardPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.LEVEL_TEST.TEST}
+            element={
+              <Layout>
+                <LevelTestPage />
               </Layout>
             }
           />
