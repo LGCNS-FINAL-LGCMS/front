@@ -18,7 +18,10 @@ export const PAGE_PATHS = {
   CART: "/cart",
   QNA: "/qna",
   USER_PAGE: {
-    STUDENT: "/userpage/student",
+    STUDENT: {
+      MY_LECTURES: "/userpage/student",
+      QNA: "/member/qna",
+    },
     LECTURER: "/userpage/lecturer",
   },
 };
