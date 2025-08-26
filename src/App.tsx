@@ -16,6 +16,7 @@ import LandingPage from "./pages/LandingPage/LandingPage";
 import Login from "./pages/Login/Login";
 import SignupPage from "./pages/Signup/SignupPage";
 import StudentLecturePage from "./pages/UserMypage/StudentLecturePage";
+import StudentQnaPage from "./pages/UserMypage/StudentQnaPage/StudentQnaPage";
 import MainPage from "./pages/MainPage/MainPage";
 import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
@@ -66,10 +67,19 @@ function App() {
           />
 
           <Route
-            path={PAGE_PATHS.USER_PAGE.STUDENT}
+            path={PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES}
             element={
               <Layout>
                 <StudentLecturePage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_PAGE.STUDENT.QNA}
+            element={
+              <Layout>
+                <StudentQnaPage />
               </Layout>
             }
           />

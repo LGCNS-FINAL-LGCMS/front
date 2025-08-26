@@ -37,7 +37,7 @@ export const API_ENDPOINTS = {
     PATCH: "/api/qna", // /{lectureId}
 
     MEMBER: {
-      GET: "/api/qna//member", // 해당 맴버의 QNA
+      GET: "/api/qna/member", // 해당 맴버의 QNA
 
       LECTURE: {
         POST: "/api/qna/answer", // /{questionId} 답변 작성
