@@ -15,12 +15,16 @@ import Layout from "./layouts/Layout";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Login from "./pages/Login/Login";
 import SignupPage from "./pages/Signup/SignupPage";
+import StudentLecturePage from "./pages/UserMypage/StudentLecturePage";
 import MainPage from "./pages/MainPage/MainPage";
 import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
 import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
 import LectureInfoPage from "./pages/LectureInfoPage/LectureInfoPage";
+
+import QnaPage from "./pages/QnaPage/QnaPage";
+import FaqPage from "./pages/FaqPage/FaqPage";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -58,6 +62,24 @@ function App() {
             element={
               <Layout>
                 <UpdateUserInfoPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_PAGE.STUDENT}
+            element={
+              <Layout>
+                <StudentLecturePage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.FAQ}
+            element={
+              <Layout>
+                <FaqPage />
               </Layout>
             }
           />
@@ -103,6 +125,14 @@ function App() {
             element={
               <Layout>
                 <LectureInfoPage />
+              </Layout>
+            }
+          />
+          <Route
+            path={`${PAGE_PATHS.QNA}/:qnaId?`}
+            element={
+              <Layout>
+                <QnaPage />
               </Layout>
             }
           />

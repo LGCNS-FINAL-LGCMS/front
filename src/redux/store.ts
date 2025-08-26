@@ -14,16 +14,23 @@ import categorySlice from "./Category/categorySlice";
 import authSlice from "./Auth/authSlice";
 import guideBotSlice from "./GuideBot/guideBotSlice";
 import lecturePaginationSlice from "./lectureData/lecturerPageData/lecturerPageData";
+import studentLecturePagenationSlice from "./lectureData/studentPageData/studentPageDataSlice";
+import currentLectureSlice from "./lectureData/currentLectureData/currentLectureSlice";
+import currentQnaSlice from "./qna/currentQnaSlice";
+import faqListSlice from "./FaqData/FaqDataSlice";
 
-// slice import 자리 (예: import userReducer from './slices/userSlice';)
 const rootReducer = combineReducers({
   keyword: keywordSlice,
   lectureData: lectureDataSlice,
   lecturerLectureData: lecturePaginationSlice,
+  studnetLectureData: studentLecturePagenationSlice,
   token: tokenSlice,
   category: categorySlice,
   auth: authSlice,
   guide: guideBotSlice,
+currentLecture: currentLectureSlice,
+  currentQna: currentQnaSlice,
+  faq: faqListSlice,
 });
 
 // persist 설정 타입 지정
