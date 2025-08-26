@@ -69,41 +69,37 @@ const PaymentResultPage: React.FC = () => {
                 </IconWrap>
             </Hero>
 
-            <SummaryCard>
-                <SummaryRow>
-                    <Label>결제 금액</Label>
-                    <Value><Mono>₩ {totalAmount}</Mono></Value>
-                </SummaryRow>
-                <SummaryRow>
-                    <Label>결제 방법</Label>
-                    <Value><Mono>{paymentMethod}</Mono></Value>
-                </SummaryRow>
-                <SummaryRow>
-                    <Label>거래 ID</Label>
-                    <Value><Mono>{transactionId}</Mono></Value>
-                </SummaryRow>
-            </SummaryCard>
-
-
-
-
             <Section>
                 <SectionTitle>추가 정보</SectionTitle>
                 {/* 추가 정보 컴포넌트 */}
 
-                <Actions $tone={paymentStatus === 'success' ? 'green' : paymentStatus === 'failure' ? 'red' : 'gray'}>
-
-                    <Button
-                        text="확인"
-                        onClick={() => {
-                            navigate(PAGE_PATHS.HOME)
-                        }}
-                        design={2}
-                        fontColor={2}
-                        fontWeight={400}
-                    />
-                </Actions>
+                <SummaryCard>
+                    <SummaryRow>
+                        <Label>결제 금액</Label>
+                        <Value><Mono>₩ {totalAmount}</Mono></Value>
+                    </SummaryRow>
+                    <SummaryRow>
+                        <Label>결제 방법</Label>
+                        <Value><Mono>{paymentMethod}</Mono></Value>
+                    </SummaryRow>
+                    <SummaryRow>
+                        <Label>거래 ID</Label>
+                        <Value><Mono>{transactionId}</Mono></Value>
+                    </SummaryRow>
+                </SummaryCard>
             </Section>
+
+            <Actions>
+                <Button
+                    text="확인"
+                    onClick={() => {
+                        navigate(PAGE_PATHS.HOME)
+                    }}
+                    design={2}
+                    fontColor={2}
+                    fontWeight={400}
+                />
+            </Actions>
 
             {/* 나중에 삭제하세요. 테스트용입니다. */}
             {/* <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', width: '100%' }}>
@@ -211,18 +207,11 @@ const SectionTitle = styled.h2`
     margin: 0 0 8px;
 `;
 
-const Actions = styled.div<{ $tone: 'green' | 'gray' | 'red' }>`
+const Actions = styled.div`
   display: flex;
   justify-content: center;
   gap: 10px;
   margin-top: 14px;
   border-radius:14px;
-  
-
-  ${({ $tone }) =>
-        $tone === 'green' ? css`background: rgba(255, 255, 255, 1); border:3px solid #c8ecd8;`
-            : $tone === 'gray' ? css`background: rgba(255, 255, 255, 1); border:3px solid #e9ecef;`
-                : css`background: rgba(255, 255, 255, 1); border:3px solid #fac0c0;`}
-  
-`;
+    `;
 
