@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import type { InstructorRequest } from '../../types/InstructorRequest';
 import Button from '../Common/Button';
 import { ActionRow, Td, TrBody } from './ApprovalTable';
