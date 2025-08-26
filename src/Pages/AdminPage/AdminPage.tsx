@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import type { InstructorRequest } from '../../types/InstructorRequest';
 import ApprovalTable from '../../components/Admin/ApprovalTable';
@@ -26,62 +26,45 @@ const PageTitle = styled.h1`
 
 const AdminPage: React.FC = () => {
   const [list, setList] = useState<desirerResponseData[]>([
-    { memberId: 1666, nickname: '코딩마법사_김민준', role: 'STUDENT', desireLecturer: true, categories: [{ id: 1, name: '웹 개발' }, { id: 2, name: '앱 개발' }] },
-    { memberId: 232, nickname: '리액트_장인_이서연', role: 'STUDENT', desireLecturer: true, categories: [{ id: 3, name: '프론트엔드' }] },
-    { memberId: 31414, nickname: '파이썬_킹_박도윤', role: 'STUDENT', desireLecturer: true, categories: [{ id: 4, name: '백엔드' }] },
-    { memberId: 47865, nickname: '데이터_분석가_최하은', role: 'STUDENT', desireLecturer: false, categories: [{ id: 5, name: '데이터 사이언스' }] },
-    { memberId: 51111, nickname: '자바스크립트_고수_정우진', role: 'STUDENT', desireLecturer: true, categories: [{ id: 1, name: '웹 개발' }] },
-    { memberId: 6, nickname: '디자인_천재_한우', role: 'STUDENT', desireLecturer: true, categories: [{ id: 6, name: 'UI/UX 디자인' }] },
-    { memberId: 74, nickname: '인공지능_박사_강하늘', role: 'STUDENT', desireLecturer: true, categories: [{ id: 7, name: '인공지능' }] },
-    { memberId: 8, nickname: '게임_개발자_지망생_고은서', role: 'STUDENT', desireLecturer: true, categories: [{ id: 8, name: '게임 개발' }] },
-    { memberId: 966, nickname: '클라우드_전문가_신지원', role: 'STUDENT', desireLecturer: true, categories: [{ id: 9, name: '클라우드' }] },
-    { memberId: 1440, nickname: '보안_전문가_윤서현', role: 'STUDENT', desireLecturer: true, categories: [{ id: 10, name: '정보 보안' }] },
-    { memberId: 11, nickname: '데브옵스_마스터_임준혁', role: 'STUDENT', desireLecturer: true, categories: [{ id: 11, name: '데브옵스' }] },
-    { memberId: 12, nickname: '풀스택_개발자_장예원', role: 'STUDENT', desireLecturer: true, categories: [{ id: 1, name: '웹 개발' }, { id: 4, name: '백엔드' }] },
-    { memberId: 124, nickname: 'ak마스터', role: 'STUDENT', desireLecturer: true, categories: [] },
-    { memberId: 12466, nickname: '뷰의 제왕 장은혁', role: 'STUDENT', desireLecturer: true, categories: [] },
-    { memberId: 16244, nickname: 'ak마스터', role: 'STUDENT', desireLecturer: true, categories: [] },
+    // { memberId: 1, nickname: 'User1', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-01T10:00:00Z', categories: [] },
+    // { memberId: 2, nickname: 'User2', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-02T11:00:00Z', categories: [] },
+    // { memberId: 3, nickname: 'User3', role: 'LECTURER', desireLecturer: true, requestedAt: '2024-10-03T12:00:00Z', categories: [] },
+    // { memberId: 4, nickname: 'User4', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-04T13:00:00Z', categories: [] },
+    // { memberId: 5, nickname: 'User5', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-05T14:00:00Z', categories: [] },
+    // { memberId: 6, nickname: 'User6', role: 'LECTURER', desireLecturer: true, requestedAt: '2024-10-06T15:00:00Z', categories: [] },
+    // { memberId: 7, nickname: 'User7', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-07T16:00:00Z', categories: [] },
+    // { memberId: 8, nickname: 'User8', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-08T17:00:00Z', categories: [] },
+    // { memberId: 9, nickname: 'User9', role: 'LECTURER', desireLecturer: false, requestedAt: '2024-10-09T18:00:00Z', categories: [] },
+    // { memberId: 10, nickname: 'User10', role: 'STUDENT', desireLecturer: true, requestedAt: '2025-08-25T12:00:00Z', categories: [] },
+
   ]);
 
-  // localStorage에서 이전에 확인한 item ID들을 가져와 Set으로 초기화
-  // 초기렌더링시 한번 실행
-  const [oldItemIds, setOldItemIds] = useState<Set<number>>(() => {
-    try {
-      const item = window.localStorage.getItem('viewedInstructorRequests');
-      return item ? new Set(JSON.parse(item)) : new Set();
-    } catch (error) {
-      console.error('Failed to parse oldItemIds from localStorage', error);
-      return new Set();
-    }
-  });
 
 
   const [viewList, setViewList] = useState<InstructorRequest[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
 
-  // oldItemIds 상태가 변경될 때마다 localStorage에 자동으로 저장
-
   useEffect(() => {
-    try {
-      window.localStorage.setItem('viewedInstructorRequests', JSON.stringify(Array.from(oldItemIds)));
-    } catch (error) {
-      console.error('Failed to save oldItemIds to localStorage', error);
-    }
-  }, [oldItemIds]);
-
+    const fetchData = async () => {
+      const response: desirerResponse = await getDesirers();
+      console.log(response.data);
+      setList(response.data);
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const currentItemIds = new Set<number>();
 
     const transformedList = list.map(item => {
       currentItemIds.add(item.memberId);
-      // oldItemIds에 포함되어 있지 않으면 새로운 아이템
-      const isNewItem = !oldItemIds.has(item.memberId);
+
+      const isNewItem = new Date().getTime() - new Date(item.requestedAt).getTime() < 24 * 60 * 60 * 1000;
       return {
         id: item.memberId,
         requester: item.nickname,
-        requestedAt: new Date().toLocaleDateString('ko-KR').slice(0, -1),
+        requestedAt: item.requestedAt,
         status: item.desireLecturer ? '요청' : '승인됨',
         isNew: isNewItem,
       };
@@ -90,13 +73,6 @@ const AdminPage: React.FC = () => {
     transformedList.sort((a, b) => Number(b.isNew) - Number(a.isNew));
 
     setViewList(transformedList);
-
-    // 업데이트
-    setOldItemIds(prevIds => {
-      const updatedIds = new Set(prevIds);
-      currentItemIds.forEach(id => updatedIds.add(id));
-      return updatedIds;
-    });
   }, [list]);
 
 
@@ -133,12 +109,13 @@ const AdminPage: React.FC = () => {
             item.memberId === selectedItemId ? { ...item, desireLecturer: false } : item
           )
         );
-        // 표에서 제거
-        setList(prev => prev.filter(item => item.memberId !== selectedItemId));
 
         // post요청
-        // const response: desirerResponse = await postConfirmDesirer([selectedItemId]);
-        // console.log('결과 : {}', response.data.forEach(item => (item.nickname)));
+        const response: desirerResponse = await postConfirmDesirer([selectedItemId]);
+        console.log('결과 : {}', response.data.forEach(item => (item.nickname)));
+
+        // 표에서 제거
+        setList(prev => prev.filter(item => item.memberId !== selectedItemId));
 
       }
       setIsModalOpen(false);
