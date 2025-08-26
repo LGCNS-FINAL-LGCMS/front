@@ -21,6 +21,7 @@ import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
 import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
 import AdminPage from "./Pages/AdminPage/AdminPage";
+import ProtectedRoute from "./components/Admin/ProtectedRoute";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -101,9 +102,11 @@ function App() {
           <Route
             path={PAGE_PATHS.ADMIN}
             element={
-              <Layout>
-                <AdminPage />
-              </Layout>
+              <ProtectedRoute requiredRole="ADMIN">
+                <Layout>
+                  <AdminPage />
+                </Layout>
+              </ProtectedRoute>
             }
           />
 
