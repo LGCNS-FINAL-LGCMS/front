@@ -102,7 +102,7 @@ const AdminPage: React.FC = () => {
       if (itemToApprove?.role === 'LECTURER') {
         console.log("이미 처리된 요청입니다.");
       } else {
-        alert("승인되었습니다!(실제로직은없습니다)");
+        alert("승인되었습니다!");
 
         setList(prev =>
           prev.map(item =>
