@@ -4,7 +4,7 @@ import StudnetLectureContainer from "../../components/StudentLecture/StudentLect
 
 const StudentLectureSection = styled.div``;
 
-const StudentLecturePageSubtitle = styled.div`
+const MypageTitle = styled.p`
   border-bottom: 2px solid;
   width: 1080px;
   font-size: ${(props) => props.theme.fontSize.title.max};
@@ -16,7 +16,7 @@ const StudentLecturePageSubtitle = styled.div`
 const StudentLecturePage = () => {
   return (
     <StudentLectureSection>
-      <StudentLecturePageSubtitle>MY PAGE</StudentLecturePageSubtitle>
+      <MypageTitle>MY PAGE</MypageTitle>
       <StudnetLectureContainer />
     </StudentLectureSection>
   );
