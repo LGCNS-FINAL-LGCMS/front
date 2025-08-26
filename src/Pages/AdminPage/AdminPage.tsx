@@ -6,6 +6,7 @@ import ApprovalModal from '../../components/Admin/ApprovalModal';
 import type { desirerResponseData } from '../../api/member/memberAPI';
 import { getDesirers, type desirerResponse, postConfirmDesirer } from '../../api/member/memberAPI';
 
+
 const Wrapper = styled.div`
   min-height: 100vh;
   background: ${({ theme }) => theme.colors.gray_L};
@@ -24,18 +25,28 @@ const PageTitle = styled.h1`
   margin: 0 0 16px 5vw;
 `;
 
+const formatDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+
+
+  return `${year}-${month}-${day} ${hours}시`;
+};
+
 const AdminPage: React.FC = () => {
   const [list, setList] = useState<desirerResponseData[]>([
-    // { memberId: 1, nickname: 'User1', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-01T10:00:00Z', categories: [] },
-    // { memberId: 2, nickname: 'User2', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-02T11:00:00Z', categories: [] },
-    // { memberId: 3, nickname: 'User3', role: 'LECTURER', desireLecturer: true, requestedAt: '2024-10-03T12:00:00Z', categories: [] },
-    // { memberId: 4, nickname: 'User4', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-04T13:00:00Z', categories: [] },
-    // { memberId: 5, nickname: 'User5', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-05T14:00:00Z', categories: [] },
-    // { memberId: 6, nickname: 'User6', role: 'LECTURER', desireLecturer: true, requestedAt: '2024-10-06T15:00:00Z', categories: [] },
-    // { memberId: 7, nickname: 'User7', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-07T16:00:00Z', categories: [] },
-    // { memberId: 8, nickname: 'User8', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-08T17:00:00Z', categories: [] },
-    // { memberId: 9, nickname: 'User9', role: 'LECTURER', desireLecturer: false, requestedAt: '2024-10-09T18:00:00Z', categories: [] },
-    // { memberId: 10, nickname: 'User10', role: 'STUDENT', desireLecturer: true, requestedAt: '2025-08-25T12:00:00Z', categories: [] },
+    { memberId: 10, nickname: 'User1', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-01T10:00:00Z', categories: [] },
+    { memberId: 2, nickname: 'User2', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-02T11:00:00Z', categories: [] },
+    { memberId: 3, nickname: 'User3', role: 'LECTURER', desireLecturer: true, requestedAt: '2024-10-03T12:00:00Z', categories: [] },
+    { memberId: 4, nickname: 'User4', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-04T13:00:00Z', categories: [] },
+    { memberId: 5, nickname: 'User5', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-05T14:00:00Z', categories: [] },
+    { memberId: 6, nickname: 'User6', role: 'LECTURER', desireLecturer: true, requestedAt: '2024-10-06T15:00:00Z', categories: [] },
+    { memberId: 7, nickname: 'User7', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-07T16:00:00Z', categories: [] },
+    { memberId: 8, nickname: 'User8', role: 'STUDENT', desireLecturer: true, requestedAt: '2024-10-08T17:00:00Z', categories: [] },
+    { memberId: 9, nickname: 'User9', role: 'LECTURER', desireLecturer: false, requestedAt: '2024-10-09T18:00:00Z', categories: [] },
+    { memberId: 1, nickname: 'User10', role: 'STUDENT', desireLecturer: true, requestedAt: '2025-08-25T12:00:00Z', categories: [] },
 
   ]);
 
@@ -45,14 +56,14 @@ const AdminPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response: desirerResponse = await getDesirers();
-      console.log(response.data);
-      setList(response.data);
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const response: desirerResponse = await getDesirers();
+  //     console.log(response.data);
+  //     setList(response.data);
+  //   };
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     const currentItemIds = new Set<number>();
@@ -64,7 +75,7 @@ const AdminPage: React.FC = () => {
       return {
         id: item.memberId,
         requester: item.nickname,
-        requestedAt: item.requestedAt,
+        requestedAt: formatDate(new Date(item.requestedAt)),
         status: item.desireLecturer ? '요청' : '승인됨',
         isNew: isNewItem,
       };
