@@ -5,44 +5,68 @@
 
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGOUT: "/api/auth/logout", // Delete
-    GOOGLE_LOGIN: "/api/auth/sign-in/google", //post
-    REFRESH: "/api/auth/refresh/token", // post
-    SIGN_OUT: "/api/auth/sign-out/google", // post
-    CHECK_NICKNAME: "/api/member/check/nickname", // post
+    LOGOUT: "/api/auth/logout", // DELETE
+    GOOGLE_LOGIN: "/api/auth/sign-in/google", // POST
+    REFRESH: "/api/auth/refresh/token", // POST
+    SIGN_OUT: "/api/auth/sign-out/google", // POST
+    CHECK_NICKNAME: "/api/member/check/nickname", // POST
   },
+
   USER: {
-    INFO: "/api/member", //get
-    UPDATE: "/api/member/change/info", // patch
-    CATEGORY_LIST: "/api/member/categories",
+    INFO: "/api/member", // GET
+    UPDATE: "/api/member/change/info", // PATCH
+    CATEGORY_LIST: "/api/member/categories", // GET
   },
+
   LECTURER: {
-    GET_LECTURE: "/api/lecture",
+    GET_LECTURE: "/api/lecture", // GET
   },
+
+  STUDENT: {
+    GET_LECTURE: "/api/student/lecture",
+  },
+
   CATEGORY: {
-    POST: "/api/member",
-    GET: "/api/member",
-    DELETE: "/api/member", // /{categoryId}
+    POST: "/api/member", // POST
+    GET: "/api/member", // GET
+    DELETE: "/api/member", // DELETE - /{categoryId}
   },
+
   LECTURE: {
-    GET: "/api/lecture",
+    GET: "/api/lecture", // GET
     REVIEW: {
-      GET: "/review/ilst", // /{lectureId}
-      POST: "/review/ilst", // /{lectureId}
+      GET: "/review/list", // GET - /{lectureId}
+      POST: "/review/list", // POST - /{lectureId}
     },
   },
+
   QNA: {
-    GET: "/",
-    POST: "/qna",
+    GET: "/api/qna", // GET - /{lectureId}
+    POST: "/qna", // POST
+    DELETE: "/api/qna", // DELETE - /{lectureId}
+    PATCH: "/api/qna", // PATCH - /{lectureId}
+
+    MEMBER: {
+      GET: "/api/qna/member", // GET - 특정 멤버의 QNA
+      LECTURE: {
+        POST: "/api/qna/answer", // POST - /{questionId}
+        PUT: "/api/qna/answer", // PUT - /{answerId}
+      },
+    },
   },
 
   GUIDE: {
-    POST: "/api/guide/ask",
+    POST: "/api/guide/ask", // POST
   },
+
   PAYMENT: {
     CART: {
-      GET: "/cart",
-      POST: "/cart",
+      GET: "/cart", // GET
+      POST: "/cart", // POST
     },
+  },
+
+  FAQ: {
+    GET: "/api/core/faq", // GET
   },
 };
