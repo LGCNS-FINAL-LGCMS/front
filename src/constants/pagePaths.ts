@@ -30,5 +30,6 @@ export const PAGE_PATHS = {
     CANCEL: "/cancel",
     FAIL: "/fail",
     RESULT: "/payment/result",
-  }
+  },
+  ADMIN: "/admin",
 };
