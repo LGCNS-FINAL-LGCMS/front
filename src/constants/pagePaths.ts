@@ -24,4 +24,5 @@ export const PAGE_PATHS = {
     },
     LECTURER: "/userpage/lecturer",
   },
+  ADMIN: "/admin",
 };

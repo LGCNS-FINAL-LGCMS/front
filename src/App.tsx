@@ -22,7 +22,8 @@ import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
 import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
-
+import AdminPage from "./Pages/AdminPage/AdminPage";
+import ProtectedRoute from "./components/Admin/ProtectedRoute";
 import QnaPage from "./pages/QnaPage/QnaPage";
 import FaqPage from "./pages/FaqPage/FaqPage";
 // =========== 페이지 임포트 ===========
@@ -129,6 +130,17 @@ function App() {
             }
           />
 
+          <Route
+            path={PAGE_PATHS.ADMIN}
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <Layout>
+                  <AdminPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          
           <Route
             path={`${PAGE_PATHS.QNA}/:qnaId?`}
             element={
