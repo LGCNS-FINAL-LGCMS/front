@@ -15,6 +15,8 @@ import Layout from "./layouts/Layout";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Login from "./pages/Login/Login";
 import SignupPage from "./pages/Signup/SignupPage";
+import StudentLecturePage from "./pages/UserMypage/StudentLecturePage";
+import StudentQnaPage from "./pages/UserMypage/StudentQnaPage/StudentQnaPage";
 import MainPage from "./pages/MainPage/MainPage";
 import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
@@ -22,6 +24,8 @@ import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementP
 import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
 import AdminPage from "./Pages/AdminPage/AdminPage";
 import ProtectedRoute from "./components/Admin/ProtectedRoute";
+import QnaPage from "./pages/QnaPage/QnaPage";
+import FaqPage from "./pages/FaqPage/FaqPage";
 // =========== 페이지 임포트 ===========
 
 function App() {
@@ -59,6 +63,33 @@ function App() {
             element={
               <Layout>
                 <UpdateUserInfoPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES}
+            element={
+              <Layout>
+                <StudentLecturePage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_PAGE.STUDENT.QNA}
+            element={
+              <Layout>
+                <StudentQnaPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.FAQ}
+            element={
+              <Layout>
+                <FaqPage />
               </Layout>
             }
           />
@@ -109,7 +140,15 @@ function App() {
               </ProtectedRoute>
             }
           />
-
+          
+          <Route
+            path={`${PAGE_PATHS.QNA}/:qnaId?`}
+            element={
+              <Layout>
+                <QnaPage />
+              </Layout>
+            }
+          />
           {/* =========================== */}
 
           {/* 와이드 Layout */}
