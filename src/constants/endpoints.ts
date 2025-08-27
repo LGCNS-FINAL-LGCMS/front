@@ -60,10 +60,10 @@ export const API_ENDPOINTS = {
     POST: "/cart",  // 장바구니에 아이템 등록
     DELETE: "/cart", // /{cartId}  단건 삭젝
     COUNT: "/admin/cart/count", //회원별 장바구니 아이템 갯수 
-FAQ: {
+  },
   MEMBER: {
-    DESIRER: "/api/admin/member/lecturer/desirer", // get
-    CONFIRM: "/api/admin/member/lecturer/confirm", // post
+    DESIRER: "/admin/member/lecturer/desirer", // get
+    CONFIRM: "/admin/member/lecturer/confirm", // post
   },
   
   FAQ: {
