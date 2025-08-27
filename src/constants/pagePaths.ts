@@ -13,7 +13,7 @@ export const PAGE_PATHS = {
   REPORT: "/??",
   LEVEL_TEST: {
     DASHBOARD: "/member/student/leveltest/dashboard",
-    TEST: "/member/student/leveltest/:categoryId",
+    TEST: "/member/student/leveltest",
   },
   FAQ: "/??",
   CREATE_LECTURE: "/openlecture",

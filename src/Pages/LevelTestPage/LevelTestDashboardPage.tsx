@@ -6,6 +6,8 @@ import type { RootState } from "../../redux/store";
 import { levelTestApi } from "../../utils/sessionStorage/levelTest";
 import type { UserCategoriesList } from "../../types/authInfo";
 import Button from "../../components/Common/Button";
+import { useNavigate } from "react-router-dom";
+import { PAGE_PATHS } from "../../constants/pagePaths";
 
 const LevelTestDashboardContainer = styled.div`
   font-family: ${(props) => props.theme.font.primary};
@@ -14,13 +16,12 @@ const LevelTestDashboardContainer = styled.div`
 const CategorySelectContainer = styled.div`
   align-items: center;
   justify-content: center;
-
   text-align: center;
 `;
 
 const Title = styled.p`
   margin: 0 0 50px 0;
-  width: 1080px;
+  width: ${(props) => props.theme.size.bottomLine};
   border-bottom: 2px solid;
   font-size: ${(props) => props.theme.fontSize.title.max};
 `;
@@ -80,7 +81,9 @@ const CategoryOption = styled.option``;
 const PastTestReportsSection = styled.div``;
 
 const LevelTestDashboardPage = () => {
+  const navigate = useNavigate();
   const auth = useSelector((state: RootState) => state.auth);
+
   const [CategoryList, setCategoryList] = useState<UserCategoriesList[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number>(-1);
 
@@ -104,7 +107,7 @@ const LevelTestDashboardPage = () => {
     getCategory();
   }, []);
 
-  // nickname,categoryId 보내기
+  // nickname, 선택된 categoryId 보내고 문제 세션에 저장
   const handleStartTest = async () => {
     if (selectedCategory === -1) {
       alert("카테고리를 선택해주세요");
@@ -114,6 +117,8 @@ const LevelTestDashboardPage = () => {
     try {
       const result = await levelTestApi(selectedCategory, auth.memberId);
       if (result) {
+        navigate(PAGE_PATHS.LEVEL_TEST.TEST);
+
         console.log("request 완료");
       } else {
         console.log("request 전달 실패");
@@ -127,7 +132,7 @@ const LevelTestDashboardPage = () => {
     <LevelTestDashboardContainer>
       <Title>Level Test</Title>
       <CategorySelectContainer>
-        <CategoryTitle>레벨 테스트할 Category를 선택해주세요.</CategoryTitle>
+        <CategoryTitle>레벨 테스트할 카테고리를 선택해 주세요.</CategoryTitle>
         <TestCategorySelectSection>
           <CategoryDropdown
             value={selectedCategory} // 현재 선택된 값
