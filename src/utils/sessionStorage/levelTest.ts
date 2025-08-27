@@ -29,12 +29,7 @@ export interface LevelTestSession {
 export const levelTestApi = async (categoryId: number, memberId: number) => {
   try {
     const response = await apiClient.get<ApiResponse>(
-      `${API_ENDPOINTS.LEVEL_TEST.GET_QUESTIONS}/${categoryId}`,
-      {
-        headers: {
-          memberId: memberId,
-        },
-      }
+      `${API_ENDPOINTS.LEVEL_TEST.GET_QUESTIONS}?categoryId=${categoryId}`
     );
 
     if (response.data.status === "OK") {
@@ -71,15 +66,6 @@ export const getSession = (): LevelTestSession | null => {
   }
 };
 
-// getQusetion() 문제가져오기
-export const getQuestion = (questionNumber: number): ApiQuestion | null => {
-  const session = getSession();
-  if (!session) return null;
-
-  const index = questionNumber - 1;
-  return session.questions[index] || null;
-};
-
 // 답변 저장하기
 export const saveAnswer = (questionId: number, answer: string): void => {
   const session = getSession();
@@ -107,51 +93,6 @@ export const getAnswer = (questionId: number): string => {
 
   const answer = session.answers.find((a) => a.questionId === questionId);
   return answer?.answer || "";
-};
-
-// 제출용 데이터
-export const getSubmitData = () => {
-  const session = getSession();
-  if (!session) return null;
-
-  return {
-    answers: session.answers,
-    memberId: session.memberId,
-  };
-};
-
-export const levelTestSubmit = async (): Promise<boolean> => {
-  const submitData = getSubmitData();
-
-  if (!submitData) {
-    console.log("제출할 데이터가 없어요");
-    return false;
-  }
-
-  try {
-    const response = await apiClient.post(
-      API_ENDPOINTS.LEVEL_TEST.SUBMIT_ANSWERS,
-      { answers: submitData.answers },
-      {
-        headers: {
-          memberId: submitData.memberId,
-        },
-      }
-    );
-
-    if (response.data.status === "OK") {
-      console.log("answer 제출 완료");
-      clearSession(); // 제출성공하면 세션 삭제
-      return true;
-    } else {
-      throw new Error(
-        response.data.message || "answer 제출 비즈니스 로직 에러"
-      );
-    }
-  } catch (error: unknown) {
-    console.log("answer 제출 실패", error);
-    return false;
-  }
 };
 
 //세션 삭제
