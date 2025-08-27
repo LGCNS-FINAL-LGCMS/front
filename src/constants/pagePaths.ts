@@ -12,12 +12,16 @@ export const PAGE_PATHS = {
   MY_COURSES: "/??",
   REPORT: "/??",
   LEVEL_TEST: "/??",
-  FAQ: "/??",
+  FAQ: "/faq",
   CREATE_LECTURE: "/openlecture",
   Lesson_Management: "/member/lecturer/lessons",
   CART: "/cart",
+  QNA: "/qna",
   USER_PAGE: {
-    STUDENT: "/userpage/student",
+    STUDENT: {
+      MY_LECTURES: "/userpage/student",
+      QNA: "/member/qna",
+    },
     LECTURER: "/userpage/lecturer",
   },
   ADMIN: "/admin",
