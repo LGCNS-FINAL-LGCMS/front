@@ -24,5 +24,12 @@ export const PAGE_PATHS = {
     },
     LECTURER: "/userpage/lecturer",
   },
+  PAYMENT:{
+    PAYMENT: "/payment",
+    SUCCESS: "/success",
+    CANCEL: "/cancel",
+    FAIL: "/fail",
+    RESULT: "/payment/result",
+  },
   ADMIN: "/admin",
 };
