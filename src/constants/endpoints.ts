@@ -61,6 +61,12 @@ export const API_ENDPOINTS = {
     DELETE: "/cart", // /{cartId}  단건 삭젝
     COUNT: "/admin/cart/count", //회원별 장바구니 아이템 갯수 
 FAQ: {
+  MEMBER: {
+    DESIRER: "/api/admin/member/lecturer/desirer", // get
+    CONFIRM: "/api/admin/member/lecturer/confirm", // post
+  },
+  
+  FAQ: {
     GET: "/api/core/faq",
   },
 };
