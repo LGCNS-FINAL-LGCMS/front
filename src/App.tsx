@@ -15,6 +15,8 @@ import Layout from "./layouts/Layout";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Login from "./pages/Login/Login";
 import SignupPage from "./pages/Signup/SignupPage";
+import StudentLecturePage from "./pages/UserMypage/StudentLecturePage";
+import StudentQnaPage from "./pages/UserMypage/StudentQnaPage/StudentQnaPage";
 import MainPage from "./pages/MainPage/MainPage";
 import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
@@ -22,8 +24,10 @@ import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementP
 import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
 import PaymentResultPage from "./Pages/PaymentPage/PaymentResultPage";
 import PaymentPage from "./Pages/PaymentPage/PaymentPage";
-import PaymentSuccess from "./Pages/PaymentPage/PaymentSuccess";
-// =========== 페이지 임포트 ===========
+import PaymentSuccess from "./Pages/PaymentPage/PaymentSuccess";        
+import QnaPage from "./pages/QnaPage/QnaPage";
+import FaqPage from "./pages/FaqPage/FaqPage";
+
 
 function App() {
   return (
@@ -60,6 +64,33 @@ function App() {
             element={
               <Layout>
                 <UpdateUserInfoPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES}
+            element={
+              <Layout>
+                <StudentLecturePage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_PAGE.STUDENT.QNA}
+            element={
+              <Layout>
+                <StudentQnaPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.FAQ}
+            element={
+              <Layout>
+                <FaqPage />
               </Layout>
             }
           />
@@ -113,6 +144,15 @@ function App() {
             element={
               <Layout>
                 <LessonManagementPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={`${PAGE_PATHS.QNA}/:qnaId?`}
+            element={
+              <Layout>
+                <QnaPage />
               </Layout>
             }
           />
