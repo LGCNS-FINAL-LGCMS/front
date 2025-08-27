@@ -49,6 +49,18 @@ export const API_ENDPOINTS = {
   GUIDE: {
     POST: "/api/guide/ask",
   },
+
+  PAYMENT: {
+    READY: "/payment/ready",  // 결제 준비
+    BUNDLEREADY: "/payment/list/ready",  // 묶음결제 준비
+    APPROVE: "/payment/approve",  // 결제 승인
+  },
+  CART: {
+    GET: "/cart",  // 장바구니 아이템 조회
+    POST: "/cart",  // 장바구니에 아이템 등록
+    DELETE: "/cart", // /{cartId}  단건 삭젝
+    COUNT: "/admin/cart/count", //회원별 장바구니 아이템 갯수 
+FAQ: {
   MEMBER: {
     DESIRER: "/api/admin/member/lecturer/desirer", // get
     CONFIRM: "/api/admin/member/lecturer/confirm", // post
