@@ -4,7 +4,7 @@ import ImageUploader from "../../components/CreateLecture/ImageUploader";
 import LectureMaterialsUploader from "../../components/CreateLecture/LectureMaterialUploader";
 import InterestSelector from "../../components/Common/InterestSelector";
 import Button from "../../components/Common/Button";
-import { categoriesList } from "../../api/Signup/signupAPI";
+import { getcategoriesList } from "../../api/Signup/signupAPI";
 
 interface Interest {
   id: string;
@@ -200,7 +200,6 @@ const CreateLecturePage = () => {
     ""
   );
   const [interests, setInterests] = useState<Interest[]>([]); // 여기를 빈 배열로 초기화
-  const [isLoadingInterests, setIsLoadingInterests] = useState<boolean>(true); // 로딩 여부 optional
 
   const levels: Array<"상" | "중" | "하"> = ["상", "중", "하"];
 
@@ -247,7 +246,7 @@ const CreateLecturePage = () => {
   useEffect(() => {
     const fetchInterests = async () => {
       try {
-        const data = await categoriesList();
+        const data = await getcategoriesList();
         console.log(data);
         setInterests(
           data.data.categories.map((cat: { id: number; name: string }) => ({
@@ -258,8 +257,6 @@ const CreateLecturePage = () => {
       } catch (error) {
         console.error("카테고리 불러오기 실패:", error);
         setInterests([]);
-      } finally {
-        setIsLoadingInterests(false);
       }
     };
 
