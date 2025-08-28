@@ -17,31 +17,44 @@ import preButton from "../../assets/images/levelTestPage/preButton.svg";
 
 const LevelTestContainer = styled.div`
   font-family: ${(props) => props.theme.font.primary};
-
-  padding: 40px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 10px 20px;
 `;
 
 const TimerSection = styled.div`
   display: flex;
   justify-content: center;
   gap: 20px;
-  margin: 20px 0;
   padding: 20px 30px;
   border-radius: 16px;
+  margin-bottom: 30px;
 `;
 
-const TimeBox = styled.div`
-  background: ${(props) => props.theme.colors.border_Light};
-  padding: 20px;
+const TimeBox = styled.div<{ isWarning: boolean }>`
+  background: ${(props) =>
+    props.isWarning
+      ? props.theme.colors.danger //  1분 남았을 때 빨간색
+      : props.theme.colors.border_Light};
+  padding: 15px;
   border-radius: 12px;
   text-align: center;
-  min-width: 80px;
+  min-width: 100px;
   color: white;
 
   box-shadow: ${(props) => props.theme.shadow.md};
+
+  ${(props) =>
+    props.isWarning &&
+    `animation: pulse 1s infinite;
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+  `}
 `;
 
 const TimeNumber = styled.div`
@@ -67,14 +80,49 @@ const TestContainer = styled.div`
 `;
 
 const QuestionHeader = styled.div`
-  background: ${(props) => props.theme.colors.border_Light};
+  background: ${(props) => props.theme.colors.background_Overlay};
   color: white;
   padding: 15px 25px;
   border-radius: 12px;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   font-weight: bold;
   font-size: 18px;
-  text-align: center;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const QuestionInfo = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const QuestionNumber = styled.span`
+  font-size: 18px;
+  font-weight: bold;
+`;
+
+const QuestionMeta = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+`;
+
+const DifficultyTag = styled.span`
+  background: ${(props) => props.theme.colors.gray_D};
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: normal;
+`;
+
+const CategoryTag = styled.span`
+  background: ${(props) => props.theme.colors.gray_D};
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: normal;
 `;
 
 const QuestionContainer = styled.div`
@@ -85,7 +133,7 @@ const QuestionContainer = styled.div`
   font-size: 18px;
   line-height: 1.6;
   color: #333;
-  border: 2px solid #e9ecef;
+  border: ${(props) => props.theme.colors.border_Dark};
   min-height: 120px;
   display: flex;
   align-items: center;
@@ -95,14 +143,20 @@ const AnswerContainer = styled.div`
   margin-bottom: 40px;
 `;
 
-const Answer = styled.input`
+const Answer = styled.textarea`
   width: 100%;
   padding: 20px;
-  border: 2px solid #e9ecef;
+  border: ${(props) => props.theme.colors.border_Dark};
   border-radius: 12px;
   font-size: 16px;
   transition: all 0.3s ease;
   background: #f8f9fa;
+
+  min-height: 100px;
+  resize: none;
+  overflow-y: auto;
+  font-family: inherit;
+  line-height: 1.5;
 
   &:focus {
     outline: none;
@@ -133,7 +187,6 @@ const PreButton = styled.button`
   border-radius: 4px;
   transition: all 0.3s ease;
 
-  // 아이콘에만 호버 효과 적용
   img {
     transition: all 0.3s ease;
     border-radius: 4px;
@@ -160,7 +213,6 @@ const NextButton = styled.button`
   border-radius: 4px;
   transition: all 0.3s ease;
 
-  // 아이콘에만 호버 효과 적용
   img {
     transition: all 0.3s ease;
     border-radius: 4px;
@@ -177,12 +229,12 @@ const NextButton = styled.button`
 `;
 
 const ProgressSection = styled.div`
-  margin: 20px 0;
+  margin: 0;
   padding: 0 20px;
 `;
 
 const ProgressBarContainer = styled.div`
-  width: 100%;
+  width: 300px;
   height: 8px;
   background-color: #f0f0f0;
   border-radius: 4px;
@@ -192,7 +244,7 @@ const ProgressBarContainer = styled.div`
 const ProgressBarFill = styled.div<{ progress: number }>`
   width: ${(props) => props.progress}%;
   height: 100%;
-  background: linear-gradient(90deg, #007bff, #0056b3);
+  background: ${(props) => props.theme.colors.background_Overlay};
   transition: width 0.3s ease;
 `;
 
@@ -211,7 +263,7 @@ const LevelTestPage = () => {
     null
   ); //현재 문제
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // 문제 순서를 세션에서 인덱스로 관리
-  const [answerInput, setAnswerInput] = useState<string>(""); // 사용자가 적은 답변
+  const [answerInput, setAnswerInput] = useState<string | null>(null); // 사용자가 적은 답변
 
   const [showSuccessModal, setShowSuccessModal] = useState(false); // 성공 모달 띄우기
 
@@ -253,9 +305,10 @@ const LevelTestPage = () => {
     }
   }, [navigate]);
 
-  const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAnswerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setAnswerInput(e.target.value);
   };
+
   // 버튼 눌렀을 때 문제 렌더링
   useEffect(() => {
     if (allQuestions.length > 0 && currentQuestionIndex < allQuestions.length) {
@@ -270,7 +323,8 @@ const LevelTestPage = () => {
   // 답변 저장 함수
   const saveCurrentAnswer = () => {
     if (currentQuestion) {
-      saveAnswer(currentQuestion.id, answerInput.trim());
+      const answerToSave = answerInput ? answerInput.trim() : "";
+      saveAnswer(currentQuestion.id, answerToSave);
     }
   };
 
@@ -289,6 +343,7 @@ const LevelTestPage = () => {
         );
 
         if (response.data.status === "OK") {
+          console.log(submitData);
           console.log("answer 제출 완료");
           clearSession(); // 제출성공하면 세션 삭제
           return true;
@@ -309,12 +364,6 @@ const LevelTestPage = () => {
     saveCurrentAnswer();
     if (currentQuestionIndex < allQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-      if (answerInput.trim()) {
-        setShowSuccessModal(true);
-      } else {
-        alert("문제의 답변을 입력해주세요.");
-      }
     }
   };
 
@@ -360,29 +409,39 @@ const LevelTestPage = () => {
   return (
     <LevelTestContainer>
       <TimerSection>
-        <TimeBox>
+        <TimeBox isWarning={seconds <= 60}>
           <TimeNumber>{timeDisplay.hours}</TimeNumber>
           <TimeLabel>Hours</TimeLabel>
         </TimeBox>
-        <TimeBox>
+        <TimeBox isWarning={seconds <= 60}>
           <TimeNumber>{timeDisplay.minutes}</TimeNumber>
           <TimeLabel>Minutes</TimeLabel>
         </TimeBox>
-        <TimeBox>
+        <TimeBox isWarning={seconds <= 60}>
           <TimeNumber>{timeDisplay.seconds}</TimeNumber>
           <TimeLabel>Seconds</TimeLabel>
         </TimeBox>
       </TimerSection>
 
       <TestContainer>
-        <QuestionHeader></QuestionHeader>
+        <QuestionHeader>
+          <QuestionInfo>
+            <QuestionNumber>Question {currentQuestionIndex + 1}</QuestionNumber>
+          </QuestionInfo>
+          <QuestionMeta>
+            <DifficultyTag>
+              {currentQuestion?.difficulty || "Normal"}
+            </DifficultyTag>
+            <CategoryTag>{currentQuestion?.category || "General"}</CategoryTag>
+          </QuestionMeta>
+        </QuestionHeader>
         <QuestionContainer>{currentQuestion?.question}</QuestionContainer>
         <AnswerContainer>
           <Answer
-            type="text"
-            value={answerInput}
+            value={answerInput || ""}
             onChange={handleAnswerChange}
             placeholder="답변을 입력하세요"
+            rows={4}
           />
         </AnswerContainer>
 
@@ -393,7 +452,10 @@ const LevelTestPage = () => {
           >
             <img src={preButton} />
           </PreButton>
-          <NextButton onClick={handleNext}>
+          <NextButton
+            onClick={handleNext}
+            disabled={currentQuestionIndex === 9}
+          >
             <img src={nextButton} alt="다음" />
           </NextButton>
         </ButtonContainer>
