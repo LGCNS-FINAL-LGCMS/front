@@ -15,6 +15,7 @@ import apiClient from "../../api";
 import nextButton from "../../assets/images/levelTestPage/nextButton.svg";
 import preButton from "../../assets/images/levelTestPage/preButton.svg";
 import pagenationButton from "../../assets/images/levelTestPage/pagenationButton.svg";
+import Button from "../../components/Common/Button";
 
 const LevelTestContainer = styled.div`
   font-family: ${(props) => props.theme.font.primary};
@@ -80,6 +81,7 @@ const TestContainer = styled.div`
   margin-bottom: 30px;
 `;
 
+// 문제 헤더
 const QuestionHeader = styled.div`
   background: ${(props) => props.theme.colors.background_Overlay};
   color: white;
@@ -126,6 +128,7 @@ const CategoryTag = styled.span`
   font-weight: normal;
 `;
 
+//문제
 const QuestionContainer = styled.div`
   background: #f8f9fa;
   padding: 30px;
@@ -140,6 +143,7 @@ const QuestionContainer = styled.div`
   align-items: center;
 `;
 
+//답변
 const AnswerContainer = styled.div`
   margin-bottom: 40px;
 `;
@@ -171,6 +175,7 @@ const Answer = styled.textarea`
   }
 `;
 
+//버튼
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -286,7 +291,6 @@ const NumberOverlay = styled.span<{ isActive: boolean }>`
 
   color: ${(props) => (props.isActive ? "#333333" : "white")};
 
-  // 그림자도 상황에 맞게
   text-shadow: ${
     (props) =>
       props.isActive
@@ -295,31 +299,23 @@ const NumberOverlay = styled.span<{ isActive: boolean }>`
   };
 `;
 
-const ProgressSection = styled.div`
+const SubmitContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+const SubmitButton = styled.button`
+  background: none;
+  border: none;
+  padding: 0;
   margin: 0;
-  padding: 0 20px;
-`;
+  cursor: pointer;
 
-const ProgressBarContainer = styled.div`
-  width: 300px;
-  height: 8px;
-  background-color: #f0f0f0;
-  border-radius: 4px;
-  overflow: hidden;
-`;
-
-const ProgressBarFill = styled.div<{ progress: number }>`
-  width: ${(props) => props.progress}%;
-  height: 100%;
-  background: ${(props) => props.theme.colors.background_Overlay};
-  transition: width 0.3s ease;
-`;
-
-const ProgressText = styled.div`
-  text-align: center;
-  margin-top: 8px;
-  font-size: 14px;
-  color: #666;
+  // Button 컴포넌트의 기본 스타일을 그대로 사용하도록 설정
+  & > * {
+    display: block;
+  }
 `;
 
 const LevelTestPage = () => {
@@ -413,6 +409,7 @@ const LevelTestPage = () => {
 
     if (!submitData) {
       console.log("제출할 데이터가 없어요");
+      console.log(submitData);
       return false;
     } else {
       try {
@@ -422,7 +419,6 @@ const LevelTestPage = () => {
         );
 
         if (response.data.status === "OK") {
-          console.log(response.data);
           console.log("answer 제출 완료");
           clearSession(); // 제출성공하면 세션 삭제
           return true;
@@ -454,13 +450,13 @@ const LevelTestPage = () => {
     }
   };
 
-  // 모달창 확인 누르면 대시보드 페이지로
-  const handleConfirm = async () => {
+  // 문제 제출 버튼
+  const handleSubmit = async () => {
     try {
       const success = await levelTestSubmit();
 
       if (success) {
-        navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD);
+        setShowSuccessModal(true);
       } else {
         alert("제출에 실패했습니다. 다시 시도해주세요.");
         setShowSuccessModal(false);
@@ -472,16 +468,11 @@ const LevelTestPage = () => {
     }
   };
 
-  // 모달창 취소버튼
-  const handleCancel = () => {
+  // 모달 확인 버튼
+  const handleConfirm = () => {
     setShowSuccessModal(false);
+    navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD);
   };
-
-  // progress
-  const progress =
-    allQuestions.length > 0
-      ? ((currentQuestionIndex + 1) / allQuestions.length) * 100
-      : 0;
 
   const timeDisplay = getTimeDisplay();
 
@@ -523,26 +514,6 @@ const LevelTestPage = () => {
             rows={4}
           />
         </AnswerContainer>
-        <QuestionNavigation>
-          {allQuestions.map((question, index) => {
-            const isActive = index === currentQuestionIndex;
-            const hasAnswer = hasAnswerForQuestion(question.id);
-
-            return (
-              <QuestionNavButton
-                key={question.id}
-                isActive={isActive}
-                hasAnswer={hasAnswer}
-                onClick={() => navigateToQuestion(index)}
-              >
-                <img src={pagenationButton} alt={`문제 ${index + 1}`} />
-                <NumberOverlay isActive={isActive}>
-                  {index + 1}
-                </NumberOverlay>{" "}
-              </QuestionNavButton>
-            );
-          })}
-        </QuestionNavigation>
 
         <ButtonContainer>
           <PreButton
@@ -551,6 +522,28 @@ const LevelTestPage = () => {
           >
             <img src={preButton} />
           </PreButton>
+
+          <QuestionNavigation>
+            {allQuestions.map((question, index) => {
+              const isActive = index === currentQuestionIndex;
+              const hasAnswer = hasAnswerForQuestion(question.id);
+
+              return (
+                <QuestionNavButton
+                  key={question.id}
+                  isActive={isActive}
+                  hasAnswer={hasAnswer}
+                  onClick={() => navigateToQuestion(index)}
+                >
+                  <img src={pagenationButton} alt={`문제 ${index + 1}`} />
+                  <NumberOverlay isActive={isActive}>
+                    {index + 1}
+                  </NumberOverlay>{" "}
+                </QuestionNavButton>
+              );
+            })}
+          </QuestionNavigation>
+
           <NextButton
             onClick={handleNext}
             disabled={currentQuestionIndex === 9}
@@ -560,22 +553,18 @@ const LevelTestPage = () => {
         </ButtonContainer>
       </TestContainer>
 
-      <ProgressSection>
-        <ProgressBarContainer>
-          <ProgressBarFill progress={progress} />
-        </ProgressBarContainer>
-        <ProgressText>
-          {currentQuestionIndex + 1} / {allQuestions.length} 문제
-        </ProgressText>
-      </ProgressSection>
+      <SubmitContainer>
+        <SubmitButton type="button">
+          <Button text="시험 제출" onClick={handleSubmit} />
+        </SubmitButton>
+      </SubmitContainer>
 
       <InfoCheckModal
         isOpen={showSuccessModal}
         message="답변을 제출하면 레포트 작성이 시작됩니다. 제출하시겠습니까?"
         onConfirm={handleConfirm}
-        onCancel={handleCancel}
+        onCancel={handleConfirm}
         confirmText="확인"
-        cancelText="취소"
       />
     </LevelTestContainer>
   );
