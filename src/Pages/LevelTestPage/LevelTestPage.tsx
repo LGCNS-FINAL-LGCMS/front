@@ -14,6 +14,7 @@ import { API_ENDPOINTS } from "../../constants/endpoints";
 import apiClient from "../../api";
 import nextButton from "../../assets/images/levelTestPage/nextButton.svg";
 import preButton from "../../assets/images/levelTestPage/preButton.svg";
+import pagenationButton from "../../assets/images/levelTestPage/pagenationButton.svg";
 
 const LevelTestContainer = styled.div`
   font-family: ${(props) => props.theme.font.primary};
@@ -228,6 +229,72 @@ const NextButton = styled.button`
   }
 `;
 
+//페이지 네이션
+const QuestionNavigation = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const QuestionNavButton = styled.button<{
+  isActive: boolean;
+  hasAnswer: boolean;
+}>`
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0 5px;
+  position: relative;
+  transition: all 0.3s ease;
+
+  img {
+    width: 35px;
+    height: 35px;
+    transition: all 0.3s ease;
+
+    // 아이콘 색상 변경 필터
+    filter: ${(props) => {
+      if (props.isActive) {
+        return "brightness(3.0) ";
+      }
+      if (props.hasAnswer) {
+        return "brightness(0.5) ";
+      }
+      return "brightness(3.5) ";
+    }};
+  }
+
+  &:hover {
+    transform: scale(1.15);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
+
+const NumberOverlay = styled.span<{ isActive: boolean }>`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  pointer-events: none;
+
+  color: ${(props) => (props.isActive ? "#333333" : "white")};
+
+  // 그림자도 상황에 맞게
+  text-shadow: ${
+    (props) =>
+      props.isActive
+        ? "1px 1px 2px rgba(255,255,255,0.8)" // 흰 배경에는 흰색 그림자
+        : "1px 1px 2px rgba(0,0,0,0.8)" // 어두운 배경에는 검은 그림자
+  };
+`;
+
 const ProgressSection = styled.div`
   margin: 0;
   padding: 0 20px;
@@ -328,6 +395,18 @@ const LevelTestPage = () => {
     }
   };
 
+  //페이지네이션_저장된 답변확인-> 채워진 아이콘(boolean)
+  const hasAnswerForQuestion = (questionId: number): boolean => {
+    const savedAnswer = getAnswer(questionId);
+    return savedAnswer ? savedAnswer.trim().length > 0 : false;
+  };
+
+  //페이지네이션_아이콘 클릭 시 이동
+  const navigateToQuestion = (questionIndex: number) => {
+    saveCurrentAnswer();
+    setCurrentQuestionIndex(questionIndex);
+  };
+
   // 답변 제출
   const levelTestSubmit = async (): Promise<boolean> => {
     const submitData = getSession();
@@ -343,7 +422,7 @@ const LevelTestPage = () => {
         );
 
         if (response.data.status === "OK") {
-          console.log(submitData);
+          console.log(response.data);
           console.log("answer 제출 완료");
           clearSession(); // 제출성공하면 세션 삭제
           return true;
@@ -444,6 +523,26 @@ const LevelTestPage = () => {
             rows={4}
           />
         </AnswerContainer>
+        <QuestionNavigation>
+          {allQuestions.map((question, index) => {
+            const isActive = index === currentQuestionIndex;
+            const hasAnswer = hasAnswerForQuestion(question.id);
+
+            return (
+              <QuestionNavButton
+                key={question.id}
+                isActive={isActive}
+                hasAnswer={hasAnswer}
+                onClick={() => navigateToQuestion(index)}
+              >
+                <img src={pagenationButton} alt={`문제 ${index + 1}`} />
+                <NumberOverlay isActive={isActive}>
+                  {index + 1}
+                </NumberOverlay>{" "}
+              </QuestionNavButton>
+            );
+          })}
+        </QuestionNavigation>
 
         <ButtonContainer>
           <PreButton
