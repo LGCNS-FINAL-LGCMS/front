@@ -3,22 +3,35 @@ import GlobalStyle from "./assets/styles/globalstyle";
 import { theme } from "./assets/styles/theme";
 import { PAGE_PATHS } from "./constants/pagePaths";
 import Header from "./components/Header/Header";
-import styled, { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "styled-components";
 import ChatWrapper from "./components/Common/Chat/ChatWrapper";
 
 // =========== 레이아웃 임포트 ===========
 import Layout from "./layouts/Layout";
-import WideLayout from "./layouts/WideLayout";
+// import WideLayout from "./layouts/WideLayout";
 // =========== 레이아웃 임포트 ===========
 
 // =========== 페이지 임포트 ===========
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Login from "./pages/Login/Login";
 import SignupPage from "./pages/Signup/SignupPage";
+import StudentLecturePage from "./pages/UserMypage/StudentLecturePage";
+import StudentQnaPage from "./pages/UserMypage/StudentQnaPage/StudentQnaPage";
 import MainPage from "./pages/MainPage/MainPage";
+import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
-// =========== 페이지 임포트 ===========
+import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
+
+import PaymentResultPage from "./Pages/PaymentPage/PaymentResultPage";
+import PaymentPage from "./Pages/PaymentPage/PaymentPage";
+import PaymentSuccess from "./Pages/PaymentPage/PaymentSuccess";        
+
+import AdminPage from "./Pages/AdminPage/AdminPage";
+import ProtectedRoute from "./components/Admin/ProtectedRoute";
+import QnaPage from "./pages/QnaPage/QnaPage";
+import FaqPage from "./pages/FaqPage/FaqPage";
+
 
 function App() {
   return (
@@ -51,6 +64,42 @@ function App() {
           />
 
           <Route
+            path={PAGE_PATHS.USER_INFO}
+            element={
+              <Layout>
+                <UpdateUserInfoPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES}
+            element={
+              <Layout>
+                <StudentLecturePage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_PAGE.STUDENT.QNA}
+            element={
+              <Layout>
+                <StudentQnaPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.FAQ}
+            element={
+              <Layout>
+                <FaqPage />
+              </Layout>
+            }
+          />
+
+          <Route
             path={`${PAGE_PATHS.HOME}/:keyword?/:category?`}
             element={
               <Layout>
@@ -69,6 +118,32 @@ function App() {
           />
 
           <Route
+            path={`${PAGE_PATHS.USER_PAGE.LECTURER}`}
+            element={
+              <Layout>
+                <LecturerMainPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.PAYMENT.PAYMENT}
+            element={
+              <Layout>
+                <PaymentPage />
+              </Layout>
+            }
+          />
+          <Route
+            path={PAGE_PATHS.PAYMENT.RESULT}
+            element={
+              <Layout>
+                <PaymentResultPage />
+              </Layout>
+            }
+          />
+
+          <Route
             path={`${PAGE_PATHS.Lesson_Management}/:lactureId?`}
             element={
               <Layout>
@@ -76,9 +151,44 @@ function App() {
               </Layout>
             }
           />
+
+          <Route
+            path={PAGE_PATHS.ADMIN}
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <Layout>
+                  <AdminPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path={`${PAGE_PATHS.QNA}/:qnaId?`}
+            element={
+              <Layout>
+                <QnaPage />
+              </Layout>
+            }
+          />
           {/* =========================== */}
 
           {/* 와이드 Layout */}
+
+          {/* =========================== */}
+          <Route
+            path={`${PAGE_PATHS.PAYMENT.SUCCESS}`}
+            element={<PaymentSuccess />}
+          />
+          <Route
+            path={`${PAGE_PATHS.PAYMENT.FAIL}`}
+            element={<PaymentSuccess />}
+          />
+          <Route
+            path={`${PAGE_PATHS.PAYMENT.CANCEL}`}
+            element={<PaymentSuccess />}
+          />
+
         </Routes>
       </Router>
     </ThemeProvider>

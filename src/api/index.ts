@@ -21,7 +21,7 @@ import {
 const API_BASE_URL = import.meta.env.VITE_API_URL as string;
 const REFRESH_URL = API_ENDPOINTS.AUTH.REFRESH;
 
-const handleRefreshFailure = (error: any) => {
+const handleRefreshFailure = (error: unknown) => {
   processQueue(error, null);
   handleLogoutForInterceptor();
   return Promise.reject(
@@ -72,12 +72,12 @@ let isRefreshing = false;
 
 interface FailedRequest {
   resolve: (token: string) => void;
-  reject: (err?: any) => void;
+  reject: (err?: unknown) => void;
 }
 
 let failedQueue: FailedRequest[] = [];
 
-const processQueue = (error: any, token: string | null): void => {
+const processQueue = (error: unknown, token: string | null): void => {
   failedQueue.forEach((prom) => {
     if (error) prom.reject(error);
     else if (token) prom.resolve(token);
@@ -104,7 +104,7 @@ interface RefreshResponse {
 
 apiClient.interceptors.response.use(
   (response) => response,
-  async (error: AxiosError): Promise<any> => {
+  async (error: AxiosError) => {
     if (!storeRef) return Promise.reject(error);
 
     const originalRequest = error.config as AxiosRequestConfig & {
@@ -205,7 +205,7 @@ apiClient.interceptors.response.use(
         } else {
           throw new Error("Invalid refresh response.");
         }
-      } catch (refreshError: any) {
+      } catch (refreshError) {
         return handleRefreshFailure(refreshError);
       } finally {
         isRefreshing = false;

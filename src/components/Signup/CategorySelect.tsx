@@ -1,8 +1,12 @@
 import styled from "styled-components";
 import { useState, useCallback, useEffect } from "react";
 import InterestSelector from "../Common/InterestSelector";
-import { categoriesList } from "../../api/Signup/signupAPI";
-import type { CategoryFormat } from "../../api/Signup/signupAPI";
+import { getcategoriesList } from "../../api/Signup/signupAPI";
+import type { UserCategoriesList } from "../../types/authInfo";
+import type { Interest } from "../../types/interset";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../redux/store"; // store 타입 확인
+import { getErrorMessage } from "../../utils/handleApiError";
 
 // 카테고리 선택
 const CategorySection = styled.div`
@@ -10,48 +14,64 @@ const CategorySection = styled.div`
   padding: 10px;
 `;
 
-const CategoryTitle = styled.h1`
-  text-align: center;
-  margin: 20px; // 위아래 간격
-
-  font-size: ${(props) => props.theme.fontSize.title.min};
-`;
-
-const CategorySubTitle = styled.p`
-  text-align: center;
-`;
-
 const CategoryGrid = styled.div`
   text-align: center;
   padding: 20px;
-  margin: 30px 0 30px 0; // 위 오른쪽 아래 왼쪽
+  margin-bottom: 10px;
 `;
 
-export type Interest = {
-  id: string;
-  name: string;
-};
+const CategoryCountMessage = styled.p`
+  font-size: ${(props) => props.theme.fontSize.small.max};
+  color: ${(props) => props.theme.colors.caution};
+  min-height: 20px;
+  margin: 4px 0 0 0;
+  font-family: ${({ theme }) => theme.font.primary};
+  font-weight: 500;
+  text-align: center;
+  display: block;
+  width: 100%;
+`;
 
 interface CategorySelectProps {
-  onCategoryChange: (categories: CategoryFormat[]) => void;
+  onCategoryChange: (categories: UserCategoriesList[]) => void;
 }
 
 const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
-  const [_selectedCategories, setSelectedCategories] = useState<
-    CategoryFormat[]
-  >([]);
+  const reduxCategories = useSelector(
+    (state: RootState) => state.auth.categories
+  );
 
   const [interests, setInterests] = useState<Interest[]>([]);
 
+  const [categoriesCountMessage, setCategoriesCountMessage] = useState("");
+
+  //선택된 카테고리들
   const handleSelectionChange = useCallback(
     (selected: Interest[]) => {
-      // id 타입 변경
-      const convertedCategories: CategoryFormat[] = selected.map((item) => ({
-        id: Number(item.id),
-        name: item.name,
-      }));
-      setSelectedCategories(convertedCategories);
-      onCategoryChange(convertedCategories);
+      const count = selected.length;
+
+      if (count === 0) {
+        setCategoriesCountMessage("최소 1개의 카테고리를 선택해주세요.");
+      } else if (count >= 5) {
+        setCategoriesCountMessage(
+          "카테고리는 최대 5개까지 선택할 수 있습니다."
+        );
+      } else {
+        setCategoriesCountMessage("");
+      }
+
+      // 카테고리가 1~5개 일때만 전달
+      if (count >= 1 && count <= 5) {
+        const convertedCategories: UserCategoriesList[] = selected.map(
+          (item) => ({
+            id: Number(item.id),
+            name: item.name,
+          })
+        );
+        onCategoryChange(convertedCategories);
+      } else {
+        onCategoryChange([]);
+      }
     },
     [onCategoryChange]
   );
@@ -59,19 +79,20 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
   // 카테고리 가져오기
   const getCategories = async () => {
     try {
-      const result = await categoriesList();
-      if (result.status == "OK") {
+      const result = await getcategoriesList();
+      if (result.status === "OK") {
         const formattedCategories = result.data.categories.map(
-          (category: CategoryFormat) => ({
-            id: String(category.id),
+          (category: Interest) => ({
+            id: category.id,
             name: category.name,
           })
         );
         setInterests(formattedCategories);
       }
-    } catch (error) {
-      console.log("카테고리 서버에러발생", error);
-      setInterests([]); //에러 발생 시 빈배열로 초기화
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, "카테고리 서버 에러 발생");
+      console.error(message);
+      setInterests([]);
     }
   };
 
@@ -81,15 +102,14 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
 
   return (
     <CategorySection>
-      <CategoryTitle>Category</CategoryTitle>
-      <CategorySubTitle>관심있는 카테고리를 추가하세요.</CategorySubTitle>
-
       <CategoryGrid>
         <InterestSelector
+          initialSelected={reduxCategories}
           interests={interests}
           onSelectionChange={handleSelectionChange}
         />
       </CategoryGrid>
+      <CategoryCountMessage>{categoriesCountMessage}</CategoryCountMessage>
     </CategorySection>
   );
 };

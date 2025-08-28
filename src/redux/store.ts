@@ -4,20 +4,35 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import type { PersistConfig } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // localStorage
-import apiClient, { injectStore } from "../api/index";
+import { injectStore } from "../api/index";
 
 //slice 파일들
 import keywordSlice from "./keyword/keywordSlice";
 import lectureDataSlice from "./lectureData/lectureDataSlice";
 import tokenSlice from "./token/tokenSlice";
 import categorySlice from "./Category/categorySlice";
+import authSlice from "./Auth/authSlice";
+import guideBotSlice from "./GuideBot/guideBotSlice";
+import lecturePaginationSlice from "./lectureData/lecturerPageData/lecturerPageData";
+import PaymentSlice from "./Payment/paymentSlice";
+import studentLecturePagenationSlice from "./lectureData/studentPageData/studentPageDataSlice";
+import currentLectureSlice from "./lectureData/currentLectureData/currentLectureSlice";
+import currentQnaSlice from "./qna/currentQnaSlice";
+import faqListSlice from "./FaqData/FaqDataSlice";
 
-// slice import 자리 (예: import userReducer from './slices/userSlice';)
 const rootReducer = combineReducers({
   keyword: keywordSlice,
   lectureData: lectureDataSlice,
+  lecturerLectureData: lecturePaginationSlice,
+  studnetLectureData: studentLecturePagenationSlice,
   token: tokenSlice,
   category: categorySlice,
+  auth: authSlice,
+  guide: guideBotSlice,
+  payment: PaymentSlice,
+currentLecture: currentLectureSlice,
+  currentQna: currentQnaSlice,
+  faq: faqListSlice,
 });
 
 // persist 설정 타입 지정

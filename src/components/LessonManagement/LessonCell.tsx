@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import type { Lesson } from "../../types/lesson";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -140,12 +140,7 @@ const IndexCell = styled.div`
   font-size: ${({ theme }) => theme.fontSize.body.min};
 `;
 
-const LessonCell: React.FC<Props> = ({
-  lesson,
-  onUpdate,
-  onDelete,
-  onEditClick,
-}) => {
+const LessonCell: React.FC<Props> = ({ lesson, onDelete, onEditClick }) => {
   return (
     <Row>
       <IndexCell>

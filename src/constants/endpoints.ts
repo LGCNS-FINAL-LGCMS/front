@@ -16,12 +16,57 @@ export const API_ENDPOINTS = {
     UPDATE: "/api/member/change/info", // patch
     CATEGORY_LIST: "/api/member/categories",
   },
+  LECTURER: {
+    GET_LECTURE: "/api/lecture",
+  },
+  STUDENT: {
+    GET_LECTURE: "/???",
+  },
   CATEGORY: {
-    POST: "/api/category",
-    GET: "/api/category",
-    DELETE: "/api/category", // /{categoryId}
+    POST: "/api/member",
+    GET: "/api/member",
+    DELETE: "/api/member", // /{categoryId}
   },
   LECTURE: {
     GET: "/api/lecture",
+  },
+  QNA: {
+    GET: "/api/qna", // /{lectureId}
+    POST: "/qna",
+    DELETE: "/api/qna", // /{lectureId}
+    PATCH: "/api/qna", // /{lectureId}
+
+    MEMBER: {
+      GET: "/api/qna/member", // 해당 맴버의 QNA
+
+      LECTURE: {
+        POST: "/api/qna/answer", // /{questionId} 답변 작성
+        PUT: "/api/qna/answer", // /{answerId} 답변 수정
+      },
+    },
+  },
+
+  GUIDE: {
+    POST: "/api/guide/ask",
+  },
+
+  PAYMENT: {
+    READY: "/payment/ready",  // 결제 준비
+    BUNDLEREADY: "/payment/list/ready",  // 묶음결제 준비
+    APPROVE: "/payment/approve",  // 결제 승인
+  },
+  CART: {
+    GET: "/cart",  // 장바구니 아이템 조회
+    POST: "/cart",  // 장바구니에 아이템 등록
+    DELETE: "/cart", // /{cartId}  단건 삭젝
+    COUNT: "/admin/cart/count", //회원별 장바구니 아이템 갯수 
+FAQ: {
+  MEMBER: {
+    DESIRER: "/api/admin/member/lecturer/desirer", // get
+    CONFIRM: "/api/admin/member/lecturer/confirm", // post
+  },
+  
+  FAQ: {
+    GET: "/api/core/faq",
   },
 };
