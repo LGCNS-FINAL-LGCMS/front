@@ -1,10 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import type { InstructorRequest } from '../../types/InstructorRequest';
 import Button from '../Common/Button';
 
 interface ModalProps {
-    item: InstructorRequest;
     isOpen: boolean;
     onClose: () => void;
     onConfirm: () => void;

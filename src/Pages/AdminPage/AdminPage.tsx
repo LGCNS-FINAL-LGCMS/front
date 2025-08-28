@@ -71,11 +71,11 @@ const AdminPage: React.FC = () => {
     const transformedList = list.map(item => {
       currentItemIds.add(item.memberId);
 
-      const isNewItem = new Date().getTime() - new Date(item.requestedAt).getTime() < 24 * 60 * 60 * 1000;
+      const isNewItem = new Date().getTime() - new Date(item.desireLecturerDate).getTime() < 24 * 60 * 60 * 1000;
       return {
         id: item.memberId,
         requester: item.nickname,
-        requestedAt: formatDate(new Date(item.requestedAt)),
+        requestedAt: formatDate(new Date(item.desireLecturerDate)),
         status: item.desireLecturer ? '요청' : '승인됨',
         isNew: isNewItem,
       };
