@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import studentImage from "../../assets/images/selectedStudent.png";
-import teacherImage from "../../assets/images/selectedTeacher.png";
+import studentImage from "../../assets/images/signupPage/selectedStudent.png";
+import teacherImage from "../../assets/images/signupPage/selectedTeacher.png";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 
