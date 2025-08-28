@@ -4,6 +4,7 @@ import LessonContainer from "../../components/LessonManagement/LessonContainer";
 import type { Lesson } from "../../types/lesson";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import VideoUploadModal from "../../components/LessonManagement/VideoUploadModal";
 
 const contentWidth = "800px";
 
@@ -61,6 +62,9 @@ const IconButton = styled.button<{ danger?: boolean }>`
 `;
 
 const LessonManagementPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingLesson, setEditingLesson] = useState<Lesson | null>(null);
+
   const [lessons, setLessons] = useState<Lesson[]>([
     {
       id: "1",
@@ -71,18 +75,6 @@ const LessonManagementPage = () => {
     },
   ]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
-  const handleAdd = () => {
-    const newLesson: Lesson = {
-      id: Date.now().toString(),
-      title: "새 강의",
-      description:
-        "이강의는 어쩌고 저쩌고에 관한 것으로 초보자들이 듣기 아주 좋은",
-      date: new Date().toISOString().slice(0, 10).replace(/-/g, ". "),
-      thumbnailUrl: "",
-    };
-    setLessons((prev) => [...prev, newLesson]);
-  };
 
   const handleUpdate = (id: string, updated: Partial<Lesson>) => {
     setLessons((prev) =>
@@ -97,12 +89,22 @@ const LessonManagementPage = () => {
     setSelectedIds((prev) => prev.filter((sid) => sid !== id));
   };
 
+  const handleEditClick = (lesson: Lesson) => {
+    setEditingLesson(lesson);
+    setIsModalOpen(true);
+  };
+
   return (
     <PageWrapper>
       <Toolbar>
         <Title>해당 강의 이름이 뜰 예정</Title>
         <div>
-          <IconButton onClick={handleAdd}>
+          <IconButton
+            onClick={() => {
+              setEditingLesson(null);
+              setIsModalOpen(true);
+            }}
+          >
             <FontAwesomeIcon icon={faPlus} />
           </IconButton>
         </div>
@@ -114,8 +116,53 @@ const LessonManagementPage = () => {
           onDelete={handleDelete}
           selectedIds={selectedIds}
           setSelectedIds={setSelectedIds}
+          onEditClick={handleEditClick}
         />
       </Container>
+
+      <VideoUploadModal
+        isOpen={isModalOpen}
+        mode={editingLesson ? "edit" : "upload"}
+        initialData={
+          editingLesson
+            ? {
+                title: editingLesson.title,
+                description: editingLesson.description,
+              }
+            : undefined
+        }
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingLesson(null);
+        }}
+        onSubmit={({ title, description, file }) => {
+          if (editingLesson) {
+            setLessons((prev) =>
+              prev.map((l) =>
+                l.id === editingLesson.id ? { ...l, title, description } : l
+              )
+            );
+          } else {
+            const newLesson: Lesson = {
+              id: Date.now().toString(),
+              title,
+              description,
+              date: new Date()
+                .toLocaleDateString("ko-KR", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })
+                .replace(/\. /g, ". ")
+                .replace(/\.$/, "."),
+              thumbnailUrl: "",
+            };
+            setLessons((prev) => [...prev, newLesson]);
+          }
+          setIsModalOpen(false);
+          setEditingLesson(null);
+        }}
+      />
     </PageWrapper>
   );
 };

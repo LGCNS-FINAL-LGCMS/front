@@ -10,6 +10,7 @@ interface Props {
   onDelete: (id: string) => void;
   selectedIds: string[];
   setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>;
+  onEditClick: (lesson: Lesson) => void;
 }
 
 const Table = styled.div`
@@ -68,6 +69,7 @@ const LessonContainer: React.FC<Props> = ({
   onDelete,
   selectedIds,
   setSelectedIds,
+  onEditClick,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [targetLesson, setTargetLesson] = useState<Lesson | null>(null);
@@ -105,6 +107,7 @@ const LessonContainer: React.FC<Props> = ({
             key={lesson.id}
             lesson={{ ...lesson, index: idx }}
             onUpdate={onUpdate}
+            onEditClick={onEditClick}
             onDelete={handleDeleteClick}
             checked={selectedIds.includes(lesson.id)}
             onCheckChange={(checked) =>
