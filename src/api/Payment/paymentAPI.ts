@@ -1,21 +1,21 @@
 import { API_ENDPOINTS } from "../../constants/endpoints";
 import { getErrorMessage } from "../../utils/handleApiError";
 import apiClient from "../index";
-import type { LectureItem } from "../../Pages/PaymentPage/PaymentPage";
+import type { LectureItem } from "../../pages/PaymentPage/PaymentPage";
 
-export interface paymentData{
-  tid: string,
-  nextStepUrl: string,
+export interface paymentData {
+  tid: string;
+  nextStepUrl: string;
 }
-export interface lectureData{
-  title: string,
-  price: number,
-  lectureId: string,
+export interface lectureData {
+  title: string;
+  price: number;
+  lectureId: string;
 }
-export interface paymentToken{
-  tid: string,  // 결제 아이디
-  token: string,  // 결제 토큰
-  cartId: number[],  // 장바구니물품의 아이디 (long)
+export interface paymentToken {
+  tid: string; // 결제 아이디
+  token: string; // 결제 토큰
+  cartId: number[]; // 장바구니물품의 아이디 (long)
 }
 export interface PaymentApiResponse {
   status: string;
@@ -24,9 +24,11 @@ export interface PaymentApiResponse {
 }
 
 // payment/ready
-export const postPaymentReady = async (lectureItem:LectureItem): Promise<paymentData> => {
+export const postPaymentReady = async (
+  lectureItem: LectureItem
+): Promise<paymentData> => {
   try {
-    const query : lectureData = {
+    const query: lectureData = {
       title: lectureItem.title,
       price: lectureItem.price,
       lectureId: lectureItem.lectureId,
@@ -35,7 +37,7 @@ export const postPaymentReady = async (lectureItem:LectureItem): Promise<payment
 
     const response = await apiClient.post<PaymentApiResponse>(
       API_ENDPOINTS.PAYMENT.READY,
-      query,
+      query
       // "http://localhost:38111/payment/ready",
       // {
       //   headers: {
@@ -52,18 +54,19 @@ export const postPaymentReady = async (lectureItem:LectureItem): Promise<payment
   }
 };
 
-
 // /payment/list/ready
-export const postPaymentBundleReady = async (lectureItems:LectureItem[]): Promise<paymentData> =>{
+export const postPaymentBundleReady = async (
+  lectureItems: LectureItem[]
+): Promise<paymentData> => {
   try {
-    const lectureDatas : lectureData[] = lectureItems.map(item => ({
+    const lectureDatas: lectureData[] = lectureItems.map((item) => ({
       title: item.title,
       price: item.price,
       lectureId: item.lectureId,
-    }))
+    }));
     const response = await apiClient.post<PaymentApiResponse>(
       API_ENDPOINTS.PAYMENT.BUNDLEREADY,
-       lectureDatas 
+      lectureDatas
       // "http://localhost:38111/payment/list/ready",
       //   lectureDatas,
       // {
@@ -79,14 +82,14 @@ export const postPaymentBundleReady = async (lectureItems:LectureItem[]): Promis
     console.error("PaymentBundleReady API error:", message);
     throw new Error(message);
   }
-}
+};
 
 // /payment/approve
-export const postPaymentApprove = async (query: paymentToken)=>{
+export const postPaymentApprove = async (query: paymentToken) => {
   try {
     const response = await apiClient.post<PaymentApiResponse>(
       API_ENDPOINTS.PAYMENT.APPROVE,
-       query 
+      query
       // "http://localhost:38111/payment/approve",
       //   query,
       // {
@@ -96,16 +99,14 @@ export const postPaymentApprove = async (query: paymentToken)=>{
       // },
     );
     console.log(response);
-    if(response.status===200){
-      return "결제가 완료되었습니다."
-    }else{
-      return "결제가 실패하였습니다."
-    };
+    if (response.status === 200) {
+      return "결제가 완료되었습니다.";
+    } else {
+      return "결제가 실패하였습니다.";
+    }
   } catch (error: unknown) {
     const message = getErrorMessage(error, "결제승인 실패");
     console.error("PaymentApprove API error:", message);
     throw new Error(message);
   }
-}
-
-
+};

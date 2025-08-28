@@ -24,6 +24,7 @@ export const useChatSession = (url: string) => {
       sender: "user",
       content,
       timestamp: Date.now(),
+      type: "text",
     };
     socketRef.current?.send(JSON.stringify(message));
     setMessages((prev) => [...prev, message]);

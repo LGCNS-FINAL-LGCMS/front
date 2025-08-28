@@ -394,7 +394,7 @@ const Header = () => {
 
                   <DropdownItem
                     onClick={() => {
-                      navigate(PAGE_PATHS.USER_PAGE.STUDENT);
+                      navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES);
                       setIsDropdownOpen(false);
                     }}
                   >
