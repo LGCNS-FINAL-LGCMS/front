@@ -15,6 +15,10 @@ import apiClient from "../../api";
 import nextButton from "../../assets/images/levelTestPage/nextButton.svg";
 import preButton from "../../assets/images/levelTestPage/preButton.svg";
 import pagenationButton from "../../assets/images/levelTestPage/pagenationButton.svg";
+import star3 from "../../assets/images/levelTestPage/star3.svg";
+import star2 from "../../assets/images/levelTestPage/star2.svg";
+import star1 from "../../assets/images/levelTestPage/star1.svg";
+
 import Button from "../../components/Common/Button";
 
 const LevelTestContainer = styled.div`
@@ -125,6 +129,13 @@ const DifficultyTag = styled.span`
   border-radius: 16px;
   font-size: ${(props) => props.theme.fontSize.small.min};
   font-weight: normal;
+  display: flex;
+  align-items: center;
+`;
+
+const DifficultyIcon = styled.img`
+  width: 120x; // 👈 여기서 크기 설정!
+  height: 16px;
 `;
 
 const CategoryTag = styled.span`
@@ -350,11 +361,11 @@ const LevelTestPage = () => {
   const getDifficultyIcon = (difficulty: string) => {
     switch (difficulty) {
       case "LOW":
-        return "난이도 : ⭐️";
+        return star1;
       case "MEDIUM":
-        return "난이도 : ⭐️⭐️";
+        return star2;
       case "HIGH":
-        return "난이도 : ⭐️⭐️⭐️";
+        return star3;
     }
   };
 
@@ -540,7 +551,10 @@ const LevelTestPage = () => {
           </QuestionInfo>
           <QuestionMeta>
             <DifficultyTag>
-              {getDifficultyIcon(currentQuestion?.difficulty) || "Normal"}
+              <DifficultyIcon
+                src={getDifficultyIcon(currentQuestion?.difficulty || "LOW")}
+                alt="difficulty star"
+              />
             </DifficultyTag>
             <CategoryTag>{currentQuestion?.category || "General"}</CategoryTag>
           </QuestionMeta>
