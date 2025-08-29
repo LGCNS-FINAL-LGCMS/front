@@ -22,6 +22,7 @@ export const API_ENDPOINTS = {
   STUDENT: {
     GET_LECTURE: "/???",
   },
+
   CATEGORY: {
     POST: "/api/member",
     GET: "/api/member",
@@ -50,6 +51,10 @@ export const API_ENDPOINTS = {
   GUIDE: {
     POST: "/api/guide/ask",
   },
+  LEVEL_TEST: {
+    GET_QUESTIONS: "/student/leveltest/questions/generate",
+    SUBMIT_ANSWERS: "/student/leveltest/answers/submit-all",
+  },
 
   PAYMENT: {
     READY: "/payment/ready", // 결제 준비
@@ -60,7 +65,7 @@ export const API_ENDPOINTS = {
     GET: "/cart", // 장바구니 아이템 조회
     POST: "/cart", // 장바구니에 아이템 등록
     DELETE: "/cart", // /{cartId}  단건 삭젝
-    COUNT: "/admin/cart/count", //회원별 장바구니 아이템 갯수 
+    COUNT: "/admin/cart/count", //회원별 장바구니 아이템 갯수
   },
   MEMBER: {
     DESIRER: "/admin/member/lecturer/desirer", // get

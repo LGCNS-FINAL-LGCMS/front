@@ -63,6 +63,11 @@ export const theme: DefaultTheme = {
       min: "12px",
       max: "13px",
     },
+    contents: {
+      small: "",
+      medium: "18px",
+      large: "",
+    },
   },
 
   font: {
