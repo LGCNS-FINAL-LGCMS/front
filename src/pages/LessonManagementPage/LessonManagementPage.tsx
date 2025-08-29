@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import LessonContainer from "../../components/LessonManagement/LessonContainer";
 import type { Lesson } from "../../types/lesson";

@@ -115,6 +115,7 @@ apiClient.interceptors.response.use(
     const errorMessage = (error.response?.data as { message?: string })
       ?.message;
 
+    console.log(errorMessage);
     // --- 서버에서 강제 밴 ---
     if (
       error.response?.status === 401 &&
