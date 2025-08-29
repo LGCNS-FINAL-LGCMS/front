@@ -329,6 +329,8 @@ const LevelTestPage = () => {
   const [answerInput, setAnswerInput] = useState<string | null>(null); // 사용자가 적은 답변
 
   const [showSuccessModal, setShowSuccessModal] = useState(false); // 성공 모달 띄우기
+  const [showAnswerCheckModal, setShowAnswerCheckModal] = useState(false); // 답변 없을 때 알림 모달
+  const [showTimeoverModal, setShowTimeoverModal] = useState(false); // 타임오버 됐을 때 모달
 
   const [seconds, setSeconds] = useState(30 * 60); // 30분
 
@@ -352,7 +354,7 @@ const LevelTestPage = () => {
       }, 1000);
       return () => clearTimeout(timer);
     } else {
-      setShowSuccessModal(true);
+      setShowTimeoverModal(true);
     }
   }, [seconds]);
 
@@ -365,11 +367,17 @@ const LevelTestPage = () => {
       return;
     } else {
       setAllQuestions(session.questions);
+      session.questions.forEach((question) => {
+        const backendQuestionId = question.id;
+        saveAnswer(backendQuestionId, "");
+      });
     }
   }, [navigate]);
 
+  //input 입력시 세션에 데이터 바로 저장
   const handleAnswerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setAnswerInput(e.target.value);
+    saveCurrentAnswer();
   };
 
   // 버튼 눌렀을 때 문제 렌더링
@@ -399,7 +407,6 @@ const LevelTestPage = () => {
 
   //페이지네이션_아이콘 클릭 시 이동
   const navigateToQuestion = (questionIndex: number) => {
-    saveCurrentAnswer();
     setCurrentQuestionIndex(questionIndex);
   };
 
@@ -407,7 +414,7 @@ const LevelTestPage = () => {
   const levelTestSubmit = async (): Promise<boolean> => {
     const submitData = getSession();
 
-    if (!submitData) {
+    if (!submitData?.answers) {
       console.log("제출할 데이터가 없어요");
       console.log(submitData);
       return false;
@@ -436,7 +443,6 @@ const LevelTestPage = () => {
 
   // 다음 문제 버튼
   const handleNext = () => {
-    saveCurrentAnswer();
     if (currentQuestionIndex < allQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
@@ -445,18 +451,40 @@ const LevelTestPage = () => {
   // 이전 문제 버튼
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
-      saveCurrentAnswer();
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
 
-  // 문제 제출 버튼
+  // 시험 제출 버튼
+  const handleTestSuccess = () => {
+    const checkAllAnswersCompleted = (): boolean => {
+      const session = getSession();
+      if (!session?.answers || !session?.questions) return false;
+
+      return session.questions.every((question) => {
+        const answer = session.answers.find(
+          (a) => a.questionId === question.id
+        );
+        return answer && answer.answer && answer.answer.trim().length > 0;
+      });
+    };
+
+    const allCompleted = checkAllAnswersCompleted();
+
+    if (allCompleted) {
+      setShowSuccessModal(true);
+    } else {
+      setShowAnswerCheckModal(true);
+    }
+  };
+
+  // 모달 확인 버튼(답변 제출)
   const handleSubmit = async () => {
     try {
       const success = await levelTestSubmit();
-
       if (success) {
-        setShowSuccessModal(true);
+        setShowSuccessModal(false);
+        navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD);
       } else {
         alert("제출에 실패했습니다. 다시 시도해주세요.");
         setShowSuccessModal(false);
@@ -468,10 +496,10 @@ const LevelTestPage = () => {
     }
   };
 
-  // 모달 확인 버튼
-  const handleConfirm = () => {
+  //모달 취소 버튼
+  const handleCancel = () => {
+    setShowAnswerCheckModal(false);
     setShowSuccessModal(false);
-    navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD);
   };
 
   const timeDisplay = getTimeDisplay();
@@ -555,15 +583,32 @@ const LevelTestPage = () => {
 
       <SubmitContainer>
         <SubmitButton type="button">
-          <Button text="시험 제출" onClick={handleSubmit} />
+          <Button text="시험 제출" onClick={handleTestSuccess} />
         </SubmitButton>
       </SubmitContainer>
 
       <InfoCheckModal
         isOpen={showSuccessModal}
-        message="답변을 제출하면 레포트 작성이 시작됩니다. 제출하시겠습니까?"
-        onConfirm={handleConfirm}
-        onCancel={handleConfirm}
+        message="답변이 제출되어 레포트 작성을 시작합니다."
+        onConfirm={handleSubmit}
+        onCancel={handleCancel}
+        confirmText="확인"
+      />
+
+      <InfoCheckModal
+        isOpen={showAnswerCheckModal}
+        message="답변을 작성하지 않은 문제가 있습니다. 그래도 제출하시겠습니까?"
+        onConfirm={handleSubmit}
+        onCancel={handleCancel}
+        confirmText="제출"
+        cancelText="취소"
+      />
+
+      <InfoCheckModal
+        isOpen={showTimeoverModal}
+        message="시험시간이 종료되어 작성하신 답변이 제출되었습니다. 레포트를 확인하세요."
+        onConfirm={handleSubmit}
+        onCancel={handleCancel}
         confirmText="확인"
       />
     </LevelTestContainer>
