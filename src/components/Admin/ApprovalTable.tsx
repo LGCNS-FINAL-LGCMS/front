@@ -77,7 +77,7 @@ export const Td = styled.td<{ align?: 'left' | 'center' | 'right' }>`
   font-size: 14px;
   text-align: ${({ align }) => align ?? 'left'};
   word-break: break-word;
-  color: ${({ theme }) => theme.colors.text_B};
+  color: ${({ theme }) => theme.colors.text_D};
 `;
 
 export const ActionRow = styled.div`
