@@ -20,6 +20,7 @@ interface LectureCardProps {
   progress?: number;
   rating?: number | null;
   price?: number;
+  onCardClick?: () => void;
 }
 
 const designStyles = {
@@ -54,10 +55,11 @@ const fontColorStyles = {
 const Card = styled.div<{
   $design: 1 | 2 | 3;
   width: string;
-  height: string;
+  height?: string;
 }>`
   width: ${({ width }) => width};
-  height: ${({ height }) => height};
+  min-height: ${({ height }) => height};
+  height: auto;
   overflow: hidden;
   font-family: ${({ theme }) => theme.font.primary}, sans-serif;
   display: flex;
@@ -65,16 +67,7 @@ const Card = styled.div<{
   position: relative;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   ${({ $design }) => designStyles[$design]};
-
-  &:hover {
-    box-shadow: 0 1px 25px rgba(0, 0, 0, 0.3);
-    transform: scale(1.02);
-  }
-
-  &:hover .overlay {
-    opacity: 1;
-    pointer-events: auto;
-  }
+  cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
 `;
 
 const ImageWrapper = styled.div`
@@ -108,6 +101,9 @@ const Title = styled.h3`
   font-weight: 700;
   margin: 0;
   color: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const Description = styled.p`
@@ -189,6 +185,7 @@ const LectureCard: React.FC<LectureCardProps> = ({
   progress,
   rating,
   price,
+  onCardClick,
 }) => {
   const getHeightFromWidth = (widthValue: string) => {
     const match = widthValue.match(/^(\d+)(px)?$/);
@@ -203,7 +200,12 @@ const LectureCard: React.FC<LectureCardProps> = ({
   const limitedButtons = buttons.slice(0, 3);
 
   return (
-    <Card $design={design} width={width} height={height}>
+    <Card
+      $design={design}
+      width={width}
+      height={height}
+      onClick={limitedButtons.length === 0 ? onCardClick : undefined}
+    >
       <ImageWrapper>
         <Image src={imageUrl} alt={title} />
       </ImageWrapper>
@@ -214,9 +216,9 @@ const LectureCard: React.FC<LectureCardProps> = ({
       )}
 
       <Content fontColor={fontColor}>
-        <Title>{title}</Title>
-        <Description>{description}</Description>
-        <Instructor>{lecturer}</Instructor>
+        <Title title={title}>{title}</Title>
+        {description && <Description>{description}</Description>}
+        {lecturer && <Instructor>{lecturer}</Instructor>}
 
         {/* 평점 표시 */}
         {rating != null && rating >= 0 && rating <= 5 && (
