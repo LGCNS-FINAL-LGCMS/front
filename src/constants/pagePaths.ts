@@ -25,7 +25,11 @@ export const PAGE_PATHS = {
       MY_LECTURES: "/userpage/student",
       QNA: "/member/qna",
     },
-    LECTURER: "/userpage/lecturer",
+    LECTURER: {
+      MAIN: "/userpage/lecturer",
+      DASHBOARD: "/lecturer/dashboard",
+      REPORT: "/lecturer/report",
+    },
   },
   PAYMENT: {
     PAYMENT: "/payment",
