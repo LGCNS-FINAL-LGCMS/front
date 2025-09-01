@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-
+import type { Lecture } from "../../types/lecture";
 import type { RootState } from "../../redux/store";
-
 import LectureInfoHeader from "../../components/LectureInfo/LectureInfoHeader";
 import LectureInfoTabMenu from "../../components/LectureInfo/LectureInfoTabMenu";
 import CurriculumList from "../../components/LectureInfo/CurriculumList";
 import AddReviewModal from "../../components/LectureInfo/AddReviewModal";
 import AddQnaModal from "../../components/LectureInfo/AddQnaModal";
-import { postQnaRequest } from "../../api/Qna/QnaAPI";
+import { postQna, getLectureQnas } from "../../api/Qna/qnaAPI";
 import {
   getReviewRequest,
   postReviewRequest,
@@ -19,10 +19,13 @@ import ReviewCard from "../../components/LectureInfo/ReviewCard";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../../components/Common/Button";
+import QuestionCard from "../../components/Qna/QuestionCard";
+import type { Qna } from "../../types/qna";
+import { getLectureById } from "../../api/LectureInfo/lectureInfoAPI";
+import { checkLecturePurchased } from "../../api/LectureInfo/lectureInfoAPI";
 
 const Wrapper = styled.div`
   display: flex;
-
   font-family: ${({ theme }) => theme.font.primary};
   flex-direction: column;
   height: 100%;
@@ -110,104 +113,72 @@ const QnaText = styled.p`
 type TabType = "curriculum" | "reviews" | "qna";
 
 const LectureInfoPage = () => {
-  // todo: 이거 클릭한 강의로 바꾸기
-  const lecture = useSelector(
-    (state: RootState) => state.lectureData.lectureList[0]
-  );
   const isAuthenticated = useSelector(
     (state: RootState) => state.token.isAuthenticated
   );
 
   // 구매 여부
-  const isPurchased: boolean = true;
+  const [isPurchased, setIsPurchased] = useState<boolean>(false);
   const progress: number = 70;
+  const { lectureId } = useParams<{ lectureId: string }>();
+  const [lecture, setLecture] = useState<Lecture | undefined>(undefined);
   const [activeTab, setActiveTab] = useState<TabType>("curriculum");
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [qnaList, setQnaList] = useState<Qna[]>([]);
   const [isAddReviewModalOpen, setIsAddReviewModalOpen] = useState(false);
   const [isAddQnaModalOpen, setIsAddQnaModalOpen] = useState(false);
-
   const lessons = Array.from({ length: 10 }).map((_, i) => ({
-    title: `레슨 ${i + 1} - 제목`,
+    title: `레슨 ${i + 1}: 제목`,
     duration: "23분",
   }));
 
   useEffect(() => {
-    if (!lecture?.lectureId) return;
+    if (!lectureId) return;
 
-    const fetchReviews = async () => {
+    const fetchLecture = async () => {
       try {
-        const data = await getReviewRequest(lecture.lectureId);
-        setReviews(data);
+        const data = await getLectureById(lectureId);
+        setLecture(data);
+        console.log(data);
+
+        const purchased = await checkLecturePurchased(data);
+        setIsPurchased(purchased);
       } catch (err) {
-        console.error(err);
-        setReviews([
-          {
-            comment:
-              "정말 좋은 강의였습니다! 쉽게 설명해주셔서 이해가 잘 돼요.",
-            nickname: "홍길동",
-            star: 5,
-            createdAt: [2025, 8, 21, 10, 0, 0, 0], // 년, 월, 일, 시, 분, 초, 밀리초
-          },
-          {
-            comment: "중간중간 예시가 부족해서 아쉬웠습니다.",
-            nickname: "김철수",
-            star: 3,
-            createdAt: [2025, 8, 20, 15, 30, 0, 0],
-          },
-          {
-            comment: "입문자가 듣기에 아주 좋아요. 추천합니다!",
-            nickname: "이영희",
-            star: 4,
-            createdAt: [2025, 8, 19, 8, 45, 0, 0],
-          },
-          {
-            comment: "입문자가 듣기에 아주 좋아요. 추천합니다!",
-            nickname: "이영희",
-            star: 4,
-            createdAt: [2025, 8, 19, 8, 45, 0, 0],
-          },
-          {
-            comment: "입문자가 듣기에 아주 좋아요. 추천합니다!",
-            nickname: "이영희",
-            star: 4,
-            createdAt: [2025, 8, 19, 8, 45, 0, 0],
-          },
-          {
-            comment: "입문자가 듣기에 아주 좋아요. 추천합니다!",
-            nickname: "이영희",
-            star: 4,
-            createdAt: [2025, 8, 19, 8, 45, 0, 0],
-          },
-          {
-            comment: "입문자가 듣기에 아주 좋아요. 추천합니다!",
-            nickname: "이영희",
-            star: 4,
-            createdAt: [2025, 8, 19, 8, 45, 0, 0],
-          },
-          {
-            comment: "입문자가 듣기에 아주 좋아요. 추천합니다!",
-            nickname: "이영희",
-            star: 4,
-            createdAt: [2025, 8, 19, 8, 45, 0, 0],
-          },
-          {
-            comment: "입문자가 듣기에 아주 좋아요. 추천합니다!",
-            nickname: "이영희",
-            star: 4,
-            createdAt: [2025, 8, 19, 8, 45, 0, 0],
-          },
-          {
-            comment: "입문자가 듣기에 아주 좋아요. 추천합니다!",
-            nickname: "이영희",
-            star: 4,
-            createdAt: [2025, 8, 19, 8, 45, 0, 0],
-          },
-        ]);
+        console.error("Failed to fetch lecture", err);
       }
     };
 
-    fetchReviews();
-  }, [lecture?.lectureId]);
+    fetchLecture();
+  }, [lectureId]);
+
+  useEffect(() => {
+    if (lecture?.lectureId) {
+      const fetchQnaList = async () => {
+        if (lecture && lecture.lectureId) {
+          try {
+            const data = await getLectureQnas(lecture.lectureId);
+            setQnaList(data);
+          } catch (err) {
+            console.error(err);
+          }
+        }
+      };
+
+      const fetchReviews = async () => {
+        if (lecture && lecture.lectureId) {
+          try {
+            const data = await getReviewRequest(lecture.lectureId);
+            setReviews(data);
+          } catch (err) {
+            console.error(err);
+          }
+        }
+      };
+
+      fetchQnaList();
+      fetchReviews();
+    }
+  }, [lecture]);
 
   return (
     <Wrapper>
@@ -229,24 +200,20 @@ const LectureInfoPage = () => {
           {activeTab === "reviews" && (
             <>
               <ReviewWrapper>
-                {" "}
-                <RatingNumber>{lecture?.averageStar ?? 0}</RatingNumber>{" "}
+                <RatingNumber>{lecture?.averageStar ?? 0}</RatingNumber>
                 <StarRow>
-                  {" "}
                   {Array.from({
                     length: Math.floor(lecture?.averageStar ?? 0),
                   }).map((_, idx) => (
                     <Star key={idx}>★</Star>
-                  ))}{" "}
-                  {(lecture?.averageStar ?? 0) % 1 !== 0 && <Star>☆</Star>}{" "}
-                </StarRow>{" "}
-                <ReviewCount>{lecture?.reviewCount}개의 리뷰</ReviewCount>{" "}
+                  ))}
+                  {(lecture?.averageStar ?? 0) % 1 !== 0 && <Star>☆</Star>}
+                </StarRow>
+                <ReviewCount>{lecture?.reviewCount}개의 리뷰</ReviewCount>
                 {isAuthenticated && isPurchased && (
                   <Button
                     text="리뷰 등록"
-                    onClick={() => {
-                      setIsAddReviewModalOpen(true);
-                    }}
+                    onClick={() => setIsAddReviewModalOpen(true)}
                   />
                 )}
               </ReviewWrapper>
@@ -286,7 +253,19 @@ const LectureInfoPage = () => {
               ))}
             </div>
           )}
-          {activeTab === "qna" && <div>Q&A 영역</div>}
+          {activeTab === "qna" && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+              }}
+            >
+              {qnaList.map((qna) => (
+                <QuestionCard key={qna.id} qna={qna} />
+              ))}
+            </div>
+          )}
         </RightPane>
       </Content>
 
@@ -295,6 +274,7 @@ const LectureInfoPage = () => {
         onClose={() => setIsAddReviewModalOpen(false)}
         onSubmit={async (data) => {
           try {
+            if (lecture == null) return;
             await postReviewRequest(lecture.lectureId, data);
             const updatedReviews = await getReviewRequest(lecture.lectureId);
             setReviews(updatedReviews);
@@ -313,10 +293,10 @@ const LectureInfoPage = () => {
       <AddQnaModal
         visible={isAddQnaModalOpen}
         onClose={() => setIsAddQnaModalOpen(false)}
-        lectureId={lecture.lectureId}
+        lectureId={lecture?.lectureId}
         onSubmit={async (data) => {
           try {
-            await postQnaRequest(data);
+            await postQna(data);
             setIsAddQnaModalOpen(false);
           } catch (err) {
             console.error(err);

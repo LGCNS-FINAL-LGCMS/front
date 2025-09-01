@@ -10,7 +10,7 @@ interface AddQnaModalProps {
     content: string;
     lectureId: string;
   }) => void;
-  lectureId: string;
+  lectureId: string | undefined;
 }
 
 const Overlay = styled.div<{ visible: boolean }>`
@@ -94,7 +94,7 @@ const AddQnaModal: React.FC<AddQnaModalProps> = ({
     setErrors(newErrors);
 
     if (newErrors.title || newErrors.content) return;
-
+    if (!lectureId) return;
     onSubmit({ title, content, lectureId });
     setTitle("");
     setContent("");

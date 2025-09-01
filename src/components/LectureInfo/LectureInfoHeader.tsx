@@ -9,7 +9,7 @@ import styled from "styled-components";
 import Button from "../Common/Button";
 import type { Lecture } from "../../types/lecture";
 import { theme } from "../../assets/styles/theme";
-import { postCartItem } from "../../api/Cart/cartApi";
+import { postCartItem } from "../../api/Cart/cartAPI";
 
 const TopSection = styled.div`
   display: flex;
@@ -129,7 +129,7 @@ const ModalContent = styled.div<{ isSuccess: boolean }>`
 `;
 
 interface LectureHeaderProps {
-  lecture: Lecture;
+  lecture: Lecture | undefined;
   purchased: boolean;
   progress: number;
 }
@@ -145,6 +145,7 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
 
   const handleAddCart = async () => {
     try {
+      if (!lecture) return;
       await postCartItem({
         lectureId: lecture.lectureId,
         title: lecture.title,
