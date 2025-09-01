@@ -88,7 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage }) => {
       <IconButton
         title="레벨테스트"
         active={activePage === "level-test"}
-        onClick={() => navigate(PAGE_PATHS.LEVEL_TEST)}
+        onClick={() => navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD)}
       >
         <FontAwesomeIcon icon={faChartLine} />
         <IconLabel>레벨테스트</IconLabel>
