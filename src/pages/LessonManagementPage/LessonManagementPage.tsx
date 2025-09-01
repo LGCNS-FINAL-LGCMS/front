@@ -1,17 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import LessonContainer from "../../components/LessonManagement/LessonContainer";
 import type { Lesson } from "../../types/lesson";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import VideoUploadModal from "../../components/LessonManagement/VideoUploadModal";
-const contentWidth = "800px";
+import {
+  postLessonMetadata,
+  modifyLessonMetadata,
+  deleteLesson,
+  getLessonDetails,
+  postLessonFiles,
+} from "../../api/Lesson/lessonAPI";
 
 const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: ${({ theme }) => theme.size.containerMax};
   padding: 24px 0;
   background-color: ${({ theme }) => theme.colors.background_B};
 `;
@@ -20,13 +27,13 @@ const Toolbar = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: ${contentWidth};
+  min-width: 80%;
   margin-bottom: 16px;
   gap: 12px;
 `;
 
 const Title = styled.h2`
-  font-size: ${({ theme }) => theme.fontSize.title.min};
+  font-size: ${({ theme }) => theme.fontSize.title.max};
   font-family: ${({ theme }) => theme.font.primary};
   font-weight: 600;
   color: ${({ theme }) => theme.colors.text_D};
@@ -36,7 +43,7 @@ const Title = styled.h2`
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  width: ${contentWidth};
+  width: 80%;
 `;
 
 const IconButton = styled.button<{ danger?: boolean }>`
@@ -61,36 +68,90 @@ const IconButton = styled.button<{ danger?: boolean }>`
 `;
 
 const LessonManagementPage = () => {
+  const { lectureId } = useParams<{ lectureId: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLesson, setEditingLesson] = useState<Lesson | null>(null);
-
-  const [lessons, setLessons] = useState<Lesson[]>([
-    {
-      id: "1",
-      title: "영상 1 제목",
-      description: "설명ddd",
-      date: "2025. 07. 11.",
-      thumbnailUrl: "",
-    },
-  ]);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isDataUpdated, setIsDataUpdated] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleUpdate = (id: string, updated: Partial<Lesson>) => {
-    setLessons((prev) =>
-      prev.map((lesson) =>
-        lesson.id === id ? { ...lesson, ...updated } : lesson
-      )
-    );
-  };
-
+  console.log(lectureId);
   const handleDelete = (id: string) => {
-    setLessons((prev) => prev.filter((lesson) => lesson.id !== id));
-    setSelectedIds((prev) => prev.filter((sid) => sid !== id));
+    try {
+      setLessons((prev) => prev.filter((lesson) => lesson.id !== id));
+      setSelectedIds((prev) => prev.filter((sid) => sid !== id));
+      const res = deleteLesson(id);
+      console.log(`해당 강좌 삭제 완료 :${res}`);
+    } catch (error) {
+      console.log(`강의 삭제 실패: ${error}`);
+    }
   };
 
   const handleEditClick = (lesson: Lesson) => {
     setEditingLesson(lesson);
     setIsModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!lectureId) return;
+
+    const fetchLessons = async () => {
+      try {
+        const data = await getLessonDetails(lectureId);
+        setLessons(data);
+      } catch (error) {
+        console.error("레슨 데이터를 불러오는 데 실패했습니다:", error);
+      }
+    };
+
+    fetchLessons();
+  }, [lectureId, isDataUpdated]);
+
+  const handleSubmit = async ({
+    title,
+    description,
+    file,
+  }: {
+    title: string;
+    description: string;
+    file?: File;
+  }) => {
+    setIsUploading(true);
+
+    try {
+      if (!lectureId) return;
+
+      const payload = {
+        title,
+        information: description,
+      };
+
+      let data;
+      if (editingLesson) {
+        data = await modifyLessonMetadata(editingLesson.id, description);
+        console.log("Metadata modified successfully:", data);
+      } else {
+        data = await postLessonMetadata(lectureId, payload);
+        if (file) {
+          const res = await postLessonFiles(data, lectureId, file);
+          console.log("Lesson added successfully:", res);
+        }
+      }
+
+      setIsDataUpdated((prev) => !prev);
+    } catch (error) {
+      console.error("Error adding metadata:", error);
+      alert(
+        editingLesson
+          ? "강좌 수정에 실패하였습니다"
+          : "강좌 추가에 실패하였습니다."
+      );
+    } finally {
+      setIsModalOpen(false);
+      setEditingLesson(null);
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -111,7 +172,6 @@ const LessonManagementPage = () => {
       <Container>
         <LessonContainer
           lessons={lessons}
-          onUpdate={handleUpdate}
           onDelete={handleDelete}
           selectedIds={selectedIds}
           setSelectedIds={setSelectedIds}
@@ -126,7 +186,7 @@ const LessonManagementPage = () => {
           editingLesson
             ? {
                 title: editingLesson.title,
-                description: editingLesson.description,
+                description: editingLesson.information,
               }
             : undefined
         }
@@ -134,33 +194,10 @@ const LessonManagementPage = () => {
           setIsModalOpen(false);
           setEditingLesson(null);
         }}
-        onSubmit={({ title, description }) => {
-          if (editingLesson) {
-            setLessons((prev) =>
-              prev.map((l) =>
-                l.id === editingLesson.id ? { ...l, title, description } : l
-              )
-            );
-          } else {
-            const newLesson: Lesson = {
-              id: Date.now().toString(),
-              title,
-              description,
-              date: new Date()
-                .toLocaleDateString("ko-KR", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                })
-                .replace(/\. /g, ". ")
-                .replace(/\.$/, "."),
-              thumbnailUrl: "",
-            };
-            setLessons((prev) => [...prev, newLesson]);
-          }
-          setIsModalOpen(false);
-          setEditingLesson(null);
+        onSubmit={async ({ title, description, file }) => {
+          handleSubmit({ title, description, file });
         }}
+        isUploading={isUploading}
       />
     </PageWrapper>
   );
