@@ -59,6 +59,13 @@ apiClient.interceptors.request.use(
       console.warn("⚠️ Access token missing or headers not present");
     }
 
+    if (
+      config.data instanceof FormData &&
+      config.headers["Content-Type"] === "application/json"
+    ) {
+      delete config.headers["Content-Type"];
+    }
+
     return config;
   },
   (error: AxiosError): Promise<AxiosError> => {
@@ -115,6 +122,7 @@ apiClient.interceptors.response.use(
     const errorMessage = (error.response?.data as { message?: string })
       ?.message;
 
+    console.log(error);
     // --- 서버에서 강제 밴 ---
     if (
       error.response?.status === 401 &&

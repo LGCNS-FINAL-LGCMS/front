@@ -11,10 +11,13 @@ export const PAGE_PATHS = {
   USER_INFO: "/userinfo",
   MY_COURSES: "/??",
   REPORT: "/??",
-  LEVEL_TEST: "/??",
+  LEVEL_TEST: {
+    DASHBOARD: "/member/student/leveltest/dashboard",
+    TEST: "/member/student/leveltest",
+  },
   FAQ: "/faq",
   CREATE_LECTURE: "/openlecture",
-  Lesson_Management: "/member/lecturer/lessons",
+  LESSON_MANAGEMENT: "/member/lecturer/lessons",
   CART: "/cart",
   QNA: "/qna",
   LESSON_VIEW: "/lessonview",
@@ -25,4 +28,12 @@ export const PAGE_PATHS = {
     },
     LECTURER: "/userpage/lecturer",
   },
+  PAYMENT: {
+    PAYMENT: "/payment",
+    SUCCESS: "/success",
+    CANCEL: "/cancel",
+    FAIL: "/fail",
+    RESULT: "/payment/result",
+  },
+  ADMIN: "/admin",
 };

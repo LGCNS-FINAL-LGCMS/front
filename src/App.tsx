@@ -13,8 +13,8 @@ import Layout from "./layouts/Layout";
 
 // =========== 페이지 임포트 ===========
 import LandingPage from "./pages/LandingPage/LandingPage";
-import Login from "./pages/Login/Login";
-import SignupPage from "./pages/Signup/SignupPage";
+import Login from "./pages/LoginPage/Login";
+import SignupPage from "./pages/SignupPage/SignupPage";
 import StudentLecturePage from "./pages/UserMypage/StudentLecturePage";
 import StudentQnaPage from "./pages/UserMypage/StudentQnaPage/StudentQnaPage";
 import MainPage from "./pages/MainPage/MainPage";
@@ -26,7 +26,13 @@ import LessonViewPage from "./pages/LessonViewPage/LessonViewPage";
 import QnaPage from "./pages/QnaPage/QnaPage";
 import FaqPage from "./pages/FaqPage/FaqPage";
 import WideLayout from "./layouts/WideLayout";
-// =========== 페이지 임포트 ===========
+import LevelTestPage from "./pages/LevelTestPage/LevelTestPage";
+import LevelTestDashboardPage from "./pages/LevelTestPage/LevelTestDashboardPage";
+import PaymentResultPage from "./pages/PaymentPage/PaymentResultPage";
+import PaymentPage from "./pages/PaymentPage/PaymentPage";
+import PaymentSuccess from "./pages/PaymentPage/PaymentSuccess";
+import AdminPage from "./pages/AdminPage/AdminPage";
+import ProtectedRoute from "./components/Admin/ProtectedRoute";
 
 function App() {
   return (
@@ -63,6 +69,24 @@ function App() {
             element={
               <Layout>
                 <UpdateUserInfoPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.LEVEL_TEST.DASHBOARD}
+            element={
+              <Layout>
+                <LevelTestDashboardPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.LEVEL_TEST.TEST}
+            element={
+              <Layout>
+                <LevelTestPage />
               </Layout>
             }
           />
@@ -122,11 +146,39 @@ function App() {
           />
 
           <Route
-            path={`${PAGE_PATHS.Lesson_Management}/:lactureId?`}
+            path={PAGE_PATHS.PAYMENT.PAYMENT}
+            element={
+              <Layout>
+                <PaymentPage />
+              </Layout>
+            }
+          />
+          <Route
+            path={PAGE_PATHS.PAYMENT.RESULT}
+            element={
+              <Layout>
+                <PaymentResultPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={`${PAGE_PATHS.LESSON_MANAGEMENT}/:lectureId?`}
             element={
               <Layout>
                 <LessonManagementPage />
               </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.ADMIN}
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <Layout>
+                  <AdminPage />
+                </Layout>
+              </ProtectedRoute>
             }
           />
 
@@ -145,6 +197,18 @@ function App() {
           <Route
             path={`${PAGE_PATHS.LESSON_VIEW}/:lactureId?`}
             element={<LessonViewPage />}
+          />
+          <Route
+            path={`${PAGE_PATHS.PAYMENT.SUCCESS}`}
+            element={<PaymentSuccess />}
+          />
+          <Route
+            path={`${PAGE_PATHS.PAYMENT.FAIL}`}
+            element={<PaymentSuccess />}
+          />
+          <Route
+            path={`${PAGE_PATHS.PAYMENT.CANCEL}`}
+            element={<PaymentSuccess />}
           />
         </Routes>
       </Router>
