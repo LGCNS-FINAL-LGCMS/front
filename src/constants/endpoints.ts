@@ -8,8 +8,8 @@ export const API_ENDPOINTS = {
     LOGOUT: "/auth/logout", // Delete
     GOOGLE_LOGIN: "/auth/sign-in/google", //post
     REFRESH: "/auth/refresh/token", // post
-    SIGN_OUT: "/auth/sign-out/google", // post
-    CHECK_NICKNAME: "/member/check/nickname", // post
+    SIGN_OUT: " /auth/sign-out/google", // post
+    CHECK_NICKNAME: " /member/check/nickname", // post
   },
   USER: {
     INFO: "/member", //get
@@ -22,6 +22,7 @@ export const API_ENDPOINTS = {
   STUDENT: {
     GET_LECTURE: "/???",
   },
+
   CATEGORY: {
     POST: "/member",
     GET: "/member",
@@ -30,6 +31,7 @@ export const API_ENDPOINTS = {
   LECTURE: {
     GET: "/lecture",
     OPEN: "/lecturer/lecture", // post
+    POST_FILES: "/lecturer/upload/lecture",
   },
   LESSON: {
     POST_META: "/lecturer/lesson",
@@ -49,10 +51,10 @@ export const API_ENDPOINTS = {
     PATCH: "/qna", // /{lectureId}
 
     MEMBER: {
-      GET: "/qna/member", // 해당 맴버의 QNA
+      GET: " /qna/member", // 해당 맴버의 QNA
 
       LECTURE: {
-        POST: "/qna/answer", // /{questionId} 답변 작성
+        POST: " /qna/answer", // /{questionId} 답변 작성
         PUT: "/qna/answer", // /{answerId} 답변 수정
       },
     },
@@ -60,6 +62,10 @@ export const API_ENDPOINTS = {
 
   GUIDE: {
     POST: "/guide/ask",
+  },
+  LEVEL_TEST: {
+    GET_QUESTIONS: "/student/leveltest/questions/generate",
+    SUBMIT_ANSWERS: "/student/leveltest/answers/submit-all",
   },
 
   PAYMENT: {
