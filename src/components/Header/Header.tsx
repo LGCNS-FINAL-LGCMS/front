@@ -405,7 +405,7 @@ const Header = () => {
                   {isLecturer && (
                     <DropdownItem
                       onClick={() => {
-                        navigate(PAGE_PATHS.USER_PAGE.LECTURER);
+                        navigate(PAGE_PATHS.USER_PAGE.LECTURER.MAIN);
                         setIsDropdownOpen(false);
                       }}
                     >
