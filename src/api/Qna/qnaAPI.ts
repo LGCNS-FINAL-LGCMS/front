@@ -8,7 +8,7 @@ import type { Qna } from "../../types/qna";
 interface PostQnaPayload {
   title: string;
   content: string;
-  lectureId: number;
+  lectureId: string;
 }
 
 interface PatchQnaPayload {
@@ -29,7 +29,7 @@ interface PutAnswerPayload {
   content: string;
 }
 
-export const getLectureQnas = async (lectureId: number): Promise<Qna[]> => {
+export const getLectureQnas = async (lectureId: string): Promise<Qna[]> => {
   try {
     const response = await apiClient.get(
       `${API_ENDPOINTS.QNA.GET}/${lectureId}`

@@ -112,7 +112,7 @@ function App() {
           />
 
           <Route
-            path={`${PAGE_PATHS.Lesson_Management}/:lactureId?`}
+            path={`${PAGE_PATHS.Lesson_Management}/:lectureId?`}
             element={
               <Layout>
                 <LessonManagementPage />
@@ -121,7 +121,7 @@ function App() {
           />
 
           <Route
-            path={`${PAGE_PATHS.LECTURE_INFO}/:lactureId`}
+            path={`${PAGE_PATHS.LECTURE_INFO}/:lectureId`}
             element={
               <Layout>
                 <LectureInfoPage />
