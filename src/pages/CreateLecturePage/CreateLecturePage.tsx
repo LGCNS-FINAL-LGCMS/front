@@ -1,15 +1,19 @@
-import React, { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import ImageUploader from "../../components/CreateLecture/ImageUploader";
 import LectureMaterialsUploader from "../../components/CreateLecture/LectureMaterialUploader";
 import InterestSelector from "../../components/Common/InterestSelector";
 import Button from "../../components/Common/Button";
 import { getcategoriesList } from "../../api/Signup/signupAPI";
-
-interface Interest {
-  id: string;
-  name: string;
-}
+import type { Interest } from "../../types/interset";
+import {
+  openLectureRequest,
+  lectureFilesUpload,
+} from "../../api/Lecture/lectureAPI";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../redux/store";
+import { useNavigate } from "react-router-dom";
+import { PAGE_PATHS } from "../../constants/pagePaths";
 
 const RadioGroup = styled.div`
   display: flex;
@@ -164,15 +168,45 @@ const ConfirmModal = styled.div`
   align-items: center;
   justify-content: center;
   z-index: ${({ theme }) => theme.zIndex.modal};
+  animation: fadeIn 0.2s ease;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 `;
 
 const ConfirmModalContent = styled.div`
-  background: ${({ theme }) => theme.colors.background_B};
-  padding: 24px;
-  border-radius: 3px;
-  ${({ theme }) => theme.size.modal};
-  max-height: 80vh;
-  overflow-y: auto;
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: ${({ theme }) => theme.shadow.md};
+  animation: slideUp 0.3s ease;
+  font-family: ${({ theme }) => theme.font.primary};
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  h3 {
+    font-size: ${({ theme }) => theme.fontSize.title};
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+  }
 `;
 
 const SectionSubtitle = styled.p`
@@ -184,22 +218,36 @@ const SectionSubtitle = styled.p`
 `;
 
 const ConfirmRow = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 12px;
+  font-size: ${({ theme }) => theme.fontSize.body.min};
+
+  strong {
+    font-weight: 600;
+    display: inline-block;
+    width: 90px;
+  }
 `;
 
 const CreateLecturePage = () => {
+  const TITLE_MAX_LENGTH = 20;
+  const DESCRIPTION_MAX_LENGTH = 40;
+
+  const navigate = useNavigate();
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [selectedInterests, setSelectedInterests] = useState<Interest[]>([]);
-  const [priceStr, setPriceStr] = useState<string>(""); // 화면용
-  const [priceNum, setPriceNum] = useState<number>(0); // 저장용
+  const [priceStr, setPriceStr] = useState<string>("");
+  const [priceNum, setPriceNum] = useState<number>(0);
   const [isFree, setIsFree] = useState<boolean>(true);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [information, setInformation] = useState<string>("");
   const [selectedLevel, setSelectedLevel] = useState<"상" | "중" | "하" | "">(
     ""
   );
   const [interests, setInterests] = useState<Interest[]>([]); // 여기를 빈 배열로 초기화
+  const nickname = useSelector((state: RootState) => state.auth.nickname);
 
   const levels: Array<"상" | "중" | "하"> = ["상", "중", "하"];
 
@@ -209,6 +257,7 @@ const CreateLecturePage = () => {
     category: "",
     title: "",
     description: "",
+    information: "",
     materials: "",
   });
 
@@ -231,15 +280,24 @@ const CreateLecturePage = () => {
     const newErrors = {
       thumbnail: selectedImageFile ? "" : "썸네일 이미지를 등록해주세요.",
       level: selectedLevel ? "" : "강의 난이도를 선택해주세요.",
-      category: selectedInterests.length > 0 ? "" : "카테고리를 선택해주세요.",
-      title: title.trim() ? "" : "강의 제목을 입력해주세요.",
+      category:
+        selectedInterests.length === 0
+          ? "카테고리를 선택해주세요."
+          : selectedInterests.length > 1
+          ? "카테고리는 하나만 선택할 수 있습니다."
+          : "",
+      title: title.trim()
+        ? title.length > 50
+          ? `제목은 ${TITLE_MAX_LENGTH}자 이내로 입력해주세요.`
+          : ""
+        : "강의 제목을 입력해주세요.",
       description: description.trim() ? "" : "강의 설명을 입력해주세요.",
+      information: information.trim() ? "" : "상세 설명을 입력해주세요.",
       materials: selectedFile ? "" : "강의 자료를 업로드해주세요.",
     };
 
     setErrors(newErrors);
 
-    // 모든 에러가 빈 문자열일 경우 true 반환
     return Object.values(newErrors).every((err) => err === "");
   };
 
@@ -349,22 +407,41 @@ const CreateLecturePage = () => {
         <Input
           placeholder="강의 제목을 입력하세요"
           value={title}
+          maxLength={TITLE_MAX_LENGTH}
           onChange={(e) => setTitle(e.target.value)}
         />
+        <div style={{ textAlign: "right", fontSize: "12px", color: "#888" }}>
+          {title.length}/{TITLE_MAX_LENGTH}자
+        </div>
       </Section>
 
       <Section>
-        <SectionTitle>강의 설명</SectionTitle>
+        <SectionTitle>강의 한 줄 설명</SectionTitle>
         {errors.description && (
           <ErrorMessage>{errors.description}</ErrorMessage>
         )}
-        <TextArea
-          placeholder="강의 설명을 입력하세요"
+        <Input
+          placeholder="강의 설명을 입력하세요 (한 줄 요약)"
           value={description}
+          maxLength={DESCRIPTION_MAX_LENGTH}
           onChange={(e) => setDescription(e.target.value)}
         />
+        <div style={{ textAlign: "right", fontSize: "12px", color: "#888" }}>
+          {description.length}/{DESCRIPTION_MAX_LENGTH}자
+        </div>
       </Section>
 
+      <Section>
+        <SectionTitle>상세 설명</SectionTitle>
+        {errors.information && (
+          <ErrorMessage>{errors.information}</ErrorMessage>
+        )}
+        <TextArea
+          placeholder="강의에 대한 상세 설명을 입력하세요"
+          value={information}
+          onChange={(e) => setInformation(e.target.value)}
+        />
+      </Section>
       <Section>
         <SectionTitle>강의 자료</SectionTitle>
         <SectionSubtitle>강의 자료는 PDF 확장자만 가능합니다.</SectionSubtitle>
@@ -385,7 +462,10 @@ const CreateLecturePage = () => {
               <strong>제목:</strong> {title}
             </ConfirmRow>
             <ConfirmRow>
-              <strong>설명:</strong> {description}
+              <strong> 한 줄 설명:</strong> {description}
+            </ConfirmRow>
+            <ConfirmRow>
+              <strong>상세 설명:</strong> {information}
             </ConfirmRow>
             <ConfirmRow>
               <strong>난이도:</strong> {selectedLevel}
@@ -406,23 +486,46 @@ const CreateLecturePage = () => {
             </ConfirmRow>
             <div
               style={{
-                marginTop: "16px",
+                marginTop: "24px",
                 display: "flex",
-                gap: "8px",
+                gap: "12px",
                 justifyContent: "flex-end",
               }}
             >
               <Button
                 text="취소"
                 onClick={() => setShowConfirmModal(false)}
-                design={2}
+                design={1}
               />
               <Button
                 text="제출"
-                onClick={() => {
-                  console.log("제출 완료!");
-                  setShowConfirmModal(false);
-                  // 여기서 실제 제출 로직 넣기 (API 등)
+                onClick={async () => {
+                  try {
+                    if (selectedImageFile == null || selectedFile == null)
+                      return;
+                    const response = await openLectureRequest({
+                      title,
+                      category: selectedInterests[0]?.name ?? "",
+                      information,
+                      level: selectedLevel,
+                      price: isFree ? 0 : priceNum,
+                      description,
+                      nickname: nickname,
+                    });
+
+                    console.log(response);
+                    const res = await lectureFilesUpload({
+                      id: response,
+                      files: [selectedImageFile, selectedFile],
+                    });
+
+                    console.log("강의 개설 성공!", res);
+                    setShowConfirmModal(false);
+                    navigate(PAGE_PATHS.USER_PAGE.LECTURER);
+                  } catch (error) {
+                    console.error("강의 개설 중 오류 발생:", error);
+                    alert("강의 개설 중 오류 발생");
+                  }
                 }}
                 design={1}
               />

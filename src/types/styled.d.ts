@@ -65,6 +65,11 @@ declare module "styled-components" {
         min: string;
         max: string;
       };
+      contents: {
+        small: string;
+        medium: string;
+        large: string;
+      };
     };
 
     font: {

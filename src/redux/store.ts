@@ -14,6 +14,7 @@ import categorySlice from "./Category/categorySlice";
 import authSlice from "./Auth/authSlice";
 import guideBotSlice from "./GuideBot/guideBotSlice";
 import lecturePaginationSlice from "./lectureData/lecturerPageData/lecturerPageData";
+import PaymentSlice from "./Payment/paymentSlice";
 import studentLecturePagenationSlice from "./lectureData/studentPageData/studentPageDataSlice";
 import currentLectureSlice from "./lectureData/currentLectureData/currentLectureSlice";
 import currentQnaSlice from "./qna/currentQnaSlice";
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   category: categorySlice,
   auth: authSlice,
   guide: guideBotSlice,
+  payment: PaymentSlice,
 currentLecture: currentLectureSlice,
   currentQna: currentQnaSlice,
   faq: faqListSlice,
