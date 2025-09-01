@@ -14,7 +14,7 @@ export const PAGE_PATHS = {
   LEVEL_TEST: "/??",
   FAQ: "/faq",
   CREATE_LECTURE: "/openlecture",
-  Lesson_Management: "/member/lecturer/lessons",
+  LESSON_MANAGEMENT: "/member/lecturer/lessons",
   CART: "/cart",
   QNA: "/qna",
   USER_PAGE: {
@@ -24,7 +24,7 @@ export const PAGE_PATHS = {
     },
     LECTURER: "/userpage/lecturer",
   },
-  PAYMENT:{
+  PAYMENT: {
     PAYMENT: "/payment",
     SUCCESS: "/success",
     CANCEL: "/cancel",

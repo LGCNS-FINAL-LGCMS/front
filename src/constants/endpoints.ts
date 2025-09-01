@@ -5,16 +5,16 @@
 
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGOUT: "/api/auth/logout", // Delete
-    GOOGLE_LOGIN: "/api/auth/sign-in/google", //post
-    REFRESH: "/api/auth/refresh/token", // post
-    SIGN_OUT: "/api/auth/sign-out/google", // post
-    CHECK_NICKNAME: "/api/member/check/nickname", // post
+    LOGOUT: "/auth/logout", // Delete
+    GOOGLE_LOGIN: "/auth/sign-in/google", //post
+    REFRESH: "/auth/refresh/token", // post
+    SIGN_OUT: "/auth/sign-out/google", // post
+    CHECK_NICKNAME: "/member/check/nickname", // post
   },
   USER: {
-    INFO: "/api/member", //get
-    UPDATE: "/api/member/change/info", // patch
-    CATEGORY_LIST: "/api/member/categories",
+    INFO: "/member", //get
+    UPDATE: "/member/change/info", // patch
+    CATEGORY_LIST: "/member/categories",
   },
   LECTURER: {
     GET_LECTURE: "/lecturer/lecture",
@@ -23,32 +23,43 @@ export const API_ENDPOINTS = {
     GET_LECTURE: "/???",
   },
   CATEGORY: {
-    POST: "/api/member",
-    GET: "/api/member",
-    DELETE: "/api/member", // /{categoryId}
+    POST: "/member",
+    GET: "/member",
+    DELETE: "/member", // /{categoryId}
   },
   LECTURE: {
     GET: "/lecture",
     OPEN: "/lecturer/lecture", // post
   },
+  LESSON: {
+    POST_META: "/lecturer/lesson",
+    POST_FILES: "/lecturer/upload/lesson",
+    MODIFY: "/lecturer/lesson",
+    DELETE: "/lecturer/lesson",
+    GET: {
+      DETAIL: "/lesson/details",
+      TITLE: "/lesson/title",
+      SECTION: "/lesson/section",
+    },
+  },
   QNA: {
-    GET: "/api/qna", // /{lectureId}
+    GET: "/qna", // /{lectureId}
     POST: "/qna",
-    DELETE: "/api/qna", // /{lectureId}
-    PATCH: "/api/qna", // /{lectureId}
+    DELETE: "/qna", // /{lectureId}
+    PATCH: "/qna", // /{lectureId}
 
     MEMBER: {
-      GET: "/api/qna/member", // 해당 맴버의 QNA
+      GET: "/qna/member", // 해당 맴버의 QNA
 
       LECTURE: {
-        POST: "/api/qna/answer", // /{questionId} 답변 작성
-        PUT: "/api/qna/answer", // /{answerId} 답변 수정
+        POST: "/qna/answer", // /{questionId} 답변 작성
+        PUT: "/qna/answer", // /{answerId} 답변 수정
       },
     },
   },
 
   GUIDE: {
-    POST: "/api/guide/ask",
+    POST: "/guide/ask",
   },
 
   PAYMENT: {
@@ -60,7 +71,7 @@ export const API_ENDPOINTS = {
     GET: "/cart", // 장바구니 아이템 조회
     POST: "/cart", // 장바구니에 아이템 등록
     DELETE: "/cart", // /{cartId}  단건 삭젝
-    COUNT: "/admin/cart/count", //회원별 장바구니 아이템 갯수 
+    COUNT: "/admin/cart/count", //회원별 장바구니 아이템 갯수
   },
   MEMBER: {
     DESIRER: "/admin/member/lecturer/desirer", // get
@@ -68,6 +79,6 @@ export const API_ENDPOINTS = {
   },
 
   FAQ: {
-    GET: "/api/core/faq",
+    GET: "/core/faq",
   },
 };
