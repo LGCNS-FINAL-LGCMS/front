@@ -32,6 +32,7 @@ import AdminPage from "./pages/AdminPage/AdminPage";
 import ProtectedRoute from "./components/Admin/ProtectedRoute";
 import QnaPage from "./pages/QnaPage/QnaPage";
 import FaqPage from "./pages/FaqPage/FaqPage";
+import StudentReportPage from "./pages/StudentReportPage/StudentReportPage";
 
 function App() {
   return (
@@ -86,6 +87,15 @@ function App() {
             element={
               <Layout>
                 <LevelTestPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={`${PAGE_PATHS.STUDENT_REPORT}/:reportId?`}
+            element={
+              <Layout>
+                <StudentReportPage />
               </Layout>
             }
           />
