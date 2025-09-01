@@ -147,6 +147,7 @@ const LecturerDashboardPage = () => {
               padAngle={0.7}
               cornerRadius={3}
               activeOuterRadiusOffset={8}
+              enableArcLabels={false}
               colors={{ scheme: "set3" }}
               borderWidth={1}
               borderColor={{
@@ -189,6 +190,7 @@ const LecturerDashboardPage = () => {
               data={profitDistributionData.dataList}
               keys={profitDistributionData.keyList}
               indexBy={profitDistributionData.index}
+              enableLabel={false}
               margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
               padding={0.3}
               valueScale={{ type: "linear" }}
@@ -301,11 +303,12 @@ const LecturerDashboardPage = () => {
               data={completeProgressData.dataList}
               keys={completeProgressData.keyList}
               indexBy={completeProgressData.index}
+              enableLabel={false}
               margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
               padding={0.3}
               valueScale={{ type: "linear" }}
               indexScale={{ type: "band", round: true }}
-              colors={{ scheme: "set2" }}
+              colors={{ scheme: "pastel1" }}
               borderColor={{
                 from: "color",
                 modifiers: [["darker", 1.6]],
@@ -318,8 +321,8 @@ const LecturerDashboardPage = () => {
                 tickRotation: 0,
               }}
               axisLeft={{
-                tickSize: 5,
-                tickPadding: 5,
+                tickSize: 3,
+                tickPadding: 3,
                 tickRotation: 0,
               }}
               labelSkipWidth={12}
@@ -359,7 +362,8 @@ const LecturerDashboardPage = () => {
               padAngle={0.7}
               cornerRadius={3}
               activeOuterRadiusOffset={8}
-              colors={{ scheme: "set3" }}
+              enableArcLabels={false}
+              colors={{ scheme: "nivo" }}
               borderWidth={1}
               borderColor={{
                 from: "color",
@@ -401,11 +405,12 @@ const LecturerDashboardPage = () => {
               data={progressGroupData.dataList}
               keys={progressGroupData.keyList}
               indexBy={progressGroupData.index}
+              enableLabel={false}
               margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
               padding={0.3}
               valueScale={{ type: "linear" }}
               indexScale={{ type: "band", round: true }}
-              colors={{ scheme: "set2" }}
+              colors={{ scheme: "set3" }}
               borderColor={{
                 from: "color",
                 modifiers: [["darker", 1.6]],
