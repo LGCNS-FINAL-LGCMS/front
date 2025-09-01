@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import Button from "../Common/Button";
 import ClipLoader from "react-spinners/ClipLoader";
+import type { FileRejection } from "react-dropzone";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -212,24 +213,27 @@ const VideoUploadModal: React.FC<Props> = ({
     setErrors((prev) => ({ ...prev, file: "" }));
   }, []);
 
-  const onDropRejected = useCallback((fileRejections: any[]) => {
-    if (fileRejections.length > 0) {
-      const reason = fileRejections[0].errors[0].code;
-      if (reason === "file-too-large") {
-        setErrors((prev) => ({
-          ...prev,
-          file: `파일 크기가 너무 큽니다. (최대 ${
-            MAX_FILE_SIZE / 1024 / 1024
-          }MB)`,
-        }));
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          file: "허용되지 않는 파일입니다.",
-        }));
+  const onDropRejected = useCallback(
+    (fileRejections: FileRejection[]) => {
+      if (fileRejections.length > 0) {
+        const reason = fileRejections[0].errors[0].code;
+        if (reason === "file-too-large") {
+          setErrors((prev) => ({
+            ...prev,
+            file: `파일 크기가 너무 큽니다. (최대 ${
+              MAX_FILE_SIZE / 1024 / 1024
+            }MB)`,
+          }));
+        } else {
+          setErrors((prev) => ({
+            ...prev,
+            file: "허용되지 않는 파일입니다.",
+          }));
+        }
       }
-    }
-  }, []);
+    },
+    [MAX_FILE_SIZE]
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
