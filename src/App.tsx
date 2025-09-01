@@ -162,7 +162,7 @@ function App() {
           />
 
           <Route
-            path={`${PAGE_PATHS.Lesson_Management}/:lactureId?`}
+            path={`${PAGE_PATHS.LESSON_MANAGEMENT}/:lectureId?`}
             element={
               <Layout>
                 <LessonManagementPage />

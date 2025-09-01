@@ -17,7 +17,7 @@ export const PAGE_PATHS = {
   },
   FAQ: "/faq",
   CREATE_LECTURE: "/openlecture",
-  Lesson_Management: "/member/lecturer/lessons",
+  LESSON_MANAGEMENT: "/member/lecturer/lessons",
   CART: "/cart",
   QNA: "/qna",
   USER_PAGE: {

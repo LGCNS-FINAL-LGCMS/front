@@ -33,6 +33,17 @@ export const API_ENDPOINTS = {
     OPEN: "/lecturer/lecture", // post
     POST_FILES: "/lecturer/upload/lecture",
   },
+  LESSON: {
+    POST_META: "/lecturer/lesson",
+    POST_FILES: "/lecturer/upload/lesson",
+    MODIFY: "/lecturer/lesson",
+    DELETE: "/lecturer/lesson",
+    GET: {
+      DETAIL: "/lesson/details",
+      TITLE: "/lesson/title",
+      SECTION: "/lesson/section",
+    },
+  },
   QNA: {
     GET: "/qna", // /{lectureId}
     POST: "/qna",

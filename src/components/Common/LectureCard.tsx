@@ -224,7 +224,7 @@ const LectureCard: React.FC<LectureCardProps> = ({
             {[...Array(Math.floor(rating))].map((_, idx) => (
               <Star key={idx}>★</Star>
             ))}
-            {rating % 1 !== 0 && <Star>☆</Star>} {/* 소수점 있을 때 반 별 */}
+            {rating % 1 !== 0 && <Star>☆</Star>}
             <span>({rating})</span>
           </RatingWrapper>
         )}
