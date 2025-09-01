@@ -19,7 +19,7 @@ interface ReportList {
   totalScore: number;
   studentLevel: "HIGH" | "MEDIUM" | "LOW";
   createdAt: string;
-  categoryName: string;
+  category: string;
 }
 
 const Container = styled.div`
@@ -208,7 +208,15 @@ const LevelTestDashboardPage = () => {
   const getReportList = async () => {
     try {
       const response = await apiClient.get(API_ENDPOINTS.STUDENT_REPORT.GET);
-      if (response.data.status === "OK") setReportList(response.data.data);
+      if (response.data.status === "OK") {
+        if (response.data.data) {
+          setReportList(response.data.data);
+        } else {
+          console.log("레포트 데이터 없음");
+        }
+      } else {
+        console.log("StudentReport API 연결 실패");
+      }
     } catch (error) {
       console.log("StudentReport API 호출 실패", error);
     }
@@ -280,7 +288,7 @@ const LevelTestDashboardPage = () => {
                   src={getLevelIcon(report.studentLevel)}
                   alt="Level Icon"
                 />
-                <ReportTitle>{report.categoryName}</ReportTitle>
+                <ReportTitle>{report.category}</ReportTitle>
               </ReportRight>
             </ReportCard>
           ))
