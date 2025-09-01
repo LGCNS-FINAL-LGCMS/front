@@ -3,11 +3,9 @@ import styled from "styled-components";
 import type { Lesson } from "../../types/lesson";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
-import baseimg from "../../assets/Imgs/기본이미지.gif";
 
 interface Props {
   lesson: Lesson;
-  onUpdate: (id: string, updated: Partial<Lesson>) => void;
   onDelete: (id: string) => void;
   checked: boolean;
   onCheckChange: (checked: boolean) => void;
@@ -141,19 +139,27 @@ const IndexCell = styled.div`
 `;
 
 const LessonCell: React.FC<Props> = ({ lesson, onDelete, onEditClick }) => {
+  const formatDate = (createdAt: number[]) => {
+    const [year, month, day] = createdAt;
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
+      2,
+      "0"
+    )}`;
+  };
+
   return (
     <Row>
       <IndexCell>
         {lesson.index !== undefined ? lesson.index + 1 : "-"}
       </IndexCell>
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <Thumb imageUrl={lesson.thumbnailUrl || baseimg} />
+        <Thumb imageUrl={lesson.thumbnail || undefined} />
         <div>
           <Title>{lesson.title}</Title>
-          <SmallText>{lesson.description}</SmallText>
+          <SmallText>{lesson.information}</SmallText>
         </div>
       </div>
-      <div>{lesson.date}</div>
+      <div>{formatDate(lesson.createdAt)}</div>
       <Actions>
         <UpdateButton onClick={() => onEditClick(lesson)}>
           {" "}
