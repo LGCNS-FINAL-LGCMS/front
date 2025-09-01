@@ -11,15 +11,29 @@ export const PAGE_PATHS = {
   USER_INFO: "/userinfo",
   MY_COURSES: "/??",
   REPORT: "/??",
-  LEVEL_TEST: "/??",
+  LEVEL_TEST: {
+    DASHBOARD: "/member/student/leveltest/dashboard",
+    TEST: "/member/student/leveltest",
+  },
   FAQ: "/faq",
   CREATE_LECTURE: "/openlecture",
-  Lesson_Management: "/member/lecturer/lessons",
+  LESSON_MANAGEMENT: "/member/lecturer/lessons",
   CART: "/cart",
   LECTURE_INFO: "/lecture",
   QNA: "/qna",
   USER_PAGE: {
-    STUDENT: "/userpage/student",
+    STUDENT: {
+      MY_LECTURES: "/userpage/student",
+      QNA: "/member/qna",
+    },
     LECTURER: "/userpage/lecturer",
   },
+  PAYMENT: {
+    PAYMENT: "/payment",
+    SUCCESS: "/success",
+    CANCEL: "/cancel",
+    FAIL: "/fail",
+    RESULT: "/payment/result",
+  },
+  ADMIN: "/admin",
 };
