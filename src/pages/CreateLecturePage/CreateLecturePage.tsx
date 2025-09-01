@@ -6,7 +6,10 @@ import InterestSelector from "../../components/Common/InterestSelector";
 import Button from "../../components/Common/Button";
 import { getcategoriesList } from "../../api/Signup/signupAPI";
 import type { Interest } from "../../types/interset";
-import { openLectureRequest } from "../../api/Lecture/lectureAPI";
+import {
+  openLectureRequest,
+  lectureFilesUpload,
+} from "../../api/Lecture/lectureAPI";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
@@ -234,8 +237,8 @@ const CreateLecturePage = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [selectedInterests, setSelectedInterests] = useState<Interest[]>([]);
-  const [priceStr, setPriceStr] = useState<string>(""); // 화면용
-  const [priceNum, setPriceNum] = useState<number>(0); // 저장용
+  const [priceStr, setPriceStr] = useState<string>("");
+  const [priceNum, setPriceNum] = useState<number>(0);
   const [isFree, setIsFree] = useState<boolean>(true);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -492,12 +495,14 @@ const CreateLecturePage = () => {
               <Button
                 text="취소"
                 onClick={() => setShowConfirmModal(false)}
-                design={2}
+                design={1}
               />
               <Button
                 text="제출"
                 onClick={async () => {
                   try {
+                    if (selectedImageFile == null || selectedFile == null)
+                      return;
                     const response = await openLectureRequest({
                       title,
                       category: selectedInterests[0]?.name ?? "",
@@ -507,7 +512,14 @@ const CreateLecturePage = () => {
                       description,
                       nickname: nickname,
                     });
-                    console.log("강의 개설 성공!", response);
+
+                    console.log(response);
+                    const res = await lectureFilesUpload({
+                      id: response,
+                      files: [selectedImageFile, selectedFile],
+                    });
+
+                    console.log("강의 개설 성공!", res);
                     setShowConfirmModal(false);
                     navigate(PAGE_PATHS.USER_PAGE.LECTURER);
                   } catch (error) {

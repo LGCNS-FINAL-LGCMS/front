@@ -151,13 +151,17 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onFileSelect }) => {
 
   const getCroppedImage = useCallback(async () => {
     if (!originalImage || !croppedAreaPixels) return;
-    const imageUrl = await createCroppedImage(
+
+    const croppedFile = await createCroppedImage(
       originalImage.preview,
       croppedAreaPixels
     );
-    setCroppedImage(imageUrl);
+
+    const preview = URL.createObjectURL(croppedFile);
+    setCroppedImage(preview);
     setIsModalOpen(false);
-    onFileSelect(originalImage.file, imageUrl);
+
+    onFileSelect(croppedFile, preview);
   }, [croppedAreaPixels, originalImage, onFileSelect]);
 
   const displayedImage = croppedImage || originalImage?.preview || "";
@@ -260,10 +264,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onFileSelect }) => {
 
 export default ImageUploader;
 
-async function createCroppedImage(
-  imageSrc: string,
-  crop: Area
-): Promise<string> {
+async function createCroppedImage(imageSrc: string, crop: Area): Promise<File> {
   const image = await createImage(imageSrc);
   const canvas = document.createElement("canvas");
   canvas.width = crop.width;
@@ -284,10 +285,15 @@ async function createCroppedImage(
     crop.height
   );
 
-  return new Promise<string>((resolve) => {
+  return new Promise<File>((resolve) => {
     canvas.toBlob((blob) => {
-      if (!blob) return;
-      resolve(URL.createObjectURL(blob));
+      if (!blob) throw new Error("Blob 생성 실패");
+
+      const file = new File([blob], "cropped_image.jpg", {
+        type: "image/jpeg",
+      });
+
+      resolve(file);
     }, "image/jpeg");
   });
 }
