@@ -22,10 +22,10 @@ import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
 import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
+import LectureInfoPage from "./pages/LectureInfoPage/LectureInfoPage";
 import LecturerDashboardPage from "./pages/LecturerPage/LecturerDashboardPage";
 import LevelTestPage from "./pages/LevelTestPage/LevelTestPage";
 import LevelTestDashboardPage from "./pages/LevelTestPage/LevelTestDashboardPage";
-// =========== 페이지 임포트 ===========
 import PaymentResultPage from "./pages/PaymentPage/PaymentResultPage";
 import PaymentPage from "./pages/PaymentPage/PaymentPage";
 import PaymentSuccess from "./pages/PaymentPage/PaymentSuccess";
@@ -171,6 +171,14 @@ function App() {
             }
           />
 
+          <Route
+            path={`${PAGE_PATHS.LECTURE_INFO}/:lectureId`}
+            element={
+              <Layout>
+                <LectureInfoPage />
+              </Layout>
+            }
+          />
           <Route
             path={PAGE_PATHS.ADMIN}
             element={
