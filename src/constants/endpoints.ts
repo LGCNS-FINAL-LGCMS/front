@@ -20,7 +20,7 @@ export const API_ENDPOINTS = {
     GET_LECTURE: "/lecturer/lecture",
   },
   STUDENT: {
-    GET_LECTURE: "/???",
+    GET_LECTURE: "/student/lecture",
   },
 
   CATEGORY: {
