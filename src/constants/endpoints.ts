@@ -98,8 +98,6 @@ export const API_ENDPOINTS = {
   MEMBER: {
     DESIRER: "/admin/member/lecturer/desirer", // get
     CONFIRM: "/admin/member/lecturer/confirm", // post
-  },FAQ: {
-    GET: "/core/faq",
   },
 
   CONSULTING: {
