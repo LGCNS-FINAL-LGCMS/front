@@ -146,7 +146,7 @@ const LecturerLectureContainer: React.FC = () => {
                 {
                   label: "강의 정보 보기",
                   onClick: () =>
-                    navigate(`${PAGE_PATHS.LECTURE_INFO}${item.lectureId}`),
+                    navigate(`${PAGE_PATHS.LECTURE_INFO}/${item.lectureId}`),
                 },
                 {
                   label: "강좌 추가하기",
