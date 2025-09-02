@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import KakaoPayBox from '../../components/Payment/KakaoPayBox';
 import ProductList from '../../components/Payment/ProductList';
 import styled, { keyframes, css } from 'styled-components';
-import { getCart } from '../../api/Payment/cartAPI';
+import { deleteCart, getCart } from '../../api/Payment/cartAPI';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setCancelled, setLoading, setFailure, setPaymentInfo, setPending, setSuccess } from '../../redux/Payment/paymentSlice';
@@ -20,6 +20,7 @@ import { PAGE_PATHS } from '../../constants/pagePaths';
 import { useNavigate } from 'react-router-dom';
 // import { postLectureStudent } from '../../api/Lecture/lectureAPI';
 import type { RootState } from '../../redux/store';
+import { postLectureStudent } from '../../api/Lecture/lectureAPI';
 
 
 const PaymentContainer = styled.div`
@@ -117,8 +118,12 @@ const PaymentPage: React.FC = () => {
         dispatch(setPending());
 
         setItems(data.cartResponses.map(item => ({
-          ...item,
           selected: true,
+          lectureId: item.lectureId,
+          title: item.title,
+          price: item.price,
+          thumbnailUrl: item.thumbnailUrl,
+          cartId: item.cartId
         })));
 
       } catch (error) {
@@ -130,11 +135,33 @@ const PaymentPage: React.FC = () => {
 
   // 결제함수
 
-  const startKakaoAccount = async () => {
+  const startKakaoAccount = async (subtotal: number) => {
     try {
-
       let tid = '';
       dispatch(setLoading());
+
+      if (subtotal <= 0) {
+        // 수강등록시키기
+        // 장바구니에서 선택된 항목 없애는 요청 보내기
+        items.filter(item => item.selected).map(async (item) => {
+          await postLectureStudent(item.lectureId);
+          await deleteCart(item.cartId);
+        })
+
+        dispatch(setPaymentInfo({
+          totalAmount: subtotal,
+          paymentMethod: "KakaoPay",
+          transactionId: "ST8FREE8TST",
+        }))
+
+        if (items.filter(item => item.selected).length > 0) {
+          dispatch(setFailure());
+        } else {
+          dispatch(setSuccess());
+        }
+        navigate(PAGE_PATHS.PAYMENT.RESULT);
+        return;
+      }
 
       sessionStorage.setItem('itemIds',
         JSON.stringify(items
@@ -142,15 +169,12 @@ const PaymentPage: React.FC = () => {
           .map(items => items.cartId)
         )
       );
-      const selectedItems = items.filter(item => item.selected);
-      const subtotal = selectedItems.reduce((sum, item) => sum + item.price, 0)
+
 
       let response: paymentData;
       let stepUrl = '';
 
       // 실제 결제 api
-      // 처음에 바로 강의등록해놓고 결제실패시 삭제하는 방식으로 만들기
-      // selectedItems.map(async (item) => await postLectureStudent(item.lectureId));
 
       // 준비요청 -> 카카오 팝업 -> tid와 토큰값을 승인api요청 -> 결제완료!
       if (items.length > 1) {
@@ -183,9 +207,14 @@ const PaymentPage: React.FC = () => {
         transactionId: tid,
       }))
 
+      // TODO : 처음에 바로 강의등록해놓고 결제실패시 삭제하는 방식으로 만들기
+      // items.filter(item => item.selected)
+      //   .map(async (item) =>
+      //     await postLectureStudent(item.lectureId)
+      //   );
 
 
-      const popUp = window.open(stepUrl, "카카오페이 결제", 'width=450,height=700');
+      const popUp = window.open(stepUrl, "카카오페이 결제", 'width=450,height=700') as Window;
 
 
       const checkPopupClosed = setInterval(() => {
@@ -205,15 +234,16 @@ const PaymentPage: React.FC = () => {
         clearInterval(checkPopupClosed);
         if (event.data.type === "fail") {
           // 실패창 넘어가기
-          console.log('결제 실패 tntls')
           dispatch(setFailure())
           navigate(PAGE_PATHS.PAYMENT.RESULT);
-
+          //  TODO 실패요청 백엔드로 보내기
+          return;
         } else if (event.data.type === "cancel") {
           // 취소창 넘어가기
           dispatch(setCancelled())
           navigate(PAGE_PATHS.PAYMENT.RESULT);
-
+          // TODO 취소요청 백엔드로 보내기
+          return;
         } else {
           const pgToken = event.data.pg_token
           const tid = sessionStorage.getItem('tid');
@@ -232,13 +262,14 @@ const PaymentPage: React.FC = () => {
               // 완료창 넘어가기
               dispatch(setSuccess())
               navigate(PAGE_PATHS.PAYMENT.RESULT);
-
+              return;
             } else {
               alert("결제가 실패하였습니다.")
               // 실패창 넘어가기
               dispatch(setFailure())
               //  TODO 실패요청 백엔드로 보내기
               navigate(PAGE_PATHS.PAYMENT.RESULT);
+              return;
             }
           }
         }
