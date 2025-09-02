@@ -213,7 +213,7 @@ function App() {
           {/* 와이드 Layout */}
 
           <Route
-            path={`${PAGE_PATHS.LESSON_VIEW}/:lactureId?`}
+            path={`${PAGE_PATHS.LESSON_VIEW}/:lectureId?`}
             element={<LessonViewPage />}
           />
           <Route

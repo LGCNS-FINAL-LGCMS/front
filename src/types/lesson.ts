@@ -1,11 +1,11 @@
 export interface Lesson {
   id: string;
-  index?: number;
+  lectureId: string;
   title: string;
   information: string;
-  thumbnail?: string;
-  videoUrl: string | null;
-  playtime?: number | null;
-  lectureId: string;
-  createdAt: number[];
+  videoUrl: string;
+  thumbnail: string;
+  playtime: number;
+  progress: number | null;
+  createdAt: [number, number, number, number, number, number, number];
 }
