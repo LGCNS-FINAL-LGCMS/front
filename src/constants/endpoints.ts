@@ -1,26 +1,27 @@
 // api.ts
 
-// 여기에 api 엔드포인트 적어서 상수로 사용하면됨...
-// 잘 모르겠으면 형균씨 찾아오세요
-
 export const API_ENDPOINTS = {
   AUTH: {
     LOGOUT: "/auth/logout", // Delete
     GOOGLE_LOGIN: "/auth/sign-in/google", //post
     REFRESH: "/auth/refresh/token", // post
-    SIGN_OUT: " /auth/sign-out/google", // post
-    CHECK_NICKNAME: " /member/check/nickname", // post
+    SIGN_OUT: "/auth/sign-out/google", // post
+    CHECK_NICKNAME: "/member/check/nickname", // post
   },
+
   USER: {
+    CHECK_LECTURE_PURCHASED: "/lecturer/lecture/verify",
     INFO: "/member", //get
     UPDATE: "/member/change/info", // patch
     CATEGORY_LIST: "/member/categories",
   },
+
   LECTURER: {
     GET_LECTURE: "/lecturer/lecture",
   },
+
   STUDENT: {
-    GET_LECTURE: "/???",
+    GET_LECTURE: "/api/student/lecture",
   },
 
   CATEGORY: {
@@ -28,11 +29,17 @@ export const API_ENDPOINTS = {
     GET: "/member",
     DELETE: "/member", // /{categoryId}
   },
+
   LECTURE: {
+    REVIEW: {
+      GET: "/lecture/review/list", // GET - /{lectureId}
+      POST: "/student/lecture/review", // POST - /{lectureId}
+    },
     GET: "/lecture",
     OPEN: "/lecturer/lecture", // post
     POST_FILES: "/lecturer/upload/lecture",
   },
+
   LESSON: {
     POST_META: "/lecturer/lesson",
     POST_FILES: "/lecturer/upload/lesson",
@@ -44,23 +51,28 @@ export const API_ENDPOINTS = {
       SECTION: "/lesson/section",
     },
   },
+
   QNA: {
-    GET: "/qna", // /{lectureId}
-    POST: "/qna",
-    DELETE: "/qna", // /{lectureId}
-    PATCH: "/qna", // /{lectureId}
+    GET: "/lecture/qna", // /{lectureId}
+    POST: "/student/lecture/qna",
+    DELETE: "/lecture/qna", // /{lectureId}
+    PATCH: "/lecture/qna", // /{lectureId}
 
     MEMBER: {
-      GET: " /qna/member", // 해당 맴버의 QNA
-
+      GET: "/lecture/qna/member", // GET - 특정 멤버의 QNA
       LECTURE: {
-        POST: " /qna/answer", // /{questionId} 답변 작성
-        PUT: "/qna/answer", // /{answerId} 답변 수정
+        POST: " /lecture/qna/answer", // /{questionId} 답변 작성
+        PUT: "/lecture/qna/answer", // /{answerId} 답변 수정
       },
     },
   },
 
   GUIDE: {
+    POST: "/guide/ask", // POST
+  },
+
+  FAQ: {
+    GET: "/core/faq", // GET
     POST: "/guide/ask",
   },
   LEVEL_TEST: {
@@ -69,6 +81,10 @@ export const API_ENDPOINTS = {
   },
 
   PAYMENT: {
+    CART: {
+      GET: "/cart", // GET
+      POST: "/cart", // POST
+    },
     READY: "/payment/ready", // 결제 준비
     BUNDLEREADY: "/payment/list/ready", // 묶음결제 준비
     APPROVE: "/payment/approve", // 결제 승인
@@ -84,7 +100,8 @@ export const API_ENDPOINTS = {
     CONFIRM: "/admin/member/lecturer/confirm", // post
   },
 
-  FAQ: {
-    GET: "/core/faq",
+  CONSULTING: {
+    GET_DASHBOARD: "/lecturer/consulting/dashboard", // get
+    GET_LECTURER_REPORT: "/lecturer/consulting/report", // get
   },
 };

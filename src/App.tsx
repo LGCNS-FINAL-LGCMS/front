@@ -25,7 +25,8 @@ import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
 import LessonViewPage from "./pages/LessonViewPage/LessonViewPage";
 import QnaPage from "./pages/QnaPage/QnaPage";
 import FaqPage from "./pages/FaqPage/FaqPage";
-import WideLayout from "./layouts/WideLayout";
+import LectureInfoPage from "./pages/LectureInfoPage/LectureInfoPage";
+import LecturerDashboardPage from "./pages/LecturerPage/LecturerDashboardPage";
 import LevelTestPage from "./pages/LevelTestPage/LevelTestPage";
 import LevelTestDashboardPage from "./pages/LevelTestPage/LevelTestDashboardPage";
 import PaymentResultPage from "./pages/PaymentPage/PaymentResultPage";
@@ -137,7 +138,7 @@ function App() {
           />
 
           <Route
-            path={`${PAGE_PATHS.USER_PAGE.LECTURER}`}
+            path={`${PAGE_PATHS.USER_PAGE.LECTURER.MAIN}`}
             element={
               <Layout>
                 <LecturerMainPage />
@@ -172,6 +173,14 @@ function App() {
           />
 
           <Route
+            path={`${PAGE_PATHS.LECTURE_INFO}/:lectureId`}
+            element={
+              <Layout>
+                <LectureInfoPage />
+              </Layout>
+            }
+          />
+          <Route
             path={PAGE_PATHS.ADMIN}
             element={
               <ProtectedRoute requiredRole="ADMIN">
@@ -187,6 +196,15 @@ function App() {
             element={
               <Layout>
                 <QnaPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_PAGE.LECTURER.DASHBOARD}
+            element={
+              <Layout>
+                <LecturerDashboardPage />
               </Layout>
             }
           />
