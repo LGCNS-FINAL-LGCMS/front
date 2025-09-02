@@ -23,6 +23,7 @@ import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
 import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
 import LectureInfoPage from "./pages/LectureInfoPage/LectureInfoPage";
+import LecturerDashboardPage from "./pages/LecturerPage/LecturerDashboardPage";
 import LevelTestPage from "./pages/LevelTestPage/LevelTestPage";
 import LevelTestDashboardPage from "./pages/LevelTestPage/LevelTestDashboardPage";
 import PaymentResultPage from "./pages/PaymentPage/PaymentResultPage";
@@ -136,7 +137,7 @@ function App() {
           />
 
           <Route
-            path={`${PAGE_PATHS.USER_PAGE.LECTURER}`}
+            path={`${PAGE_PATHS.USER_PAGE.LECTURER.MAIN}`}
             element={
               <Layout>
                 <LecturerMainPage />
@@ -194,6 +195,15 @@ function App() {
             element={
               <Layout>
                 <QnaPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_PAGE.LECTURER.DASHBOARD}
+            element={
+              <Layout>
+                <LecturerDashboardPage />
               </Layout>
             }
           />

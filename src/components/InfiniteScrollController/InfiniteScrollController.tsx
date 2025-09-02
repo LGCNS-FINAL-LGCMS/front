@@ -4,13 +4,15 @@ import styled from "styled-components";
 import LectureCard from "../Common/LectureCard";
 import LectureCardSkeleton from "../LectureCardSkeleton/LectureCardSkeleton";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   fetchLectureData,
   resetLectureDataState,
 } from "../../redux/lectureData/lectureDataSlice";
 import type { RootState, AppDispatch } from "../../redux/store";
 import type { Lecture } from "../../types/lecture";
-import img from "../../assets/Imgs/기본이미지.gif";
+import { theme } from "../../assets/styles/theme";
+import { PAGE_PATHS } from "../../constants/pagePaths";
 
 const CardsGrid = styled.div`
   display: grid;
@@ -35,6 +37,7 @@ const INFO_DISPLAY_INDEX = 12;
 const KEYWORD_FETCH_DELAY = 1750;
 
 const InfiniteScrollController: React.FC = () => {
+  const navigate = useNavigate();
   // 키워드 가져오기
   const currentKeywordFromStore = useSelector(
     (state: RootState) => state.keyword.searchText
@@ -161,16 +164,21 @@ const InfiniteScrollController: React.FC = () => {
         </CardsGrid>
       }
       endMessage={
-        lectureStatus === "succeeded" &&
-        (lectureList.length === 0 ? (
-          <p style={{ textAlign: "center" }}>
-            <b>검색 결과가 없습니다.</b>
+        lectureStatus === "failed" ? (
+          <p style={{ textAlign: "center", color: theme.colors.danger }}>
+            <b>강의 정보를 불러오지 못했습니다. 다시 시도해주세요.</b>
           </p>
-        ) : !lectureHasMore ? (
-          <p style={{ textAlign: "center" }}>
-            <b>더 이상 강의 정보가 없습니다.</b>
-          </p>
-        ) : null)
+        ) : lectureStatus === "succeeded" ? (
+          lectureList.length === 0 ? (
+            <p style={{ textAlign: "center" }}>
+              <b>검색 결과가 없습니다.</b>
+            </p>
+          ) : !lectureHasMore ? (
+            <p style={{ textAlign: "center" }}>
+              <b>더 이상 강의 정보가 없습니다.</b>
+            </p>
+          ) : null
+        ) : null
       }
       scrollThreshold={"35%"}
       scrollableTarget="scrollableDiv"
@@ -179,28 +187,16 @@ const InfiniteScrollController: React.FC = () => {
         {lectureList.map((item: Lecture) => (
           <LectureCard
             id={item.lectureId}
-            imageUrl={img}
+            imageUrl={item.thumbnail ?? ""}
             title={item.title ?? "제목 없음"}
             description={item.description ?? "설명이 없습니다"}
             lecturer={item.nickname ?? "강사 미정"}
             price={item.price}
             rating={item.averageStar}
-            progress={24}
             design={1}
-            buttons={[
-              {
-                label: "등록하기",
-                onClick: () => {
-                  alert(item.title);
-                },
-              },
-              {
-                label: "자세히 보기",
-                onClick: () => {
-                  alert("자세히 보기 클릭");
-                },
-              },
-            ]}
+            onCardClick={() =>
+              navigate(`${PAGE_PATHS.LECTURE_INFO}/${item.lectureId}`)
+            }
           />
         ))}
       </CardsGrid>

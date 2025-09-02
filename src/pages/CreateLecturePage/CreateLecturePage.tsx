@@ -521,7 +521,7 @@ const CreateLecturePage = () => {
 
                     console.log("강의 개설 성공!", res);
                     setShowConfirmModal(false);
-                    navigate(PAGE_PATHS.USER_PAGE.LECTURER);
+                    navigate(PAGE_PATHS.USER_PAGE.LECTURER.MAIN);
                   } catch (error) {
                     console.error("강의 개설 중 오류 발생:", error);
                     alert("강의 개설 중 오류 발생");

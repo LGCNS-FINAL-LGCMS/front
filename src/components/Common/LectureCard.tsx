@@ -20,6 +20,7 @@ interface LectureCardProps {
   progress?: number;
   rating?: number | null;
   price?: number;
+  onCardClick?: () => void;
 }
 
 const designStyles = {
@@ -55,6 +56,7 @@ const Card = styled.div<{
   $design: 1 | 2 | 3;
   width: string;
   height: string;
+  clickable: boolean;
 }>`
   width: ${({ width }) => width};
   height: ${({ height }) => height};
@@ -64,6 +66,7 @@ const Card = styled.div<{
   flex-direction: column;
   position: relative;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: ${({ clickable }) => (clickable ? "pointer" : "default")};
   ${({ $design }) => designStyles[$design]};
 
   &:hover {
@@ -108,6 +111,10 @@ const Title = styled.h3`
   font-weight: 700;
   margin: 0;
   color: inherit;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const Description = styled.p`
@@ -189,6 +196,7 @@ const LectureCard: React.FC<LectureCardProps> = ({
   progress,
   rating,
   price,
+  onCardClick,
 }) => {
   const getHeightFromWidth = (widthValue: string) => {
     const match = widthValue.match(/^(\d+)(px)?$/);
@@ -201,12 +209,24 @@ const LectureCard: React.FC<LectureCardProps> = ({
 
   const height = getHeightFromWidth(width);
   const limitedButtons = buttons.slice(0, 3);
+  const clickable = limitedButtons.length === 0 && !!onCardClick;
 
   return (
-    <Card $design={design} width={width} height={height}>
+    <Card
+      $design={design}
+      width={width}
+      height={height}
+      clickable={clickable}
+      onClick={() => {
+        if (limitedButtons.length === 0 && onCardClick) {
+          onCardClick();
+        }
+      }}
+    >
       <ImageWrapper>
         <Image src={imageUrl} alt={title} />
       </ImageWrapper>
+
       {progress !== undefined && progress >= 0 && progress <= 100 && (
         <ProgressWrapper>
           <ProgressBar progress={progress} />
@@ -218,7 +238,6 @@ const LectureCard: React.FC<LectureCardProps> = ({
         <Description>{description}</Description>
         <Instructor>{lecturer}</Instructor>
 
-        {/* 평점 표시 */}
         {rating != null && rating >= 0 && rating <= 5 && (
           <RatingWrapper>
             {[...Array(Math.floor(rating))].map((_, idx) => (
@@ -229,7 +248,6 @@ const LectureCard: React.FC<LectureCardProps> = ({
           </RatingWrapper>
         )}
 
-        {/* 가격 표시 */}
         {price !== undefined && <Price>{price.toLocaleString()} 원</Price>}
       </Content>
 
