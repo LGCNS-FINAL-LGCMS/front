@@ -59,7 +59,7 @@ export const lectureFilesUpload = async (lectureFiles: LectureFiles) => {
 export const postLectureStudent = async ( lectureId:string)=>{
   try {
     const response = await apiClient.post(
-      `${API_ENDPOINTS.STUDENT.JOIN}/${lectureId}`
+      `${API_ENDPOINTS.STUDENT.POST_LECTURE_STUDENT}/${lectureId}`
     );
     console.log("Lecture Join Response:", response);
     return response.data.data;
