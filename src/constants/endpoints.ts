@@ -87,4 +87,9 @@ export const API_ENDPOINTS = {
   FAQ: {
     GET: "/core/faq",
   },
+
+  CONSULTING: {
+    GET_DASHBOARD: "/lecturer/consulting/dashboard", // get
+    GET_LECTURER_REPORT: "/lecturer/consulting/report", // get
+  },
 };
