@@ -260,7 +260,7 @@ const VideoUploadModal: React.FC<Props> = ({
     <ModalOverlay>
       <ModalContent>
         <Section>
-          <SectionTitle>강의 제목</SectionTitle>
+          <SectionTitle>강좌 제목</SectionTitle>
           {errors.title && <ErrorMessage>{errors.title}</ErrorMessage>}
           <Input
             value={title}
