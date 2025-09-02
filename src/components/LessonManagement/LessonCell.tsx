@@ -7,12 +7,11 @@ import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 interface Props {
   lesson: Lesson;
   onDelete: (id: string) => void;
+  index: number;
   checked: boolean;
   onCheckChange: (checked: boolean) => void;
   onEditClick: (lesson: Lesson) => void;
 }
-
-// Row 스타일
 const Row = styled.div`
   display: grid;
   grid-template-columns: 70px 1fr 140px 100px;
@@ -138,7 +137,12 @@ const IndexCell = styled.div`
   font-size: ${({ theme }) => theme.fontSize.body.min};
 `;
 
-const LessonCell: React.FC<Props> = ({ lesson, onDelete, onEditClick }) => {
+const LessonCell: React.FC<Props> = ({
+  lesson,
+  index,
+  onDelete,
+  onEditClick,
+}) => {
   const formatDate = (createdAt: number[]) => {
     const [year, month, day] = createdAt;
     return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
@@ -149,9 +153,7 @@ const LessonCell: React.FC<Props> = ({ lesson, onDelete, onEditClick }) => {
 
   return (
     <Row>
-      <IndexCell>
-        {lesson.index !== undefined ? lesson.index + 1 : "-"}
-      </IndexCell>
+      <IndexCell>{index + 1}</IndexCell>
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
         <Thumb imageUrl={lesson.thumbnail || undefined} />
         <div>
@@ -162,7 +164,6 @@ const LessonCell: React.FC<Props> = ({ lesson, onDelete, onEditClick }) => {
       <div>{formatDate(lesson.createdAt)}</div>
       <Actions>
         <UpdateButton onClick={() => onEditClick(lesson)}>
-          {" "}
           <FontAwesomeIcon icon={faPen} />
         </UpdateButton>
         <DeleteButton onClick={() => onDelete(lesson.id)}>
