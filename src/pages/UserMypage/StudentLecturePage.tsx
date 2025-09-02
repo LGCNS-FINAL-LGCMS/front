@@ -1,13 +1,11 @@
 import styled from "styled-components";
 
-import StudnetLectureContainer from "../../components/StudentLecture/StudentLectureContainer";
+import StudentLectureContainer from "../../components/StudentLecture/StudentLectureContainer";
 import { useNavigate } from "react-router-dom";
 import { PAGE_PATHS } from "../../constants/pagePaths";
 import SideTab from "../../components/Common/SideTab";
 
 const Container = styled.div``;
-
-const StudentLectureContainer = styled.div``;
 
 const MypageTitle = styled.p`
   border-bottom: 2px solid;
@@ -53,10 +51,8 @@ const StudentLecturePage = () => {
   return (
     <Container>
       <SideTab title="MyPage" items={tabItems} onSelect={handleTabSelect} />
-      <StudentLectureContainer>
-        <MypageTitle>MY PAGE</MypageTitle>
-        <StudnetLectureContainer />
-      </StudentLectureContainer>
+      <MypageTitle>MY PAGE</MypageTitle>
+      <StudentLectureContainer />
     </Container>
   );
 };
