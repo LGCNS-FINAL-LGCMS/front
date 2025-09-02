@@ -4,8 +4,8 @@ import ProductList from '../../components/Payment/ProductList';
 import styled, { keyframes, css } from 'styled-components';
 import { getCart } from '../../api/Payment/cartAPI';
 
-import { useDispatch } from 'react-redux';
-import { setCancelled, setFailure, setPaymentInfo, setPending, setSuccess } from '../../redux/Payment/paymentSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCancelled, setLoading, setFailure, setPaymentInfo, setPending, setSuccess } from '../../redux/Payment/paymentSlice';
 
 
 
@@ -18,6 +18,8 @@ import {
 } from '../../api/Payment/paymentAPI';
 import { PAGE_PATHS } from '../../constants/pagePaths';
 import { useNavigate } from 'react-router-dom';
+// import { postLectureStudent } from '../../api/Lecture/lectureAPI';
+import type { RootState } from '../../redux/store';
 
 
 const PaymentContainer = styled.div`
@@ -53,7 +55,6 @@ const Overlay = styled.div<{ $disabled: boolean }>`
     background-color: ${({ theme }) => theme.colors.disable};
 
     cursor: not-allowed;
-    pointer-events: none;
 
       // 스피너를 보여주기 위한 로딩 오버레이 스타일
       &::after {
@@ -95,7 +96,7 @@ const KakaoPayBoxWrapper = styled.div`
 
 
 export type LectureItem = {
-  id: number,
+  cartId: number,
   lectureId: string;
   title: string;
   price: number;
@@ -113,6 +114,7 @@ const PaymentPage: React.FC = () => {
     const fetchCartData = async () => {
       try {
         const data = await getCart();
+        dispatch(setPending());
 
         setItems(data.cartResponses.map(item => ({
           ...item,
@@ -127,20 +129,17 @@ const PaymentPage: React.FC = () => {
   }, [])
 
   // 결제함수
-  // 결제로딩상태
-  const [isLoading, setIsLoading] = useState(false);
 
   const startKakaoAccount = async () => {
     try {
 
-      dispatch(setPending());
       let tid = '';
-      setIsLoading(true);
+      dispatch(setLoading());
 
       sessionStorage.setItem('itemIds',
         JSON.stringify(items
           .filter(item => item.selected)
-          .map(items => items.id)
+          .map(items => items.cartId)
         )
       );
       const selectedItems = items.filter(item => item.selected);
@@ -150,6 +149,9 @@ const PaymentPage: React.FC = () => {
       let stepUrl = '';
 
       // 실제 결제 api
+      // 처음에 바로 강의등록해놓고 결제실패시 삭제하는 방식으로 만들기
+      // selectedItems.map(async (item) => await postLectureStudent(item.lectureId));
+
       // 준비요청 -> 카카오 팝업 -> tid와 토큰값을 승인api요청 -> 결제완료!
       if (items.length > 1) {
         // case 1: 개수가 2개 이상인 경우 /payment/list/ready
@@ -168,6 +170,10 @@ const PaymentPage: React.FC = () => {
         sessionStorage.setItem('tid', tid);
         stepUrl = response.nextStepUrl;
         console.log(response.nextStepUrl);
+      } else {
+        alert("결제할 항목이 없습니다.");
+        dispatch(setPending());
+        return;
       }
 
 
@@ -177,12 +183,17 @@ const PaymentPage: React.FC = () => {
         transactionId: tid,
       }))
 
-      if (stepUrl === '') {
-        console.error("nextStepUrl 없음");
-        alert("결제Url을 받지 못했습니다.");
-      } else {
-        window.open(stepUrl, "카카오페이 결제", 'width=450,height=700');
-      }
+
+
+      const popUp = window.open(stepUrl, "카카오페이 결제", 'width=450,height=700');
+
+
+      const checkPopupClosed = setInterval(() => {
+        if (popUp.closed) {
+          clearInterval(checkPopupClosed);
+          dispatch(setPending());
+        }
+      }, 1000);
 
       /**
        * ** 팝업에서 결제 진행 **
@@ -190,53 +201,53 @@ const PaymentPage: React.FC = () => {
       /** 결제 성공시 이벤트리스너 (postMessage 받기) **/
       window.addEventListener('message', async (event) => {
         // 이벤트 보낸 오리진이 카카오결제창이라 다를 수도 있으니 안되면 삭제하세요 if문
-        if (event.origin === window.location.origin) {
-          if (event.data.type === "fail") {
-            // 실패창 넘어가기
-            dispatch(setFailure())
-            navigate(PAGE_PATHS.PAYMENT.RESULT);
 
-          } else if (event.data.type === "cancel") {
-            // 취소창 넘어가기
-            dispatch(setCancelled())
-            navigate(PAGE_PATHS.PAYMENT.RESULT);
+        clearInterval(checkPopupClosed);
+        if (event.data.type === "fail") {
+          // 실패창 넘어가기
+          console.log('결제 실패 tntls')
+          dispatch(setFailure())
+          navigate(PAGE_PATHS.PAYMENT.RESULT);
 
-          } else {
-            const pgToken = event.data.pg_token
-            const tid = sessionStorage.getItem('tid');
-            console.log('pgToken 수신 : ', pgToken);
-            console.log('tid : ', tid);
-            if (pgToken && tid) {
+        } else if (event.data.type === "cancel") {
+          // 취소창 넘어가기
+          dispatch(setCancelled())
+          navigate(PAGE_PATHS.PAYMENT.RESULT);
 
-              const pendingCartIdString = sessionStorage.getItem('itemIds');
-              const pendingCartId = pendingCartIdString ? JSON.parse(pendingCartIdString) : [];
-              console.log('장바구니 아이디:', pendingCartId);
+        } else {
+          const pgToken = event.data.pg_token
+          const tid = sessionStorage.getItem('tid');
+          console.log('pgToken 수신 : ', pgToken);
+          console.log('tid : ', tid);
+          if (pgToken && tid) {
 
-              const paymentResult = await postPaymentApprove({ token: pgToken, tid: tid, cartId: pendingCartId });
+            const pendingCartIdString = sessionStorage.getItem('itemIds');
+            const pendingCartId = pendingCartIdString ? JSON.parse(pendingCartIdString) : [];
+            console.log('장바구니 아이디:', pendingCartId);
 
-              if (paymentResult === "결제가 완료되었습니다.") {
-                alert("결제가 완료되었습니다.")
-                // 완료창 넘어가기
-                dispatch(setSuccess())
-                navigate(PAGE_PATHS.PAYMENT.RESULT);
+            const paymentResult = await postPaymentApprove({ token: pgToken, tid: tid, cartId: pendingCartId });
 
-              } else {
-                alert("결제가 실패하였습니다.")
-                // 실패창 넘어가기
-                dispatch(setFailure())
-                navigate(PAGE_PATHS.PAYMENT.RESULT);
+            if (paymentResult === "결제가 완료되었습니다.") {
+              alert("결제가 완료되었습니다.")
+              // 완료창 넘어가기
+              dispatch(setSuccess())
+              navigate(PAGE_PATHS.PAYMENT.RESULT);
 
-              }
+            } else {
+              alert("결제가 실패하였습니다.")
+              // 실패창 넘어가기
+              dispatch(setFailure())
+              //  TODO 실패요청 백엔드로 보내기
+              navigate(PAGE_PATHS.PAYMENT.RESULT);
             }
           }
         }
-        setIsLoading(false);
+
       }, false) // 버블링(false)인지 캡처링(true)인지 상관없다. mes sage타입 이벤트는 DOM트리를 거치지 않고 window에 직접 전달되니까!
     } catch (error) {
       console.error("결제 처리 중 오류가 발생했습니다.", error);
       alert("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.")
-      dispatch(setFailure())
-      setIsLoading(false);
+      dispatch(setFailure());
       // sessionStorage.removeItem('itemIds');
 
       navigate(PAGE_PATHS.PAYMENT.RESULT);
@@ -254,7 +265,9 @@ const PaymentPage: React.FC = () => {
         <KakaoPayBox items={items} startKakaoAccount={startKakaoAccount} />
       </KakaoPayBoxWrapper>
 
-      <Overlay $disabled={isLoading}></Overlay>
+      <Overlay $disabled={
+        useSelector((state: RootState) => state.payment.paymentStatus) === 'loading'
+      }></Overlay>
     </PaymentContainer>
 
   );
