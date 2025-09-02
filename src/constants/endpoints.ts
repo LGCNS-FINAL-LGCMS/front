@@ -8,8 +8,8 @@ export const API_ENDPOINTS = {
     LOGOUT: "/auth/logout", // Delete
     GOOGLE_LOGIN: "/auth/sign-in/google", //post
     REFRESH: "/auth/refresh/token", // post
-    SIGN_OUT: " /auth/sign-out/google", // post
-    CHECK_NICKNAME: " /member/check/nickname", // post
+    SIGN_OUT: "/auth/sign-out/google", // post
+    CHECK_NICKNAME: "/member/check/nickname", // post
   },
   USER: {
     INFO: "/member", //get

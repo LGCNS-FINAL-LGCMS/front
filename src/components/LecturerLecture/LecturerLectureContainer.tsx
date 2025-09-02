@@ -3,6 +3,7 @@ import styled from "styled-components";
 import LectureCard from "../Common/LectureCard";
 import LectureCardSkeleton from "../LectureCardSkeleton/LectureCardSkeleton";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   fetchLecturePage,
   resetPaginationState,
@@ -12,6 +13,7 @@ import type { RootState, AppDispatch } from "../../redux/store";
 import type { Lecture } from "../../types/lecture";
 import Pagination from "react-bootstrap/Pagination";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { PAGE_PATHS } from "../../constants/pagePaths";
 
 // 카드 그리드
 const CardsGrid = styled.div`
@@ -83,6 +85,7 @@ const CustomPaginationButton = styled(Pagination.First)`
 const PAGE_SIZE = 12;
 
 const LecturerLectureContainer: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
   const { lectureList, status, totalCount, currentPage, pageSize } =
@@ -139,10 +142,18 @@ const LecturerLectureContainer: React.FC = () => {
               rating={item.averageStar}
               design={1}
               buttons={[
-                { label: "등록하기", onClick: () => alert(item.title) },
+                { label: "강의 등록하기", onClick: () => alert(item.title) },
                 {
-                  label: "자세히 보기",
-                  onClick: () => alert("자세히 보기 클릭"),
+                  label: "강의 정보 보기",
+                  onClick: () =>
+                    navigate(`${PAGE_PATHS.LECTURE_INFO}${item.lectureId}`),
+                },
+                {
+                  label: "강좌 추가하기",
+                  onClick: () =>
+                    navigate(
+                      `${PAGE_PATHS.LESSON_MANAGEMENT}/${item.lectureId}`
+                    ),
                 },
               ]}
             />
