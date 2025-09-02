@@ -279,7 +279,7 @@ const Header = () => {
     (state: RootState) => state.token.isAuthenticated
   );
   const nickname: string = auth.nickname;
-  const isLecturer: boolean = auth.role === "LECTURER";
+  const isLecturer: boolean = auth.role === "LECTURER" || auth.role === "ADMIN";
   const hasUnreadAlerts = true;
   const dropdownRef = useRef<HTMLDivElement>(null);
   const alertRef = useRef<HTMLDivElement>(null);

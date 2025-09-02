@@ -9,7 +9,6 @@ export const PAGE_PATHS = {
   LOGIN: "/login",
   SIGNUP: "/signup",
   USER_INFO: "/userinfo",
-  MY_COURSES: "/??",
   REPORT: "/??",
   LEVEL_TEST: {
     DASHBOARD: "/member/student/leveltest/dashboard",
