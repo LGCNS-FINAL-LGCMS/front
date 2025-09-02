@@ -86,6 +86,13 @@ const ChartContainer = styled.div`
   height: calc(100% - 50px);
 `;
 
+const NotFoundMessage = styled.p`
+  font-size: ${({ theme }) => theme.fontSize.subtitle};
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.caution};
+  text-align: center;
+`;
+
 const LecturerDashboardPage = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(
     null
@@ -110,7 +117,8 @@ const LecturerDashboardPage = () => {
   if (!dashboardData) {
     return (
       <DashboardContainer>
-        <div>대시보드 데이터가 없어용 으아아아</div>
+        <DashboardTitle>강사 대시보드</DashboardTitle>
+        <NotFoundMessage>조회된 대시보드 데이터가 없습니다.</NotFoundMessage>
       </DashboardContainer>
     );
   }
