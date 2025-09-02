@@ -12,6 +12,7 @@ import CategorySelect from "../../components/Signup/CategorySelect";
 import InfoCheckModal from "../../components/Signup/signupModal";
 import RoleSelect from "../../components/Signup/RoleSelect";
 import { setUserInfo } from "../../redux/Auth/authSlice";
+import SideTab from "../../components/Common/SideTab";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -294,8 +295,38 @@ const UpdateUserInfoPage = () => {
     setShowFailModal(false);
   };
 
+  //sideTab
+  const tabItems = [
+    {
+      id: 1,
+      label: "My Lecture",
+      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES),
+    },
+    {
+      id: 2,
+      label: "Level Test",
+      action: () => navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD),
+    },
+    {
+      id: 3,
+      label: "회원정보수정",
+      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO),
+    },
+    {
+      id: 4,
+      label: "나의 Q&A",
+      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.QNA),
+    },
+  ];
+
+  const handleTabSelect = (id: number) => {
+    const tab = tabItems.find((t) => t.id === id);
+    if (tab?.action) tab.action();
+  };
+
   return (
     <PageWrapper>
+      <SideTab title="MyPage" items={tabItems} onSelect={handleTabSelect} />
       <UserInfoContainer>
         <TitleSection>
           <UserInfoTitle>회원 정보 수정</UserInfoTitle>

@@ -1,8 +1,13 @@
 import styled from "styled-components";
 
 import StudnetLectureContainer from "../../components/StudentLecture/StudentLectureContainer";
+import { useNavigate } from "react-router-dom";
+import { PAGE_PATHS } from "../../constants/pagePaths";
+import SideTab from "../../components/Common/SideTab";
 
-const StudentLectureSection = styled.div``;
+const Container = styled.div``;
+
+const StudentLectureContainer = styled.div``;
 
 const MypageTitle = styled.p`
   border-bottom: 2px solid;
@@ -14,11 +19,45 @@ const MypageTitle = styled.p`
 `;
 
 const StudentLecturePage = () => {
+  const navigate = useNavigate();
+
+  //sideTab
+  const tabItems = [
+    {
+      id: 1,
+      label: "My Lecture",
+      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES),
+    },
+    {
+      id: 2,
+      label: "Level Test",
+      action: () => navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD),
+    },
+    {
+      id: 3,
+      label: "회원정보수정",
+      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO),
+    },
+    {
+      id: 4,
+      label: "나의 Q&A",
+      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.QNA),
+    },
+  ];
+
+  const handleTabSelect = (id: number) => {
+    const tab = tabItems.find((t) => t.id === id);
+    if (tab?.action) tab.action();
+  };
+
   return (
-    <StudentLectureSection>
-      <MypageTitle>MY PAGE</MypageTitle>
-      <StudnetLectureContainer />
-    </StudentLectureSection>
+    <Container>
+      <SideTab title="MyPage" items={tabItems} onSelect={handleTabSelect} />
+      <StudentLectureContainer>
+        <MypageTitle>MY PAGE</MypageTitle>
+        <StudnetLectureContainer />
+      </StudentLectureContainer>
+    </Container>
   );
 };
 
