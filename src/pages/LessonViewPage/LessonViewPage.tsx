@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import Hls from "hls.js";
+import type { Level } from "hls.js";
+import type { ManifestParsedData } from "hls.js";
 import styled from "styled-components";
 import Button from "../../components/Common/Button";
 import { getLessonDetails } from "../../api/Lesson/lessonAPI";
@@ -140,10 +142,9 @@ type SidebarTab = "lecture" | "chatbot";
 
 const LessonViewPage: React.FC = () => {
   const { lectureId } = useParams<{ lectureId: string }>();
-  const hls = new Hls();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hlsRef = useRef<Hls | null>(null);
-  const [levels, setLevels] = useState<typeof hls.levels>([]);
+  const [levels, setLevels] = useState<Level[]>([]);
   const [currentLevel, setCurrentLevel] = useState<number>(-1);
   const [activeTab, setActiveTab] = useState<SidebarTab>("lecture");
   const [selectedLesson, setSelectedLesson] = useState<number | null>(null);
@@ -166,9 +167,13 @@ const LessonViewPage: React.FC = () => {
       const hls = new Hls();
       hls.loadSource(currentLesson.videoUrl);
       hls.attachMedia(videoRef.current);
-      hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
-        setLevels(data.levels.filter((lvl: any) => lvl.height >= 360));
-      });
+      hls.on(
+        Hls.Events.MANIFEST_PARSED,
+        (_event, data: { levels: Level[] }) => {
+          setLevels(data.levels.filter((lvl) => lvl.height >= 360));
+        }
+      );
+
       hlsRef.current = hls;
     } else if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
       videoRef.current.src = currentLesson.videoUrl;
@@ -196,9 +201,13 @@ const LessonViewPage: React.FC = () => {
         const hls = new Hls();
         hls.loadSource(currentLesson?.videoUrl);
         hls.attachMedia(videoRef.current);
-        hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
-          setLevels(data.levels.filter((lvl: any) => lvl.height >= 360));
-        });
+        hls.on(
+          Hls.Events.MANIFEST_PARSED,
+          (_event, data: ManifestParsedData) => {
+            setLevels(data.levels.filter((lvl) => lvl.height >= 360));
+          }
+        );
+
         hlsRef.current = hls;
       } else if (
         videoRef.current.canPlayType("application/vnd.apple.mpegurl")
@@ -208,7 +217,7 @@ const LessonViewPage: React.FC = () => {
       }
     }
     return () => hlsRef.current?.destroy();
-  }, []);
+  }, [currentLesson]);
 
   const handleLevelChange = (level: number) => {
     if (hlsRef.current) {
