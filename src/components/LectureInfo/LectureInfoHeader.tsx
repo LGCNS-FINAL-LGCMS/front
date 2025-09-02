@@ -4,12 +4,13 @@ import {
   faCircleCheck,
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
-
+import { useNavigate } from "react-router-dom";
+// import { PAGE_PATHS } from "../../constants/pagePaths";
 import styled from "styled-components";
 import Button from "../Common/Button";
-import type { Lecture } from "../../types/lecture";
 import { theme } from "../../assets/styles/theme";
 import { postCartItem } from "../../api/Cart/cartAPI";
+import type { LectureResponse } from "../../api/LectureInfo/lectureInfoAPI";
 
 const TopSection = styled.div`
   display: flex;
@@ -129,8 +130,8 @@ const ModalContent = styled.div<{ isSuccess: boolean }>`
 `;
 
 interface LectureHeaderProps {
-  lecture: Lecture | undefined;
-  purchased: boolean;
+  lecture: LectureResponse | undefined;
+  purchased: boolean | undefined;
   progress: number;
 }
 
@@ -142,6 +143,7 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleAddCart = async () => {
     try {
@@ -212,12 +214,30 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
               </div>
               <Button
                 text="자료 다운로드"
-                onClick={() => alert("자료 다운로드")}
+                onClick={async () => {
+                  if (!lecture?.textbook) return;
+
+                  try {
+                    const res = await fetch(lecture.textbook);
+                    const blob = await res.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.download =
+                      lecture.textbook.split("/").pop() ?? "file.pdf";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(url);
+                  } catch (err) {
+                    console.error("파일 다운로드 실패", err);
+                  }
+                }}
                 design={1}
               />
               <Button
                 text="강의 들으러 가기"
-                onClick={() => console.log("강의 들으러 가기")}
+                onClick={() => navigate(`lecture/${lecture?.lectureId}`)}
                 design={1}
               />
             </ButtonRow>

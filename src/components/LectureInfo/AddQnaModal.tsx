@@ -123,7 +123,7 @@ const AddQnaModal: React.FC<AddQnaModalProps> = ({
           {errors.content && <ErrorMessage>{errors.content}</ErrorMessage>}
         </div>
         <ButtonRow>
-          <Button text="취소" onClick={onClose} design={2} />
+          <Button text="취소" onClick={onClose} design={1} />
           <Button text="작성" onClick={handleSubmit} design={1} />
         </ButtonRow>
       </ModalContainer>
