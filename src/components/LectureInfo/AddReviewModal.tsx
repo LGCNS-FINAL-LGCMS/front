@@ -4,11 +4,12 @@ import styled from "styled-components";
 import Button from "../Common/Button";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
+import type { ReviewRequest } from "../../api/Review/reviewAPI";
 
 interface AddReviewModalProps {
   visible: boolean;
   onClose: () => void;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: ReviewRequest) => void;
   defaultNickname?: string;
   questions?: { question: string }[];
 }

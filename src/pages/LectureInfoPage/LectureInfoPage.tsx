@@ -179,27 +179,24 @@ const LectureInfoPage = () => {
   useEffect(() => {
     if (!lectureId) return;
 
-    const fetchLecture = async () => {
+    (async () => {
       try {
         const data = await getLectureById(lectureId);
-        console.log(data);
         setLecture(data);
         setLessonList(data.lessonResponses);
-        data?.progress === null ? setProgress(0) : setProgress(data?.progress);
+        setProgress(data?.progress ?? 0);
       } catch (err) {
         console.error("Failed to fetch lecture", err);
       }
-    };
-
-    fetchLecture();
+    })();
   }, [lectureId]);
 
   useEffect(() => {
-    if (lecture?.lectureResponseDto?.lectureId) {
-      fetchQnaList();
-      fetchReviews();
-    }
-  }, [lecture]);
+    if (!lecture?.lectureResponseDto?.lectureId) return;
+
+    fetchQnaList();
+    fetchReviews();
+  }, [lecture, fetchQnaList, fetchReviews]);
 
   return (
     <Wrapper>
