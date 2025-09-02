@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 interface PaymentState {
-    paymentStatus:  'success' | 'pending'  | 'failure' | 'cancelled';
+    paymentStatus:  'success' | 'pending'  | 'failure' | 'cancelled' | 'loading';
     totalAmount: number;
     paymentMethod: 'KakaoPay' | 'KB국민은행' | '우리은행' | '';
     transactionId: string | null;
@@ -20,6 +20,9 @@ const paymentSlice = createSlice({
     reducers: {
         setPending(state) {
             state.paymentStatus = 'pending';
+        },
+        setLoading(state) {
+            state.paymentStatus = 'loading';
         },
         setSuccess(state) {
             state.paymentStatus = 'success';
@@ -40,5 +43,5 @@ const paymentSlice = createSlice({
 
 // 결제페이지에서 총결제금액과 결제방법, 거래ID를 저장함
 
-export const { setPending, setSuccess, setFailure, setCancelled, setPaymentInfo } = paymentSlice.actions;
+export const { setPending, setLoading,setSuccess, setFailure, setCancelled, setPaymentInfo } = paymentSlice.actions;
 export default paymentSlice.reducer;
