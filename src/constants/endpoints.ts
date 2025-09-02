@@ -5,8 +5,8 @@ export const API_ENDPOINTS = {
     LOGOUT: "/auth/logout", // Delete
     GOOGLE_LOGIN: "/auth/sign-in/google", //post
     REFRESH: "/auth/refresh/token", // post
-    SIGN_OUT: " /auth/sign-out/google", // post
-    CHECK_NICKNAME: " /member/check/nickname", // post
+    SIGN_OUT: "/auth/sign-out/google", // post
+    CHECK_NICKNAME: "/member/check/nickname", // post
   },
 
   USER: {
@@ -98,5 +98,12 @@ export const API_ENDPOINTS = {
   MEMBER: {
     DESIRER: "/admin/member/lecturer/desirer", // get
     CONFIRM: "/admin/member/lecturer/confirm", // post
+  },FAQ: {
+    GET: "/core/faq",
+  },
+
+  CONSULTING: {
+    GET_DASHBOARD: "/lecturer/consulting/dashboard", // get
+    GET_LECTURER_REPORT: "/lecturer/consulting/report", // get
   },
 };
