@@ -15,9 +15,8 @@ import apiClient from "../../api";
 import nextButton from "../../assets/images/levelTestPage/nextButton.svg";
 import preButton from "../../assets/images/levelTestPage/preButton.svg";
 import pagenationButton from "../../assets/images/levelTestPage/pagenationButton.svg";
-import star3 from "../../assets/images/levelTestPage/star3.svg";
-import star2 from "../../assets/images/levelTestPage/star2.svg";
-import star1 from "../../assets/images/levelTestPage/star1.svg";
+import blueStar from "../../assets/images/levelTestPage/blueStar.svg";
+import blueStar_empty from "../../assets/images/levelTestPage/blueStar_empty.svg";
 
 import Button from "../../components/Common/Button";
 
@@ -134,7 +133,7 @@ const DifficultyTag = styled.span`
 `;
 
 const DifficultyIcon = styled.img`
-  width: 120x; // 👈 여기서 크기 설정!
+  width: 12px;
   height: 16px;
 `;
 
@@ -358,14 +357,16 @@ const LevelTestPage = () => {
   };
 
   //난이도
-  const getDifficultyIcon = (difficulty: string) => {
+  const getDifficultyNumber = (difficulty: string) => {
     switch (difficulty) {
       case "LOW":
-        return star1;
+        return 1;
       case "MEDIUM":
-        return star2;
+        return 2;
       case "HIGH":
-        return star3;
+        return 3;
+      default:
+        return 1;
     }
   };
 
@@ -551,10 +552,18 @@ const LevelTestPage = () => {
           </QuestionInfo>
           <QuestionMeta>
             <DifficultyTag>
-              <DifficultyIcon
-                src={getDifficultyIcon(currentQuestion?.difficulty || "LOW")}
-                alt="difficulty star"
-              />
+              {currentQuestion?.difficulty &&
+                [...Array(3)].map((_, idx) => (
+                  <DifficultyIcon
+                    key={idx}
+                    src={
+                      idx < getDifficultyNumber(currentQuestion.difficulty)
+                        ? blueStar
+                        : blueStar_empty
+                    }
+                    alt="난이도"
+                  />
+                ))}
             </DifficultyTag>
             <CategoryTag>{currentQuestion?.category || "General"}</CategoryTag>
           </QuestionMeta>

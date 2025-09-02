@@ -22,7 +22,8 @@ export interface StudentReportData {
   conceptSummaries: ConceptSummary[];
   comprehensiveFeedback: string;
   nextLearningRecommendation: string;
-  createdAt: string; // 생성일시 (ISO 8601 형식)
+  createdAt: string;
+  category: string;
 }
 
 export interface ConceptSummary {
@@ -41,6 +42,7 @@ const initialState: StudentReportData = {
   comprehensiveFeedback: "",
   nextLearningRecommendation: "",
   createdAt: "",
+  category: "",
 };
 
 export const fetchStudentReport = createAsyncThunk<
@@ -55,7 +57,7 @@ export const fetchStudentReport = createAsyncThunk<
 
     if (response.data?.status === "OK") {
       const reportData = response.data.data;
-      localStorage.setItem("currentStudentReport", JSON.stringify(reportData));
+      localStorage.setItem("studentReport", JSON.stringify(reportData));
       return reportData;
     } else {
       throw new Error(
@@ -82,6 +84,7 @@ export const studentReportSlice = createSlice({
       state.nextLearningRecommendation =
         action.payload.nextLearningRecommendation;
       state.createdAt = action.payload.createdAt;
+      state.category = action.payload.category;
 
       localStorage.setItem(
         "currentStudentReport",
@@ -98,6 +101,7 @@ export const studentReportSlice = createSlice({
       state.comprehensiveFeedback = "";
       state.nextLearningRecommendation = "";
       state.createdAt = "";
+      state.category = "";
 
       localStorage.removeItem("currentStudentReport");
     },
@@ -116,6 +120,7 @@ export const studentReportSlice = createSlice({
         state.nextLearningRecommendation =
           action.payload.nextLearningRecommendation;
         state.createdAt = action.payload.createdAt;
+        state.category = action.payload.category;
       })
       .addCase(fetchStudentReport.rejected, (state, action) => {
         console.log("학생 Report API 호출 실패", action.payload);
@@ -129,6 +134,7 @@ export const studentReportSlice = createSlice({
         state.comprehensiveFeedback = "";
         state.nextLearningRecommendation = "";
         state.createdAt = "";
+        state.category = "";
       });
   },
 });

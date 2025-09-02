@@ -32,16 +32,24 @@ const Container = styled.div`
   gap: 40px;
 `;
 
+const CategorySelectWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 70%;
+  margin: 0 auto;
+`;
+
 const PageTitle = styled.h1`
   font-size: ${(props) => props.theme.fontSize.title.max};
   color: ${(props) => props.theme.colors.text_D};
   border-bottom: 2px solid ${(props) => props.theme.colors.border_Dark};
   padding-bottom: 10px;
-  margin: 0 auto;
-  text-align: center;
+  text-align: left;
+  width: fit-content;
 `;
 
-const CategorySelectWrapper = styled.div`
+const CategorySelectSection = styled.div`
   background: white;
   border-radius: 16px;
   box-shadow: ${(props) => props.theme.shadow.md};
@@ -49,8 +57,6 @@ const CategorySelectWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 70%;
-  margin: 0 auto;
 `;
 
 const CategoryTitle = styled.p`
@@ -82,6 +88,7 @@ const CategoryDropdown = styled.select`
   background-repeat: no-repeat;
   background-size: 16px;
   padding-right: 40px;
+  margin: 0 20px;
 
   &:hover {
     border-color: ${(props) => props.theme.colors.primary};
@@ -105,8 +112,8 @@ const TestReportTitle = styled.h2`
   color: ${(props) => props.theme.colors.text_D};
   border-bottom: 2px solid ${(props) => props.theme.colors.border_Dark};
   padding-bottom: 10px;
-  margin: 0 auto;
-  text-align: center;
+  text-align: left;
+  width: fit-content;
 `;
 
 const ReportCard = styled.div`
@@ -162,6 +169,8 @@ const ReportScore = styled.p`
   color: ${(props) => props.theme.colors.primary};
   margin: 0;
 `;
+
+const ReportCategory = styled.div``;
 
 const EmptyListMessage = styled.p`
   text-align: center;
@@ -236,7 +245,7 @@ const LevelTestDashboardPage = () => {
   };
 
   const handleReportClick = (reportId: number) => {
-    navigate(`${PAGE_PATHS.STUDENT_REPORT}?reportId=${reportId}`);
+    navigate(`${PAGE_PATHS.USER_PAGE.STUDENT.REPORT}/${reportId}`);
   };
 
   useEffect(() => {
@@ -246,28 +255,29 @@ const LevelTestDashboardPage = () => {
 
   return (
     <Container>
-      <PageTitle>Level Test</PageTitle>
-
+      {" "}
       <CategorySelectWrapper>
-        <CategoryTitle>레벨 테스트할 카테고리를 선택해 주세요.</CategoryTitle>
-        <CategorySection>
-          <CategoryDropdown
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(Number(e.target.value))}
-          >
-            <option value={-1} disabled hidden>
-              카테고리를 선택하세요
-            </option>
-            {CategoryList.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.name}
+        <PageTitle>Level Test</PageTitle>
+        <CategorySelectSection>
+          <CategoryTitle>레벨 테스트할 카테고리를 선택해 주세요.</CategoryTitle>{" "}
+          <CategorySection>
+            <CategoryDropdown
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(Number(e.target.value))}
+            >
+              <option value={-1} disabled hidden>
+                카테고리를 선택하세요
               </option>
-            ))}
-          </CategoryDropdown>
-          <Button text="시험 시작" onClick={handleStartTest} />
-        </CategorySection>
+              {CategoryList.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </CategoryDropdown>
+            <Button text="시험 시작" onClick={handleStartTest} />
+          </CategorySection>
+        </CategorySelectSection>
       </CategorySelectWrapper>
-
       <ReportListWrapper>
         <TestReportTitle>Report</TestReportTitle>
         {reportList.length > 0 ? (
@@ -288,7 +298,7 @@ const LevelTestDashboardPage = () => {
                   src={getLevelIcon(report.studentLevel)}
                   alt="Level Icon"
                 />
-                <ReportTitle>{report.category}</ReportTitle>
+                <ReportCategory>{report.category}</ReportCategory>
               </ReportRight>
             </ReportCard>
           ))

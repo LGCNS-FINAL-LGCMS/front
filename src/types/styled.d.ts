@@ -21,6 +21,7 @@ declare module "styled-components" {
       text_D: string;
       text_B: string;
       disable: string;
+      card: string;
     };
 
     size: {
