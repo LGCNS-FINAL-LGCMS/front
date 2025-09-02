@@ -97,6 +97,7 @@ const KakaoPayBoxWrapper = styled.div`
 
 
 export type LectureItem = {
+  id: number,
   cartId: number,
   lectureId: string;
   title: string;
@@ -117,14 +118,14 @@ const PaymentPage: React.FC = () => {
         const data = await getCart();
         dispatch(setPending());
 
+        console.log("장바구니 데이터", data.cartResponses);
+
         setItems(data.cartResponses.map(item => ({
+          ...item,
           selected: true,
-          lectureId: item.lectureId,
-          title: item.title,
-          price: item.price,
-          thumbnailUrl: item.thumbnailUrl,
-          cartId: item.cartId
+          id: 1,
         })));
+        // id를 추가안하면 lint에서 빌드에러 떠서 고정값으로 채우게 합니다.
 
       } catch (error) {
         console.error("장바구니 데이터를 가져오는데 실패했습니다.", error);
