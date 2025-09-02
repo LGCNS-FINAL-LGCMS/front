@@ -101,7 +101,8 @@ const LessonContainer: React.FC<Props> = ({
         {lessons.map((lesson, idx) => (
           <LessonCell
             key={lesson.id}
-            lesson={{ ...lesson, index: idx }}
+            lesson={lesson}
+            index={idx}
             onEditClick={onEditClick}
             onDelete={handleDeleteClick}
             checked={selectedIds.includes(lesson.id)}

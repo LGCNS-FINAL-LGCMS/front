@@ -20,6 +20,7 @@ export const PAGE_PATHS = {
   CART: "/cart",
   LECTURE_INFO: "/lecture",
   QNA: "/qna",
+  LESSON_VIEW: "/lessonview",
   USER_PAGE: {
     STUDENT: {
       MY_LECTURES: "/userpage/student",
