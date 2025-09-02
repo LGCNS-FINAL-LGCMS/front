@@ -1,11 +1,44 @@
 // api/Lecture/lectureAPI.ts
 
 import apiClient from "..";
-import type { Lecture } from "../../types/lecture";
 import { API_ENDPOINTS } from "../../constants/endpoints";
 import { getErrorMessage } from "../../utils/handleApiError";
 
-export const getLectureById = async (lectureId: string): Promise<Lecture> => {
+export interface LessonResponse {
+  id: string;
+  title: string;
+  lectureId: string | null;
+  playtime: number;
+  information: string | null;
+  thumbnail: string | null;
+  videoUrl: string | null;
+  createdAt?: [number, number, number, number, number, number, number]; // [year, month, day, hour, min, sec, nano]
+  progress?: number | null;
+}
+
+export interface LectureResponse {
+  lectureId: string;
+  title: string;
+  description: string;
+  information: string;
+  nickname: string;
+  price: number;
+  textbook: string;
+  thumbnail: string;
+  averageStar: number;
+  reviewCount: number | null;
+}
+
+export interface LectureData {
+  isStudent: boolean;
+  lectureResponseDto: LectureResponse;
+  lessonResponses: LessonResponse[];
+  progress: number | null;
+}
+
+export const getLectureById = async (
+  lectureId: string
+): Promise<LectureData> => {
   try {
     const response = await apiClient.get(
       `${API_ENDPOINTS.LECTURE.GET}/${lectureId}`

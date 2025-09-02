@@ -80,13 +80,22 @@ const StyledSelect = styled.select`
   border: 1px solid ${({ theme }) => theme.colors.gray_M};
 `;
 
+const ErrorMessage = styled.div`
+  color: ${({ theme }) => theme.colors.danger || "#ff4d4f"};
+  font-size: ${({ theme }) => theme.fontSize.body.min || "12px"};
+  margin-top: -15px;
+`;
+
+const MAX_COMMENT_LENGTH = 100; // 한줄평 최대 글자수
+const MAX_SUGGESTION_LENGTH = 100; // 개선점 최대 글자수
+
 const AddReviewModal: React.FC<AddReviewModalProps> = ({
   visible,
   onClose,
   onSubmit,
   questions = [
     { question: "이번 강의가 도움이 되었나요?" },
-    { question: "강사님은 괜찮았나요?" },
+    { question: "난이도는 괜찮았나요?" },
   ],
 }) => {
   const nickname = useSelector((state: RootState) => state.auth.nickname);
@@ -96,6 +105,11 @@ const AddReviewModal: React.FC<AddReviewModalProps> = ({
   const [survey, setSurvey] = useState<number[]>(
     Array(questions.length).fill(1)
   );
+  const [errors, setErrors] = useState({
+    star: "",
+    comment: "",
+    suggestion: "",
+  });
 
   const handleSurveyChange = (idx: number, value: number) => {
     const newSurvey = [...survey];
@@ -103,7 +117,44 @@ const AddReviewModal: React.FC<AddReviewModalProps> = ({
     setSurvey(newSurvey);
   };
 
+  const handleCancel = () => {
+    // 입력값 초기화
+    setComment("");
+    setSuggestion("");
+    setStar(0);
+    setSurvey(Array(questions.length).fill(1));
+    // 오류 초기화
+    setErrors({
+      star: "",
+      comment: "",
+      suggestion: "",
+    });
+    // 모달 닫기
+    onClose();
+  };
+
   const handleSubmit = () => {
+    const newErrors = {
+      star: star === 0 ? "별점을 선택해주세요." : "",
+      comment:
+        comment.trim() === ""
+          ? "한줄평을 입력해주세요."
+          : comment.length > MAX_COMMENT_LENGTH
+          ? `한줄평은 ${MAX_COMMENT_LENGTH}자 이내로 입력해주세요.`
+          : "",
+      suggestion:
+        suggestion.trim() === ""
+          ? "강사에게 바라는 점을 입력해주세요."
+          : suggestion.length > MAX_SUGGESTION_LENGTH
+          ? `강사 개선점은 ${MAX_SUGGESTION_LENGTH}자 이내로 입력해주세요.`
+          : "",
+    };
+
+    setErrors(newErrors);
+
+    // 오류가 있으면 제출 막기
+    if (Object.values(newErrors).some((e) => e !== "")) return;
+
     const payload = {
       nickname,
       comment,
@@ -114,6 +165,7 @@ const AddReviewModal: React.FC<AddReviewModalProps> = ({
         answer: survey[idx],
       })),
     };
+
     onSubmit(payload);
     onClose();
   };
@@ -133,6 +185,7 @@ const AddReviewModal: React.FC<AddReviewModalProps> = ({
             </span>
           ))}
         </StarSelector>
+        {errors.star && <ErrorMessage>{errors.star}</ErrorMessage>}
 
         <Label>한줄평</Label>
         <TextArea
@@ -140,6 +193,10 @@ const AddReviewModal: React.FC<AddReviewModalProps> = ({
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />
+        <div style={{ fontSize: "12px", color: "#888", textAlign: "right" }}>
+          {comment.length}/{MAX_COMMENT_LENGTH}
+        </div>
+        {errors.comment && <ErrorMessage>{errors.comment}</ErrorMessage>}
 
         <Label>강사에게 바라는 점 / 개선점</Label>
         <TextArea
@@ -147,6 +204,10 @@ const AddReviewModal: React.FC<AddReviewModalProps> = ({
           value={suggestion}
           onChange={(e) => setSuggestion(e.target.value)}
         />
+        <div style={{ fontSize: "12px", color: "#888", textAlign: "right" }}>
+          {suggestion.length}/{MAX_SUGGESTION_LENGTH}
+        </div>
+        {errors.suggestion && <ErrorMessage>{errors.suggestion}</ErrorMessage>}
 
         <Label>설문</Label>
         {questions.map((q, idx) => (
@@ -168,7 +229,7 @@ const AddReviewModal: React.FC<AddReviewModalProps> = ({
         ))}
 
         <ButtonRow>
-          <Button text="취소" onClick={onClose} design={2} />
+          <Button text="취소" onClick={handleCancel} design={1} />
           <Button text="제출" onClick={handleSubmit} design={1} />
         </ButtonRow>
       </Modal>

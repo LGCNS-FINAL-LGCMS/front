@@ -10,7 +10,7 @@ export const API_ENDPOINTS = {
   },
 
   USER: {
-    CHECK_LECTURE_PURCHASED: "/lecture/verify",
+    CHECK_LECTURE_PURCHASED: "/lecturer/lecture/verify",
     INFO: "/member", //get
     UPDATE: "/member/change/info", // patch
     CATEGORY_LIST: "/member/categories",
@@ -32,8 +32,8 @@ export const API_ENDPOINTS = {
 
   LECTURE: {
     REVIEW: {
-      GET: "/review/list", // GET - /{lectureId}
-      POST: "/review/list", // POST - /{lectureId}
+      GET: "/lecture/review/list", // GET - /{lectureId}
+      POST: "/student/lecture/review", // POST - /{lectureId}
     },
     GET: "/lecture",
     OPEN: "/lecturer/lecture", // post
@@ -53,22 +53,22 @@ export const API_ENDPOINTS = {
   },
 
   QNA: {
-    GET: "/qna", // /{lectureId}
-    POST: "/qna",
-    DELETE: "/qna", // /{lectureId}
-    PATCH: "/qna", // /{lectureId}
+    GET: "/lecture/qna", // /{lectureId}
+    POST: "/student/lecture/qna",
+    DELETE: "/lecture/qna", // /{lectureId}
+    PATCH: "/lecture/qna", // /{lectureId}
 
     MEMBER: {
-      GET: "/api/qna/member", // GET - 특정 멤버의 QNA
+      GET: "/lecture/qna/member", // GET - 특정 멤버의 QNA
       LECTURE: {
-        POST: " /qna/answer", // /{questionId} 답변 작성
-        PUT: "/qna/answer", // /{answerId} 답변 수정
+        POST: " /lecture/qna/answer", // /{questionId} 답변 작성
+        PUT: "/lecture/qna/answer", // /{answerId} 답변 수정
       },
     },
   },
 
   GUIDE: {
-    POST: "/api/guide/ask", // POST
+    POST: "/guide/ask", // POST
   },
 
   FAQ: {
