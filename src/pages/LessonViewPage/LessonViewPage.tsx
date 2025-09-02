@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import Hls from "hls.js";
 import styled from "styled-components";
 import Button from "../../components/Common/Button";
+import { getLessonDetails } from "../../api/Lesson/lessonAPI";
+import type { Lesson } from "../../types/lesson";
 
 const Container = styled.div`
   display: grid;
@@ -87,18 +90,38 @@ const TabContent = styled.div`
 `;
 
 const LessonItem = styled.div<{ selected?: boolean }>`
-  padding: 14px 16px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  background-color: ${({ selected }) =>
-    selected ? "rgba(0, 93, 159, 0.4)" : "transparent"};
+  position: relative;
+  padding: 16px 20px 16px 50px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  background-color: ${({ selected, theme }) =>
+    selected ? "rgba(0, 93, 159, 0.4)" : theme.colors.background_D};
   cursor: pointer;
-  transition: ${({ theme }) => theme.transition.default};
+  transition: all 0.2s ease;
+  box-shadow: ${({ selected }) =>
+    selected
+      ? "0 3px 10px rgba(255, 255, 255, 0.12)"
+      : "0 2px 6px rgba(0, 0, 0, 0)"};
+
   display: flex;
   flex-direction: column;
 
   &:hover {
-    background-color: rgba(0, 93, 159, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background-color: ${({ theme }) => theme.colors.primary};
+  }
+
+  &::before {
+    content: attr(data-index);
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 700;
+    font-size: ${({ theme }) => theme.fontSize.body.max};
+    color: ${({ selected, theme }) =>
+      selected ? theme.colors.text_B : theme.colors.gray_M};
   }
 
   strong {
@@ -116,6 +139,7 @@ const LessonItem = styled.div<{ selected?: boolean }>`
 type SidebarTab = "lecture" | "chatbot";
 
 const LessonViewPage: React.FC = () => {
+  const { lectureId } = useParams<{ lectureId: string }>();
   const hls = new Hls();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hlsRef = useRef<Hls | null>(null);
@@ -123,17 +147,54 @@ const LessonViewPage: React.FC = () => {
   const [currentLevel, setCurrentLevel] = useState<number>(-1);
   const [activeTab, setActiveTab] = useState<SidebarTab>("lecture");
   const [selectedLesson, setSelectedLesson] = useState<number | null>(null);
+  const [lessonList, setLessonList] = useState<Lesson[] | null>(null);
+  const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
 
-  const lessons = Array.from({ length: 10 }).map((_, i) => ({
-    title: `레슨 ${i + 1}: 모던 스타일 강좌`,
-    duration: "23분",
-  }));
+  useEffect(() => {
+    if (lessonList && lessonList.length > 0) {
+      setSelectedLesson(0);
+      setCurrentLesson(lessonList[0]);
+    }
+  }, [lessonList]);
+
+  useEffect(() => {
+    if (!currentLesson || !videoRef.current) return;
+
+    hlsRef.current?.destroy();
+
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(currentLesson.videoUrl);
+      hls.attachMedia(videoRef.current);
+      hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
+        setLevels(data.levels.filter((lvl: any) => lvl.height >= 360));
+      });
+      hlsRef.current = hls;
+    } else if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
+      videoRef.current.src = currentLesson.videoUrl;
+    }
+  }, [currentLesson]);
+
+  useEffect(() => {
+    const fetchLesson = async () => {
+      if (!lectureId) return;
+      try {
+        const res = await getLessonDetails(lectureId);
+        setLessonList(res);
+      } catch (err) {
+        console.error("레슨 불러오기 실패:", err);
+      }
+    };
+
+    fetchLesson();
+  }, [lectureId]);
 
   useEffect(() => {
     if (videoRef.current) {
       if (Hls.isSupported()) {
+        if (currentLesson == null) return;
         const hls = new Hls();
-        hls.loadSource("https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8");
+        hls.loadSource(currentLesson?.videoUrl);
         hls.attachMedia(videoRef.current);
         hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
           setLevels(data.levels.filter((lvl: any) => lvl.height >= 360));
@@ -142,8 +203,8 @@ const LessonViewPage: React.FC = () => {
       } else if (
         videoRef.current.canPlayType("application/vnd.apple.mpegurl")
       ) {
-        videoRef.current.src =
-          "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8";
+        if (currentLesson == null) return;
+        videoRef.current.src = currentLesson?.videoUrl;
       }
     }
     return () => hlsRef.current?.destroy();
@@ -157,14 +218,19 @@ const LessonViewPage: React.FC = () => {
     }
   };
 
+  const formatPlaytime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+
+    if (minutes === 0) return `${secs}초`;
+    if (secs === 0) return `${minutes}분`;
+    return `${minutes}분 ${secs}초`;
+  };
+
   return (
     <Container>
       <VideoWrapper>
-        <Video
-          ref={videoRef}
-          controls
-          poster="https://via.placeholder.com/1280x720.png?text=Lesson+Thumbnail"
-        />
+        <Video ref={videoRef} controls poster={currentLesson?.thumbnail} />
         <ControlBar>
           {levels.map((level, idx) => (
             <Button
@@ -196,14 +262,18 @@ const LessonViewPage: React.FC = () => {
         </TabMenu>
         <TabContent>
           {activeTab === "lecture" &&
-            lessons.map((lesson, idx) => (
+            lessonList?.map((lesson, idx) => (
               <LessonItem
                 key={idx}
+                data-index={`${idx + 1}`}
                 selected={selectedLesson === idx}
-                onClick={() => setSelectedLesson(idx)}
+                onClick={() => {
+                  setSelectedLesson(idx);
+                  setCurrentLesson(lesson);
+                }}
               >
                 <strong>{lesson.title}</strong>
-                <p>{lesson.duration}</p>
+                <p>{formatPlaytime(lesson.playtime)}</p>
               </LessonItem>
             ))}
           {activeTab === "chatbot" && <div>튜터 챗봇 내용 표시</div>}
