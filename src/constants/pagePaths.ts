@@ -8,14 +8,11 @@ export const PAGE_PATHS = {
   HOME: "/home",
   LOGIN: "/login",
   SIGNUP: "/signup",
-  USER_INFO: "/userinfo",
   MY_COURSES: "/??",
-  REPORT: "/??",
   LEVEL_TEST: {
     DASHBOARD: "/member/student/leveltest/dashboard",
     TEST: "/member/student/leveltest",
   },
-  STUDENT_REPORT: "/member/student/report",
   FAQ: "/faq",
   CREATE_LECTURE: "/openlecture",
   Lesson_Management: "/member/lecturer/lessons",
@@ -25,6 +22,8 @@ export const PAGE_PATHS = {
     STUDENT: {
       MY_LECTURES: "/userpage/student",
       QNA: "/member/qna",
+      REPORT: "/member/student/report",
+      USER_INFO: "/userinfo",
     },
     LECTURER: "/userpage/lecturer",
   },

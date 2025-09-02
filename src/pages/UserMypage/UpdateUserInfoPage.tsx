@@ -285,7 +285,7 @@ const UpdateUserInfoPage = () => {
   // 확인 누르면 변경된 회원수정페이지 보여주기
   const handelConfirm = () => {
     setShowSuccessModal(true);
-    navigate(PAGE_PATHS.USER_INFO);
+    navigate(PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO);
     setShowSuccessModal(false);
   };
 

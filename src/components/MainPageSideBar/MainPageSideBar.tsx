@@ -79,7 +79,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage }) => {
       <IconButton
         title="레포트"
         active={activePage === "report"}
-        onClick={() => navigate(PAGE_PATHS.REPORT)}
+        onClick={() => navigate(PAGE_PATHS.USER_PAGE.STUDENT.REPORT)}
       >
         <FontAwesomeIcon icon={faFileAlt} />
         <IconLabel>레포트</IconLabel>
@@ -88,7 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage }) => {
       <IconButton
         title="레벨테스트"
         active={activePage === "level-test"}
-        onClick={() => navigate(PAGE_PATHS.LEVEL_TEST)}
+        onClick={() => navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD)}
       >
         <FontAwesomeIcon icon={faChartLine} />
         <IconLabel>레벨테스트</IconLabel>

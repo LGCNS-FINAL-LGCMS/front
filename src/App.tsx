@@ -65,7 +65,7 @@ function App() {
           />
 
           <Route
-            path={PAGE_PATHS.USER_INFO}
+            path={PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO}
             element={
               <Layout>
                 <UpdateUserInfoPage />
@@ -92,7 +92,7 @@ function App() {
           />
 
           <Route
-            path={`${PAGE_PATHS.STUDENT_REPORT}/:reportId?`}
+            path={`${PAGE_PATHS.USER_PAGE.STUDENT.REPORT}/:reportId?`}
             element={
               <Layout>
                 <StudentReportPage />
