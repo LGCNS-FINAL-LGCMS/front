@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
@@ -149,32 +149,29 @@ const LectureInfoPage = () => {
   const [lessonList, setLessonList] = useState<LessonResponse[]>([]);
   const [progress, setProgress] = useState<number>(0);
 
-  const fetchQnaList = async () => {
+  const fetchQnaList = useCallback(async () => {
     if (lecture && lecture.lectureResponseDto?.lectureId) {
       try {
-        const data = await getLectureQnas(
-          lecture?.lectureResponseDto?.lectureId
-        );
-        console.log(data);
+        const data = await getLectureQnas(lecture.lectureResponseDto.lectureId);
         setQnaList(data);
       } catch (err) {
         console.error(err);
       }
     }
-  };
+  }, [lecture]);
 
-  const fetchReviews = async () => {
-    if (lecture && lecture?.lectureResponseDto?.lectureId) {
+  const fetchReviews = useCallback(async () => {
+    if (lecture?.lectureResponseDto?.lectureId) {
       try {
         const data = await getReviewRequest(
-          lecture?.lectureResponseDto?.lectureId
+          lecture.lectureResponseDto.lectureId
         );
         setReviews(data.data.content);
       } catch (err) {
         console.error(err);
       }
     }
-  };
+  }, [lecture]);
 
   useEffect(() => {
     if (!lectureId) return;
