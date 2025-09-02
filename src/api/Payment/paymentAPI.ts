@@ -37,7 +37,7 @@ export const postPaymentReady = async (
 
     const response = await apiClient.post<PaymentApiResponse>(
       API_ENDPOINTS.PAYMENT.READY,
-      query
+      query,
       // "http://localhost:38111/payment/ready",
       // {
       //   headers: {

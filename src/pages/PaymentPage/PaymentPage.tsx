@@ -121,7 +121,11 @@ const PaymentPage: React.FC = () => {
         console.log("장바구니 데이터", data.cartResponses);
 
         setItems(data.cartResponses.map(item => ({
-          ...item,
+          cartId: item.cartId,
+          lectureId: item.lectureId,
+          title: item.title,
+          price: item.price,
+          thumbnailUrl: item.thumbnailUrl,
           selected: true,
           id: 1,
         })));

@@ -21,6 +21,7 @@ export const API_ENDPOINTS = {
   },
   STUDENT: {
     GET_LECTURE: "/???",
+    POST_LECTURE_STUDENT: "/student/lecture/join", // post
   },
 
   CATEGORY: {
