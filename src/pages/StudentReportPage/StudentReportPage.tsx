@@ -1,12 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import type { AppDispatch, RootState } from "../../redux/store";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { fetchStudentReport } from "../../redux/StudentReport/StudentReportSlice";
 
 import blueStar from "../../assets/images/levelTestPage/blueStar.svg";
 import blueStar_empty from "../../assets/images/levelTestPage/blueStar_empty.svg";
+import SideTab from "../../components/Common/SideTab";
+import { PAGE_PATHS } from "../../constants/pagePaths";
 
 const Container = styled.div``;
 
@@ -198,7 +200,7 @@ const NextStepsCard = styled.div`
 
 const StudentReportPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-
+  const navigate = useNavigate();
   const { reportId } = useParams<{ reportId: string }>();
 
   const reportData = useSelector((state: RootState) => state.studentReport);
@@ -209,8 +211,38 @@ const StudentReportPage = () => {
     }
   }, [reportId, dispatch]);
 
+  //sideTab
+  const tabItems = [
+    {
+      id: 1,
+      label: "My Lecture",
+      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES),
+    },
+    {
+      id: 2,
+      label: "Level Test",
+      action: () => navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD),
+    },
+    {
+      id: 3,
+      label: "회원정보수정",
+      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO),
+    },
+    {
+      id: 4,
+      label: "나의 Q&A",
+      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.QNA),
+    },
+  ];
+
+  const handleTabSelect = (id: number) => {
+    const tab = tabItems.find((t) => t.id === id);
+    if (tab?.action) tab.action();
+  };
+
   return (
     <Container>
+      <SideTab title="MyPage" items={tabItems} onSelect={handleTabSelect} />
       <StudentReportWrapper>
         <ReportHeader>
           <PageTitle>LevelTest Report</PageTitle>
