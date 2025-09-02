@@ -9,7 +9,6 @@ export const PAGE_PATHS = {
   LOGIN: "/login",
   SIGNUP: "/signup",
   USER_INFO: "/userinfo",
-  MY_COURSES: "/??",
   REPORT: "/??",
   LEVEL_TEST: {
     DASHBOARD: "/member/student/leveltest/dashboard",
@@ -19,6 +18,7 @@ export const PAGE_PATHS = {
   CREATE_LECTURE: "/openlecture",
   LESSON_MANAGEMENT: "/member/lecturer/lessons",
   CART: "/cart",
+  LECTURE_INFO: "/lecture",
   QNA: "/qna",
   LESSON_VIEW: "/lessonview",
   USER_PAGE: {
@@ -26,7 +26,11 @@ export const PAGE_PATHS = {
       MY_LECTURES: "/userpage/student",
       QNA: "/member/qna",
     },
-    LECTURER: "/userpage/lecturer",
+    LECTURER: {
+      MAIN: "/userpage/lecturer",
+      DASHBOARD: "/lecturer/dashboard",
+      REPORT: "/lecturer/report",
+    },
   },
   PAYMENT: {
     PAYMENT: "/payment",
