@@ -8,7 +8,7 @@ export interface desirerResponseData{
     nickname: string;
     role: string;
     desireLecturer: boolean;
-    desireLecturerDate: string;
+    desireLecturerDate: number[];
     categories: {
         id: number
         name: string
