@@ -20,8 +20,6 @@ import { PAGE_PATHS } from '../../constants/pagePaths';
 import { useNavigate } from 'react-router-dom';
 // import { postLectureStudent } from '../../api/Lecture/lectureAPI';
 import type { RootState } from '../../redux/store';
-import { postLectureStudent } from '../../api/Lecture/lectureAPI';
-
 
 const PaymentContainer = styled.div`
   display: flex;
@@ -257,10 +255,7 @@ const PaymentPage: React.FC = () => {
 
             if (paymentResult === "결제가 완료되었습니다.") {
               alert("결제가 완료되었습니다.")
-              // 결제완료시 등록
-              pendingLectureId
-                .map(async (lectureId: string) =>
-                  await postLectureStudent(lectureId));
+
               // 완료창 넘어가기
               dispatch(setSuccess())
               navigate(PAGE_PATHS.PAYMENT.RESULT);
