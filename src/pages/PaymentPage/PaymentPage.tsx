@@ -244,11 +244,15 @@ const PaymentPage: React.FC = () => {
             const pendingLectureIdString = sessionStorage.getItem('lectureIds');
             const pendingLectureId = pendingLectureIdString ? JSON.parse(pendingLectureIdString) : [];
 
+            const cartIdList = pendingCartId.map((id: number) => ({
+              cartId: id,
+              lectureId: pendingLectureId[pendingCartId.indexOf(id)]
+            }))
+            console.log('cartIdList : {}', cartIdList);
             const paymentResult = await postPaymentApprove({
               token: pgToken,
               tid: tid,
-              cartId: pendingCartId,
-              lectureId: pendingLectureId,
+              cartInfos: cartIdList,
             });
 
             if (paymentResult === "결제가 완료되었습니다.") {
