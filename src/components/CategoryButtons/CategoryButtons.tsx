@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import styled, { keyframes } from "styled-components";
-import { getCategorys } from "../../api/Category/categoryApi";
+import React from "react";
+import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCategory, setCategory } from "../../redux/Category/categorySlice";
 import type { RootState } from "../../redux/store";
@@ -49,26 +48,26 @@ const Button = styled.button<{ isActive: boolean }>`
   }
 `;
 
-const shimmer = keyframes`
-  0% { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
-`;
+// const shimmer = keyframes`
+//   0% { background-position: -400px 0; }
+//   100% { background-position: 400px 0; }
+// `;
 
-const SkeletonButton = styled.div<{ width: string }>`
-  width: ${({ width }) => width};
-  height: 36px; /* 버튼 높이와 동일 */
-  background: linear-gradient(
-    90deg,
-    #bfbfbfff 25%,
-    #9d9d9dff 50%,
-    #bfbfbfff 75%
-  );
-  background-size: 800px 100%;
-  animation: ${shimmer} 1.2s infinite;
-  border-radius: 4px;
-  margin: 0 12px;
-  overflow: hidden;
-`;
+// const SkeletonButton = styled.div<{ width: string }>`
+//   width: ${({ width }) => width};
+//   height: 36px; /* 버튼 높이와 동일 */
+//   background: linear-gradient(
+//     90deg,
+//     #bfbfbfff 25%,
+//     #9d9d9dff 50%,
+//     #bfbfbfff 75%
+//   );
+//   background-size: 800px 100%;
+//   animation: ${shimmer} 1.2s infinite;
+//   border-radius: 4px;
+//   margin: 0 12px;
+//   overflow: hidden;
+// `;
 
 interface CategoryButtonsProps {
   onCategoryClick: (keyword: string, category: string) => void;

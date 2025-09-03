@@ -120,8 +120,6 @@ const PaymentPage: React.FC = () => {
         const data = await getCart();
         dispatch(setPending());
 
-        console.log("장바구니 데이터", data.cartResponses);
-
         setItems(
           data.cartResponses.map((item) => ({
             cartId: item.cartId,
