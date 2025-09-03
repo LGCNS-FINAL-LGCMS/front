@@ -170,7 +170,9 @@ const PaymentPage: React.FC = () => {
       if (items.length > 1) {
         // case 1: 개수가 2개 이상인 경우 /payment/list/ready
 
-        response = await postPaymentBundleReady(items);
+
+        response = await postPaymentBundleReady(items.filter(item => item.selected));
+
 
         tid = response.tid;
         sessionStorage.setItem("tid", tid);
