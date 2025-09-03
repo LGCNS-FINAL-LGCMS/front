@@ -39,11 +39,12 @@ const ProductList: React.FC<ProductListProps> = ({ items, setItems }) => {
 
   const removeOne = async (id: number) => {
     // 백에서 지우기
+    console.log("삭제할 id:", id);
     const result = await deleteCart(id);
     console.log(result);
 
     // 프론트에서 지우기 (새로고침하면 백에서 지워진채로 불러옴. 새로고침안하고 리랜더 표시하려고 이렇게 함)
-    setItems((prev) => prev.filter((it) => it.id !== id));
+    setItems((prev) => prev.filter((it) => it.cartId !== id));
   };
 
   // 전체삭제는 api가 없어서 구현하지 않았습니다.
@@ -119,7 +120,7 @@ const ProductList: React.FC<ProductListProps> = ({ items, setItems }) => {
                   {/* 가격 + 제거 */}
                   <T.Td align="right">
                     <Price>{it.price.toLocaleString()} ₩</Price>
-                    <RemoveLink type="button" onClick={() => removeOne(it.id)}>
+                    <RemoveLink type="button" onClick={() => removeOne(it.cartId)}>
                       🗑
                     </RemoveLink>
                   </T.Td>

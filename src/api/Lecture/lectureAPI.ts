@@ -55,3 +55,17 @@ export const lectureFilesUpload = async (lectureFiles: LectureFiles) => {
     throw new Error(message);
   }
 };
+
+export const postLectureStudent = async ( lectureId:string)=>{
+  try {
+    const response = await apiClient.post(
+      `${API_ENDPOINTS.STUDENT.POST_LECTURE_STUDENT}/${lectureId}`
+    );
+    console.log("Lecture Join Response:", response);
+    return response.data.data;
+  }catch(error: unknown){
+    const message = getErrorMessage(error, "강의 수강 실패");
+    console.error("Lecture Join API error:", message);
+    throw new Error(message);
+  }
+};
