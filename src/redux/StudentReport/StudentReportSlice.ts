@@ -86,10 +86,7 @@ export const studentReportSlice = createSlice({
       state.createdAt = action.payload.createdAt;
       state.category = action.payload.category;
 
-      localStorage.setItem(
-        "currentStudentReport",
-        JSON.stringify(action.payload)
-      );
+      localStorage.setItem("studentReport", JSON.stringify(action.payload));
     },
     resetStudentReportData: (state) => {
       state.reportId = -1;
@@ -103,7 +100,7 @@ export const studentReportSlice = createSlice({
       state.createdAt = "";
       state.category = "";
 
-      localStorage.removeItem("currentStudentReport");
+      localStorage.removeItem("studentReport");
     },
   },
 
