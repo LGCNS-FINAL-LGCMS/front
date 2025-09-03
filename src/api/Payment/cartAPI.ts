@@ -14,7 +14,7 @@ export interface CartApiResponse {
 }
 
 export interface cartData {
-  id: number,
+  cartId: number,
   lectureId: string,
   title: string,
   price: number,
@@ -75,7 +75,7 @@ export const deleteCart = async (itemId: number): Promise<CartApiResponse> => {
     return response.data;
   } catch (error: unknown) {
     const message = getErrorMessage(error, "장바구니 아이템 삭제 실패");
-    console.error("GETCART API error:", message);
+    console.error("DELETECART API error:", message);
     throw new Error(message);
   }
 }

@@ -1,8 +1,11 @@
 export interface Lesson {
   id: string;
-  index?: number;
+  lectureId: string;
   title: string;
-  description: string;
-  date: string;
-  thumbnailUrl?: string;
+  information: string;
+  videoUrl: string;
+  thumbnail: string;
+  playtime: number;
+  progress: number | null;
+  createdAt: [number, number, number, number, number, number, number];
 }
