@@ -36,7 +36,8 @@ const PageTitle = styled.h1`
   max-width: 100%;
   font-size: ${(props) => props.theme.fontSize.title.max};
   font-family: ${(props) => props.theme.font.primary};
-  border-color: ${(props) => props.theme.colors.gray_M};
+  border-color: ${(props) => props.theme.colors.background_Overlay};
+  color: ${(props) => props.theme.colors.background_Overlay};
   padding-bottom: 12px;
 `;
 

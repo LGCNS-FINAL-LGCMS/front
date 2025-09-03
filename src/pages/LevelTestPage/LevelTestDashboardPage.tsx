@@ -26,7 +26,7 @@ interface ReportList {
 const Container = styled.div`
   font-family: ${(props) => props.theme.font.primary};
   max-width: ${(props) => props.theme.size.containerMax};
-  margin: 0 auto;
+  margin: 20px auto;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -42,6 +42,7 @@ const CategorySelectWrapper = styled.div`
   border-radius: 16px;
   box-shadow: ${(props) => props.theme.shadow.md};
   padding: 30px;
+  min-width: 600px;
 `;
 
 const PageTitle = styled.h1`
@@ -112,6 +113,7 @@ const ReportListWrapper = styled.div`
   box-shadow: ${(props) => props.theme.shadow.md};
   min-height: 80%;
   padding: 30px;
+  min-width: 600px;
 `;
 
 const ReportTitle = styled.h1`
@@ -130,11 +132,12 @@ const ReportContainer = styled.div`
 
 const ReportCard = styled.div`
   background: white;
+  gap: 30px;
   padding: 18px 20px;
   border-bottom: 2px solid ${(props) => props.theme.colors.gray_M};
   display: flex;
-  justify-content: space-between;
   align-items: center;
+
   transition: ${(props) => props.theme.transition.default};
   cursor: pointer;
 
@@ -145,51 +148,69 @@ const ReportCard = styled.div`
   &:hover {
     transform: translateY(-3px);
     box-shadow: ${(props) => props.theme.shadow.sm};
+    background-color: ${(props) => props.theme.colors.card};
   }
 `;
 
 const ReportInfo = styled.div`
   display: flex;
-  gap: 35px;
+  gap: 15px;
+  width: 100%;
+`;
+
+const ReportNumber = styled.div`
+  background-color: rgba(0, 93, 159, 0.1);
+  color: ${(props) => props.theme.colors.primary};
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: ${(props) => props.theme.fontSize.body.min};
+  font-weight: 600;
+  margin: auto 0;
 `;
 
 const ReportDate = styled.p`
   font-size: ${(props) => props.theme.fontSize.body.min};
   color: ${(props) => props.theme.colors.secondary};
-  margin: auto 0;
+  white-space: nowrap;
+  margin: 0 auto;
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ReportCategory = styled.div`
   background-color: rgba(0, 93, 159, 0.1);
-  padding: 5px 8px;
-  margin: auto 0;
+  height: 35px;
+  padding: 2px 8px;
   font-weight: 600;
   color: ${(props) => props.theme.colors.primary};
-`;
-
-const ReportName = styled.p`
-  font-size: ${(props) => props.theme.fontSize.body.max};
-  color: ${(props) => props.theme.colors.text_D};
-  margin: auto 0;
-`;
-
-const ReportRightContainer = styled.div`
+  margin: 0 auto;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
+  justify-content: center;
+  align-items: center;
 `;
 
 const StudentLevelIcon = styled.img`
   width: 45px;
   height: 45px;
   object-fit: contain;
+  margin: 0 auto;
+  width: 50%;
 `;
 
 const ReportScore = styled.p`
   font-size: 16px;
   color: ${(props) => props.theme.colors.primary};
-  margin: 0;
+  white-space: nowrap;
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 `;
 
 const EmptyListMessage = styled.p`
@@ -331,26 +352,29 @@ const LevelTestDashboardPage = () => {
         <ReportTitle>Report</ReportTitle>
         <ReportContainer>
           {reportList.length > 0 ? (
-            reportList.map((report) => (
+            reportList.map((report, index) => (
               <ReportCard
                 key={report.reportId}
                 onClick={() => handleReportClick(report.reportId)}
               >
                 <ReportInfo>
+                  <ReportNumber>{index + 1}</ReportNumber>
                   <ReportDate>
-                    {new Date(report.createdAt).toLocaleDateString("ko-KR")}
+                    {new Date(report.createdAt)
+                      .toLocaleDateString("ko-KR", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      })
+                      .replace(/\.$/, "")}
                   </ReportDate>
                   <ReportCategory>{report.category}</ReportCategory>
-
-                  <ReportName>테스트 레포트</ReportName>
-                </ReportInfo>
-                <ReportRightContainer>
                   <StudentLevelIcon
                     src={getLevelIcon(report.studentLevel)}
                     alt="Level Icon"
                   />
                   <ReportScore>Score : {report.totalScore} / 100</ReportScore>
-                </ReportRightContainer>
+                </ReportInfo>
               </ReportCard>
             ))
           ) : (
