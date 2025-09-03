@@ -15,7 +15,12 @@ export interface lectureData {
 export interface paymentToken {
   tid: string; // 결제 아이디
   token: string; // 결제 토큰
-  cartId: number[]; // 장바구니물품의 아이디 (long)
+  cartInfos: {
+    cartId: number,
+    lectureId: string
+  }[];
+    // 장바구니물품의 아이디 (long)
+    // 강의 아이디 (string)
 }
 export interface PaymentApiResponse {
   status: string;
