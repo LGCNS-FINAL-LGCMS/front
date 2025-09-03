@@ -136,7 +136,7 @@ const PaymentPage: React.FC = () => {
       }
     }
     fetchCartData();
-  }, [])
+  }, [dispatch])
 
   // 결제함수
 
