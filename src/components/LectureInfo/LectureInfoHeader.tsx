@@ -11,6 +11,7 @@ import Button from "../Common/Button";
 import { theme } from "../../assets/styles/theme";
 import { postCartItem } from "../../api/Cart/cartAPI";
 import type { LectureResponse } from "../../api/LectureInfo/lectureInfoAPI";
+import { PAGE_PATHS } from "../../constants/pagePaths";
 
 const TopSection = styled.div`
   display: flex;
@@ -237,7 +238,9 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
               />
               <Button
                 text="강의 들으러 가기"
-                onClick={() => navigate(`lecture/${lecture?.lectureId}`)}
+                onClick={() =>
+                  navigate(`${PAGE_PATHS.LESSON_VIEW}/${lecture?.lectureId}`)
+                }
                 design={1}
               />
             </ButtonRow>
