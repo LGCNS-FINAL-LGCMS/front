@@ -104,12 +104,10 @@ const ProductList: React.FC<ProductListProps> = ({ items, setItems }) => {
                   </T.Td>
 
                   {/* 썸네일 */}
-                  <T.Td align="center">
-                    {it.thumbnailUrl ? (
-                      <Thumb src={it.thumbnailUrl} alt={`${it.title} 썸네일`} />
-                    ) : (
-                      <ThumbPlaceholder aria-hidden />
-                    )}
+                  <T.Td >
+
+                    <Thumb imageUrl={it.thumbnailUrl || undefined} />
+
                   </T.Td>
 
                   {/* 강의 정보 */}
@@ -172,20 +170,29 @@ const CheckBox = styled.input`
   cursor: pointer;
 `;
 
-const Thumb = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  object-fit: cover;
-  border: 1px solid ${({ theme }) => theme.colors.border_Light};
+const Thumb = styled.div<{ imageUrl?: string }>`
+  width: 90px;
+  aspect-ratio: 16 / 9;
+
+  background-color: ${({ theme }) => theme.colors.gray_M};
+  border-radius: 4px;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: ${({ imageUrl }) =>
+    imageUrl ? `url(${imageUrl})` : "none"};
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 `;
-const ThumbPlaceholder = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background: ${({ theme }) => theme.colors.background_B};
-  border: 1px solid ${({ theme }) => theme.colors.border_Light};
-`;
+
 const Title = styled.div`
   font-weight: 800;
   color: ${({ theme }) => theme.colors.background_D};
