@@ -77,37 +77,10 @@ interface CategoryButtonsProps {
 const CategoryButtons: React.FC<CategoryButtonsProps> = () => {
   const dispatch = useDispatch();
   const selectedCategory = useSelector((state: RootState) => state.category);
-
+  const myCategories = useSelector((state: RootState) => state.auth.categories);
   const selectedCategoryId = selectedCategory?.id
     ? Number(selectedCategory.id)
     : null;
-
-  const [categories, setCategories] = useState<{ name: string; id: number }[]>(
-    []
-  );
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    async function fetchCategories() {
-      setLoading(true);
-      try {
-        const data = await getCategorys();
-        setCategories(data);
-      } catch (error) {
-        console.log(error);
-        setCategories([
-          { name: "백엔드", id: 1 },
-          { name: "Spring", id: 2 },
-          { name: "리액트", id: 3 },
-          { name: "DB", id: 4 },
-          { name: "쿠버네티스", id: 5 },
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchCategories();
-  }, []);
 
   const handleButtonClick = (id: number, name: string) => {
     if (selectedCategoryId === id) {
@@ -119,19 +92,15 @@ const CategoryButtons: React.FC<CategoryButtonsProps> = () => {
 
   return (
     <CategorysWrapper>
-      {loading
-        ? Array.from({ length: 5 }).map((_, index) => (
-            <SkeletonButton key={index} width="100px" />
-          ))
-        : categories.map((category) => (
-            <Button
-              key={category.id}
-              isActive={selectedCategoryId === category.id}
-              onClick={() => handleButtonClick(category.id, category.name)}
-            >
-              {category.name}
-            </Button>
-          ))}
+      {myCategories.map((category) => (
+        <Button
+          key={category.id}
+          isActive={selectedCategoryId === category.id}
+          onClick={() => handleButtonClick(category.id, category.name)}
+        >
+          {category.name}
+        </Button>
+      ))}
     </CategorysWrapper>
   );
 };

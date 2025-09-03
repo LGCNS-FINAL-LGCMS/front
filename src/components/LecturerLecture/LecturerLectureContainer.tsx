@@ -14,6 +14,11 @@ import type { Lecture } from "../../types/lecture";
 import Pagination from "react-bootstrap/Pagination";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { PAGE_PATHS } from "../../constants/pagePaths";
+import { publishLectureRequest } from "../../api/Lecture/lectureAPI";
+
+export interface LectureWithStatus extends Lecture {
+  status: string;
+}
 
 // 카드 그리드
 const CardsGrid = styled.div`
@@ -95,9 +100,6 @@ const LecturerLectureContainer: React.FC = () => {
   const category = useSelector((state: RootState) => state.category.category);
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  console.log(lectureList);
-
-  // keyword/category 바뀔 때 첫 페이지 로딩
   useEffect(() => {
     dispatch(resetPaginationState());
     dispatch(
@@ -130,7 +132,7 @@ const LecturerLectureContainer: React.FC = () => {
         </CardsGrid>
       ) : (
         <CardsGrid>
-          {lectureList.map((item: Lecture) => (
+          {lectureList.map((item: LectureWithStatus) => (
             <LectureCard
               key={item.lectureId}
               id={item.lectureId}
@@ -142,7 +144,32 @@ const LecturerLectureContainer: React.FC = () => {
               rating={item.averageStar}
               design={1}
               buttons={[
-                { label: "강의 등록하기", onClick: () => alert(item.title) },
+                ...(item.status !== "APPROVED"
+                  ? [
+                      {
+                        label: "강의 출시",
+                        onClick: async () => {
+                          try {
+                            const res = await publishLectureRequest(
+                              item.lectureId,
+                              "APPROVED"
+                            );
+                            alert("강의를 성공적으로 출시하였습니다");
+                            dispatch(
+                              fetchLecturePage({
+                                page: currentPage - 1,
+                                size: PAGE_SIZE,
+                              })
+                            );
+                            console.log("Lecture publish success:", res);
+                          } catch (error) {
+                            alert("강의 출시에 실패하였습니다");
+                            console.error(error);
+                          }
+                        },
+                      },
+                    ]
+                  : []),
                 {
                   label: "강의 정보 보기",
                   onClick: () =>
