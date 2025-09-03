@@ -92,7 +92,7 @@ type LectureItem = {
 
 type ProductListProps = {
   items: LectureItem[];
-  startKakaoAccount: () => void;
+  startKakaoAccount: (subtotal: number) => void;
 }
 
 const KakaoPayBox: React.FC<ProductListProps> = ({ items, startKakaoAccount }) => {
@@ -106,22 +106,14 @@ const KakaoPayBox: React.FC<ProductListProps> = ({ items, startKakaoAccount }) =
   const allItems = items;
 
   const handleKakaoPayClick = async () => {
-    if (subtotal <= 0 || allItems.length === 0) {
+    if (allItems.length === 0) {
       alert('결제할 항목이 없습니다.');
       return;
     }
 
-    // alert(
-    //   `카카오페이 결제 모듈을 실행합니다.\n` +
-    //   `금액: ${subtotal.toLocaleString()}원\n` +
-    //   `항목: ${selectedItems.map(i => i.title).join(', ')}`
-    // );
-
     // 상위 컴포넌트에서 결제처리하는 함수 실행
-    startKakaoAccount();
+    startKakaoAccount(subtotal);
   };
-  // console.log('props로 받은 startKakaoAccount의 값:', startKakaoAccount);
-
 
   return (
     <PaymentContainer>
@@ -138,7 +130,7 @@ const KakaoPayBox: React.FC<ProductListProps> = ({ items, startKakaoAccount }) =
       </PriceDisplay>
       <DetailText>세금/부가세는 결제 시 반영됩니다.</DetailText>
 
-      <KakaoPayButton onClick={handleKakaoPayClick} disabled={subtotal <= 0}>
+      <KakaoPayButton onClick={handleKakaoPayClick} disabled={selectedItems.length <= 0}>
         <KakaoPayIcon src={kakaoPayIcon} alt="Kakao Pay Icon" />
 
       </KakaoPayButton>
