@@ -1,11 +1,9 @@
-
 import { API_ENDPOINTS } from "../../constants/endpoints";
 import { getErrorMessage } from "../../utils/handleApiError";
 import apiClient from "../index";
 
-
 export interface cartResponse {
-  cartResponses: cartData[]
+  cartResponses: cartData[];
 }
 export interface CartApiResponse {
   status: string;
@@ -14,24 +12,26 @@ export interface CartApiResponse {
 }
 
 export interface cartData {
-  cartId: number,
-  lectureId: string,
-  title: string,
-  price: number,
-  thumbnailUrl: string,
+  cartId: number;
+  lectureId: string;
+  title: string;
+  price: number;
+  thumbnailUrl: string;
 }
 
 export interface postCartInputdto {
-  lectureId: string,
-  title: string,
-  price: number,
-  thumbnailUrl: string,
+  lectureId: string;
+  title: string;
+  price: number;
+  thumbnailUrl: string;
 }
 
-export const postCartInput = async (query: postCartInputdto): Promise<CartApiResponse> => {
+export const postCartInput = async (
+  query: postCartInputdto
+): Promise<CartApiResponse> => {
   try {
     const response = await apiClient.post<CartApiResponse>(
-      API_ENDPOINTS.CART.POST,
+      API_ENDPOINTS.PAYMENT.CART.POST,
       { query }
     );
     console.log(response);
@@ -41,12 +41,12 @@ export const postCartInput = async (query: postCartInputdto): Promise<CartApiRes
     console.error("PostCartInput API error:", message);
     throw new Error(message);
   }
-}
+};
 
 export const getCart = async (): Promise<cartResponse> => {
   try {
     const response = await apiClient.get<CartApiResponse>(
-      API_ENDPOINTS.CART.GET,
+      API_ENDPOINTS.PAYMENT.CART.GET
 
       // // 테스트 용
       // "http://localhost:38111/cart",
@@ -63,12 +63,12 @@ export const getCart = async (): Promise<cartResponse> => {
     console.error("GETCART API error:", message);
     throw new Error(message);
   }
-}
+};
 
 export const deleteCart = async (itemId: number): Promise<CartApiResponse> => {
   try {
     const response = await apiClient.delete<CartApiResponse>(
-      `${API_ENDPOINTS.CART.DELETE}/${itemId}`
+      `${API_ENDPOINTS.PAYMENT.CART.DELETE}/${itemId}`
       // `http://localhost:38111/cart/${itemId}`,
     );
     console.log(response);
@@ -78,4 +78,4 @@ export const deleteCart = async (itemId: number): Promise<CartApiResponse> => {
     console.error("DELETECART API error:", message);
     throw new Error(message);
   }
-}
+};
