@@ -27,55 +27,55 @@ const Container = styled.div`
   font-family: ${(props) => props.theme.font.primary};
   max-width: ${(props) => props.theme.size.containerMax};
   margin: 0 auto;
-  padding: 20px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 30px;
 `;
 
 const CategorySelectWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  width: 70%;
+  width: 75%;
   margin: 0 auto;
-`;
-
-const PageTitle = styled.h1`
-  font-size: ${(props) => props.theme.fontSize.title.max};
-  color: ${(props) => props.theme.colors.text_D};
-  border-bottom: 2px solid ${(props) => props.theme.colors.border_Dark};
-  padding-bottom: 10px;
-  text-align: left;
-  width: fit-content;
-`;
-
-const CategorySelectSection = styled.div`
   background: white;
   border-radius: 16px;
   box-shadow: ${(props) => props.theme.shadow.md};
   padding: 30px;
+`;
+
+const PageTitle = styled.h1`
+  font-size: ${(props) => props.theme.fontSize.title.max};
+  color: ${(props) => props.theme.colors.background_Overlay};
+  border-bottom: 2px solid ${(props) => props.theme.colors.background_Overlay};
+  text-align: left;
+  width: fit-content;
+  padding-bottom: 8px;
+`;
+
+const CategorySelectBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
 `;
 
 const CategoryTitle = styled.p`
   font-size: ${(props) => props.theme.fontSize.contents.medium};
-  color: ${(props) => props.theme.colors.background_D};
-  margin: 0;
+  color: ${(props) => props.theme.colors.text_D};
+  width: fit-content;
 `;
 
-const CategorySection = styled.div`
+const CategoryContainer = styled.div`
   display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+  flex-direction: row;
   align-items: center;
 `;
 
 const CategoryDropdown = styled.select`
   font-size: ${(props) => props.theme.fontSize.body.min};
-  padding: 12px 16px;
+  padding: 12px 30px;
   border-radius: 20px;
   border: 2px solid ${(props) => props.theme.colors.gray_M};
   background-color: white;
@@ -100,59 +100,80 @@ const CategoryDropdown = styled.select`
   }
 `;
 
+const CategoryButton = styled.div``;
+
 const ReportListWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  width: 70%;
+  width: 75%;
   margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: ${(props) => props.theme.shadow.md};
+  min-height: 80%;
+  padding: 30px;
 `;
 
-const TestReportTitle = styled.h2`
+const ReportTitle = styled.h1`
   font-size: ${(props) => props.theme.fontSize.title.max};
-  color: ${(props) => props.theme.colors.text_D};
-  border-bottom: 2px solid ${(props) => props.theme.colors.border_Dark};
-  padding-bottom: 10px;
+  color: ${(props) => props.theme.colors.background_Overlay};
+  border-bottom: 2px solid ${(props) => props.theme.colors.background_Overlay};
+  padding-bottom: 8px;
   text-align: left;
   width: fit-content;
 `;
 
+const ReportContainer = styled.div`
+  padding: 0 20px;
+  margin: 20px 0;
+`;
+
 const ReportCard = styled.div`
   background: white;
-  border-radius: 16px;
-  box-shadow: ${(props) => props.theme.shadow.md};
-  padding: 20px;
+  padding: 18px 20px;
+  border-bottom: 2px solid ${(props) => props.theme.colors.gray_M};
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: ${(props) => props.theme.transition.default};
   cursor: pointer;
 
+  &:last-child {
+    border-bottom: none; // 마지막 요소는 border 없애기
+  }
+
   &:hover {
     transform: translateY(-3px);
-    box-shadow: ${(props) => props.theme.shadow.lg};
+    box-shadow: ${(props) => props.theme.shadow.sm};
   }
 `;
 
 const ReportInfo = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-
-const ReportTitle = styled.p`
-  font-size: ${(props) => props.theme.fontSize.body.max};
-  color: ${(props) => props.theme.colors.text_D};
-  margin: 0;
+  gap: 35px;
 `;
 
 const ReportDate = styled.p`
   font-size: ${(props) => props.theme.fontSize.body.min};
   color: ${(props) => props.theme.colors.secondary};
-  margin: 0;
+  margin: auto 0;
 `;
 
-const ReportRight = styled.div`
+const ReportCategory = styled.div`
+  background-color: rgba(0, 93, 159, 0.1);
+  padding: 5px 8px;
+  margin: auto 0;
+  font-weight: 600;
+  color: ${(props) => props.theme.colors.primary};
+`;
+
+const ReportName = styled.p`
+  font-size: ${(props) => props.theme.fontSize.body.max};
+  color: ${(props) => props.theme.colors.text_D};
+  margin: auto 0;
+`;
+
+const ReportRightContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -171,17 +192,12 @@ const ReportScore = styled.p`
   margin: 0;
 `;
 
-const ReportCategory = styled.div``;
-
 const EmptyListMessage = styled.p`
   text-align: center;
-  padding: 30px;
+  margin: 0;
+  padding: 20px;
   color: ${(props) => props.theme.colors.secondary};
   font-size: ${(props) => props.theme.fontSize.body.max};
-  background: white;
-  border-radius: 12px;
-  box-shadow: ${(props) => props.theme.shadow.sm};
-  border: 1px solid ${(props) => props.theme.colors.border_Light};
 `;
 
 const LevelTestDashboardPage = () => {
@@ -288,9 +304,9 @@ const LevelTestDashboardPage = () => {
       <SideTab title="MyPage" items={tabItems} onSelect={handleTabSelect} />
       <CategorySelectWrapper>
         <PageTitle>Level Test</PageTitle>
-        <CategorySelectSection>
-          <CategoryTitle>레벨 테스트할 카테고리를 선택해 주세요.</CategoryTitle>{" "}
-          <CategorySection>
+        <CategorySelectBox>
+          <CategoryTitle>레벨 테스트할 카테고리를 선택해 주세요.</CategoryTitle>
+          <CategoryContainer>
             <CategoryDropdown
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(Number(e.target.value))}
@@ -304,39 +320,45 @@ const LevelTestDashboardPage = () => {
                 </option>
               ))}
             </CategoryDropdown>
-            <Button text="시험 시작" onClick={handleStartTest} />
-          </CategorySection>
-        </CategorySelectSection>
+            <CategoryButton>
+              <Button text="시험 시작" onClick={handleStartTest} />
+            </CategoryButton>
+          </CategoryContainer>
+        </CategorySelectBox>
       </CategorySelectWrapper>
+
       <ReportListWrapper>
-        <TestReportTitle>Report</TestReportTitle>
-        {reportList.length > 0 ? (
-          reportList.map((report) => (
-            <ReportCard
-              key={report.reportId}
-              onClick={() => handleReportClick(report.reportId)}
-            >
-              <ReportInfo>
-                <ReportTitle>테스트 레포트</ReportTitle>
-                <ReportDate>
-                  {new Date(report.createdAt).toLocaleDateString("ko-KR")}
-                </ReportDate>
-              </ReportInfo>
-              <ReportRight>
-                <ReportScore>Score : {report.totalScore} / 100</ReportScore>
-                <StudentLevelIcon
-                  src={getLevelIcon(report.studentLevel)}
-                  alt="Level Icon"
-                />
-                <ReportCategory>{report.category}</ReportCategory>
-              </ReportRight>
-            </ReportCard>
-          ))
-        ) : (
-          <EmptyListMessage>
-            아직 레벨테스트 결과가 없습니다. 위에서 테스트를 시작해보세요.
-          </EmptyListMessage>
-        )}
+        <ReportTitle>Report</ReportTitle>
+        <ReportContainer>
+          {reportList.length > 0 ? (
+            reportList.map((report) => (
+              <ReportCard
+                key={report.reportId}
+                onClick={() => handleReportClick(report.reportId)}
+              >
+                <ReportInfo>
+                  <ReportDate>
+                    {new Date(report.createdAt).toLocaleDateString("ko-KR")}
+                  </ReportDate>
+                  <ReportCategory>{report.category}</ReportCategory>
+
+                  <ReportName>테스트 레포트</ReportName>
+                </ReportInfo>
+                <ReportRightContainer>
+                  <StudentLevelIcon
+                    src={getLevelIcon(report.studentLevel)}
+                    alt="Level Icon"
+                  />
+                  <ReportScore>Score : {report.totalScore} / 100</ReportScore>
+                </ReportRightContainer>
+              </ReportCard>
+            ))
+          ) : (
+            <EmptyListMessage>
+              아직 레벨테스트 결과가 없습니다. 위에서 테스트를 시작해보세요.
+            </EmptyListMessage>
+          )}
+        </ReportContainer>
       </ReportListWrapper>
     </Container>
   );
