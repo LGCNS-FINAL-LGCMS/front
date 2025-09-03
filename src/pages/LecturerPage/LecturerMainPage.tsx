@@ -6,8 +6,8 @@ import { PAGE_PATHS } from "../../constants/pagePaths";
 
 const PageWrapper = styled.div`
   position: relative;
-  padding-top: calc(${({ theme }) => theme.size.header.height} / 2 + 5px);
-  min-height: 100vh;
+  padding-top: calc(${({ theme }) => theme.size.header.height} / 2);
+  min-height: calc(100vh - ${({ theme }) => theme.size.header.height} - 40px);
 `;
 
 const PageHeader = styled.div`
@@ -45,12 +45,12 @@ const LecturerMainPage = () => {
   return (
     <PageWrapper>
       <PageHeader>
-        <PageTitle>강의 개설 신청</PageTitle>
+        <PageTitle>강의 컨텐츠</PageTitle>
         <ButtonOffset>
           <Button
             text="+ 강의 추가"
             onClick={handleAddLecture}
-            design={2}
+            design={1}
             fontWeight={700}
           />
         </ButtonOffset>
