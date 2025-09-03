@@ -91,7 +91,7 @@ const StudnetLectureContainer: React.FC = () => {
   const navigate = useNavigate();
 
   const { lectureList, status, totalCount, currentPage, pageSize } =
-    useSelector((state: RootState) => state.studnetLectureData);
+    useSelector((state: RootState) => state.studentLectureData);
 
   const totalPages = Math.ceil(totalCount / pageSize);
 

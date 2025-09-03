@@ -19,6 +19,7 @@ export const theme: DefaultTheme = {
     text_D: "#212529", // 어두운 텍스트
     text_B: "#f2f2f2", // 밝은 텍스트
     disable: "rgba(85, 85, 85, 0.45)",
+    card: "#f8f9fa",
   },
 
   size: {
