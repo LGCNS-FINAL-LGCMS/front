@@ -1,13 +1,8 @@
-
-import React, { useEffect, useState } from 'react';
-import KakaoPayBox from '../../components/Payment/KakaoPayBox';
-import ProductList from '../../components/Payment/ProductList';
-import styled, { keyframes, css } from 'styled-components';
-import { getCart } from '../../api/Payment/cartAPI';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCancelled, setLoading, setFailure, setPaymentInfo, setPending, setSuccess } from '../../redux/Payment/paymentSlice';
-
-
+import React, { useEffect, useState } from "react";
+import KakaoPayBox from "../../components/Payment/KakaoPayBox";
+import ProductList from "../../components/Payment/ProductList";
+import styled, { keyframes, css } from "styled-components";
+import { getCart } from "../../api/Payment/cartAPI";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCancelled,
@@ -29,8 +24,7 @@ import { PAGE_PATHS } from "../../constants/pagePaths";
 import { useNavigate } from "react-router-dom";
 // import { postLectureStudent } from '../../api/Lecture/lectureAPI';
 
-import type { RootState } from '../../redux/store';
-
+import type { RootState } from "../../redux/store";
 
 const PaymentContainer = styled.div`
   display: flex;
@@ -57,18 +51,18 @@ const Overlay = styled.div<{ $disabled: boolean }>`
   ${(props) =>
     props.$disabled &&
     css`
-    width: 100%;
-    height: 100%;
-    z-index: ${({ theme }) => theme.zIndex.overlay}
-    width: 100%;
-    height: 100%;
-    background-color: ${({ theme }) => theme.colors.disable};
+      width: 100%;
+      height: 100%;
+      z-index: ${({ theme }) => theme.zIndex.overlay};
+      width: 100%;
+      height: 100%;
+      background-color: ${({ theme }) => theme.colors.disable};
 
-    cursor: not-allowed;
+      cursor: not-allowed;
 
       // 스피너를 보여주기 위한 로딩 오버레이 스타일
       &::after {
-        content: '';
+        content: "";
         display: block;
         position: absolute;
         top: 50%;
@@ -136,14 +130,12 @@ const PaymentPage: React.FC = () => {
             id: 1,
           }))
         );
-        // id를 추가안하면 lint에서 빌드에러 떠서 고정값으로 채우게 합니다.
       } catch (error) {
         console.error("장바구니 데이터를 가져오는데 실패했습니다.", error);
       }
     };
     fetchCartData();
-  }, [dispatch])
-
+  }, [dispatch]);
 
   // 결제함수
 
@@ -152,21 +144,22 @@ const PaymentPage: React.FC = () => {
       let tid = "";
       dispatch(setLoading());
 
-
-      sessionStorage.setItem('itemIds',
-        JSON.stringify(items
-          .filter(item => item.selected)
-          .map(item => item.cartId)
-
+      sessionStorage.setItem(
+        "itemIds",
+        JSON.stringify(
+          items.filter((item) => item.selected).map((item) => item.cartId)
         )
       );
-      sessionStorage.setItem('lectureIds',
-        JSON.stringify(items
-          .filter(item => item.selected)
-          .map(item => item.lectureId)
+      sessionStorage.setItem(
+        "lectureIds",
+        JSON.stringify(
+          items.filter((item) => item.selected).map((item) => item.lectureId)
         )
-      )
-      console.log('구매할 아이템', items.filter(item => item.selected).map(item => item.cartId));
+      );
+      console.log(
+        "구매할 아이템",
+        items.filter((item) => item.selected).map((item) => item.cartId)
+      );
 
       let response: paymentData;
       let stepUrl = "";
@@ -204,7 +197,6 @@ const PaymentPage: React.FC = () => {
         })
       );
 
-
       const popUp = window.open(
         stepUrl,
         "카카오페이 결제",
@@ -212,7 +204,6 @@ const PaymentPage: React.FC = () => {
       ) as Window;
 
       const checkPopupClosed = setInterval(() => {
-
         if (popUp.closed) {
           alert("결제창이 닫혔습니다. 결제를 완료해주세요.");
           dispatch(setPending());
@@ -225,62 +216,68 @@ const PaymentPage: React.FC = () => {
        **/
       /** 결제 성공시 이벤트리스너 (postMessage 받기) **/
 
-      window.addEventListener('message', async (event) => {
-        // 이벤트 보낸 오리진이 카카오결제창이라 다를 수도 있으니 안되면 삭제하세요 if문
+      window.addEventListener(
+        "message",
+        async (event) => {
+          // 이벤트 보낸 오리진이 카카오결제창이라 다를 수도 있으니 안되면 삭제하세요 if문
 
-        clearInterval(checkPopupClosed);
-        if (event.data.type === "fail") {
-          // 실패창 넘어가기
-          dispatch(setFailure())
-          navigate(PAGE_PATHS.PAYMENT.RESULT);
-          //  TODO 실패요청 백엔드로 보내기
-          return;
-        } else if (event.data.type === "cancel") {
-          // 취소창 넘어가기
-          dispatch(setCancelled())
-          navigate(PAGE_PATHS.PAYMENT.RESULT);
-          // TODO 취소요청 백엔드로 보내기
-          return;
-        } else {
-          const pgToken = event.data.pg_token
-          const tid = sessionStorage.getItem('tid');
-          console.log('pgToken 수신 : ', pgToken);
-          console.log('tid : ', tid);
-          if (pgToken && tid) {
+          clearInterval(checkPopupClosed);
+          if (event.data.type === "fail") {
+            // 실패창 넘어가기
+            dispatch(setFailure());
+            navigate(PAGE_PATHS.PAYMENT.RESULT);
+            //  TODO 실패요청 백엔드로 보내기
+            return;
+          } else if (event.data.type === "cancel") {
+            // 취소창 넘어가기
+            dispatch(setCancelled());
+            navigate(PAGE_PATHS.PAYMENT.RESULT);
+            // TODO 취소요청 백엔드로 보내기
+            return;
+          } else {
+            const pgToken = event.data.pg_token;
+            const tid = sessionStorage.getItem("tid");
+            console.log("pgToken 수신 : ", pgToken);
+            console.log("tid : ", tid);
+            if (pgToken && tid) {
+              const pendingCartIdString = sessionStorage.getItem("itemIds");
+              const pendingCartId = pendingCartIdString
+                ? JSON.parse(pendingCartIdString)
+                : [];
+              console.log("장바구니 아이디:", pendingCartId);
 
-            const pendingCartIdString = sessionStorage.getItem('itemIds');
-            const pendingCartId = pendingCartIdString ? JSON.parse(pendingCartIdString) : [];
-            console.log('장바구니 아이디:', pendingCartId);
+              const pendingLectureIdString =
+                sessionStorage.getItem("lectureIds");
+              const pendingLectureId = pendingLectureIdString
+                ? JSON.parse(pendingLectureIdString)
+                : [];
 
-            const pendingLectureIdString = sessionStorage.getItem('lectureIds');
-            const pendingLectureId = pendingLectureIdString ? JSON.parse(pendingLectureIdString) : [];
+              const cartIdList = pendingCartId.map((id: number) => ({
+                cartId: id,
+                lectureId: pendingLectureId[pendingCartId.indexOf(id)],
+              }));
+              console.log("cartIdList:", cartIdList);
+              const paymentResult = await postPaymentApprove({
+                token: pgToken,
+                tid: tid,
+                cartInfos: cartIdList,
+              });
 
-            const cartIdList = pendingCartId.map((id: number) => ({
-              cartId: id,
-              lectureId: pendingLectureId[pendingCartId.indexOf(id)]
-            }))
-            console.log('cartIdList : {}', cartIdList);
-            const paymentResult = await postPaymentApprove({
-              token: pgToken,
-              tid: tid,
-              cartInfos: cartIdList,
-            });
+              if (paymentResult === "결제가 완료되었습니다.") {
+                alert("결제가 완료되었습니다.");
 
-            if (paymentResult === "결제가 완료되었습니다.") {
-              alert("결제가 완료되었습니다.")
-
-              // 완료창 넘어가기
-              dispatch(setSuccess())
-              navigate(PAGE_PATHS.PAYMENT.RESULT);
-              return;
-            } else {
-              alert("결제가 실패하였습니다.")
-              // 실패창 넘어가기
-              dispatch(setFailure())
-              //  TODO 실패요청 백엔드로 보내기
-              navigate(PAGE_PATHS.PAYMENT.RESULT);
-              return;
-
+                // 완료창 넘어가기
+                dispatch(setSuccess());
+                navigate(PAGE_PATHS.PAYMENT.RESULT);
+                return;
+              } else {
+                alert("결제가 실패하였습니다.");
+                // 실패창 넘어가기
+                dispatch(setFailure());
+                //  TODO 실패요청 백엔드로 보내기
+                navigate(PAGE_PATHS.PAYMENT.RESULT);
+                return;
+              }
             }
           }
         },
