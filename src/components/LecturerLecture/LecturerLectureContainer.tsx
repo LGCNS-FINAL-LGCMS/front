@@ -3,6 +3,7 @@ import styled from "styled-components";
 import LectureCard from "../Common/LectureCard";
 import LectureCardSkeleton from "../LectureCardSkeleton/LectureCardSkeleton";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   fetchLecturePage,
   resetPaginationState,
@@ -10,9 +11,9 @@ import {
 } from "../../redux/lectureData/lecturerPageData/lecturerPageData";
 import type { RootState, AppDispatch } from "../../redux/store";
 import type { Lecture } from "../../types/lecture";
-import img from "../../assets/Imgs/기본이미지.gif";
 import Pagination from "react-bootstrap/Pagination";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { PAGE_PATHS } from "../../constants/pagePaths";
 
 // 카드 그리드
 const CardsGrid = styled.div`
@@ -84,6 +85,7 @@ const CustomPaginationButton = styled(Pagination.First)`
 const PAGE_SIZE = 12;
 
 const LecturerLectureContainer: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
   const { lectureList, status, totalCount, currentPage, pageSize } =
@@ -91,8 +93,9 @@ const LecturerLectureContainer: React.FC = () => {
 
   const keyword = useSelector((state: RootState) => state.keyword.searchText);
   const category = useSelector((state: RootState) => state.category.category);
-
   const totalPages = Math.ceil(totalCount / pageSize);
+
+  console.log(lectureList);
 
   // keyword/category 바뀔 때 첫 페이지 로딩
   useEffect(() => {
@@ -131,19 +134,26 @@ const LecturerLectureContainer: React.FC = () => {
             <LectureCard
               key={item.lectureId}
               id={item.lectureId}
-              imageUrl={img}
+              imageUrl={item.thumbnail || ""}
               title={item.title ?? "제목 없음"}
               description={item.description ?? "설명이 없습니다"}
               lecturer={item.nickname ?? "강사 미정"}
               price={item.price}
               rating={item.averageStar}
-              progress={24}
               design={1}
               buttons={[
-                { label: "등록하기", onClick: () => alert(item.title) },
+                { label: "강의 등록하기", onClick: () => alert(item.title) },
                 {
-                  label: "자세히 보기",
-                  onClick: () => alert("자세히 보기 클릭"),
+                  label: "강의 정보 보기",
+                  onClick: () =>
+                    navigate(`${PAGE_PATHS.LECTURE_INFO}/${item.lectureId}`),
+                },
+                {
+                  label: "강좌 추가하기",
+                  onClick: () =>
+                    navigate(
+                      `${PAGE_PATHS.LESSON_MANAGEMENT}/${item.lectureId}`
+                    ),
                 },
               ]}
             />

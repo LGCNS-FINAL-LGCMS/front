@@ -8,7 +8,7 @@ import type { Qna } from "../../types/qna";
 interface PostQnaPayload {
   title: string;
   content: string;
-  lectureId: number;
+  lectureId: string;
 }
 
 interface PatchQnaPayload {
@@ -29,13 +29,12 @@ interface PutAnswerPayload {
   content: string;
 }
 
-export const getLectureQnas = async (lectureId: number): Promise<Qna[]> => {
+export const getLectureQnas = async (lectureId: string): Promise<Qna[]> => {
   try {
     const response = await apiClient.get(
       `${API_ENDPOINTS.QNA.GET}/${lectureId}`
     );
-    console.log(response);
-    return response.data;
+    return response.data.data.content;
   } catch (error: unknown) {
     const message = getErrorMessage(error, "현재 강의 Q&A 불러오기 실패");
     console.error("Get Q&As API error:", message);
@@ -99,7 +98,6 @@ export const patchQna = async ({
 export const getMemberQnas = async (): Promise<Qna[]> => {
   try {
     const response = await apiClient.get(`${API_ENDPOINTS.QNA.MEMBER.GET}`);
-    console.log(response);
     return response.data;
   } catch (error: unknown) {
     const message = getErrorMessage(error, "유저 Q&A 불러오기 실패");

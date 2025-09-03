@@ -22,16 +22,18 @@ import UpdateUserInfoPage from "./pages/UserMypage/UpdateUserInfoPage";
 import CreateLecturePage from "./pages/CreateLecturePage/CreateLecturePage";
 import LessonManagementPage from "./pages/LessonManagementPage/LessonManagementPage";
 import LecturerMainPage from "./pages/LecturerPage/LecturerMainPage";
+import LessonViewPage from "./pages/LessonViewPage/LessonViewPage";
+import QnaPage from "./pages/QnaPage/QnaPage";
+import FaqPage from "./pages/FaqPage/FaqPage";
+import LectureInfoPage from "./pages/LectureInfoPage/LectureInfoPage";
+import LecturerDashboardPage from "./pages/LecturerPage/LecturerDashboardPage";
 import LevelTestPage from "./pages/LevelTestPage/LevelTestPage";
 import LevelTestDashboardPage from "./pages/LevelTestPage/LevelTestDashboardPage";
-// =========== 페이지 임포트 ===========
 import PaymentResultPage from "./pages/PaymentPage/PaymentResultPage";
 import PaymentPage from "./pages/PaymentPage/PaymentPage";
 import PaymentSuccess from "./pages/PaymentPage/PaymentSuccess";
 import AdminPage from "./pages/AdminPage/AdminPage";
 import ProtectedRoute from "./components/Admin/ProtectedRoute";
-import QnaPage from "./pages/QnaPage/QnaPage";
-import FaqPage from "./pages/FaqPage/FaqPage";
 import StudentReportPage from "./pages/StudentReportPage/StudentReportPage";
 
 function App() {
@@ -146,7 +148,7 @@ function App() {
           />
 
           <Route
-            path={`${PAGE_PATHS.USER_PAGE.LECTURER}`}
+            path={`${PAGE_PATHS.USER_PAGE.LECTURER.MAIN}`}
             element={
               <Layout>
                 <LecturerMainPage />
@@ -172,7 +174,7 @@ function App() {
           />
 
           <Route
-            path={`${PAGE_PATHS.Lesson_Management}/:lactureId?`}
+            path={`${PAGE_PATHS.LESSON_MANAGEMENT}/:lectureId?`}
             element={
               <Layout>
                 <LessonManagementPage />
@@ -180,6 +182,14 @@ function App() {
             }
           />
 
+          <Route
+            path={`${PAGE_PATHS.LECTURE_INFO}/:lectureId`}
+            element={
+              <Layout>
+                <LectureInfoPage />
+              </Layout>
+            }
+          />
           <Route
             path={PAGE_PATHS.ADMIN}
             element={
@@ -199,11 +209,23 @@ function App() {
               </Layout>
             }
           />
+
+          <Route
+            path={PAGE_PATHS.USER_PAGE.LECTURER.DASHBOARD}
+            element={
+              <Layout>
+                <LecturerDashboardPage />
+              </Layout>
+            }
+          />
           {/* =========================== */}
 
           {/* 와이드 Layout */}
 
-          {/* =========================== */}
+          <Route
+            path={`${PAGE_PATHS.LESSON_VIEW}/:lectureId?`}
+            element={<LessonViewPage />}
+          />
           <Route
             path={`${PAGE_PATHS.PAYMENT.SUCCESS}`}
             element={<PaymentSuccess />}

@@ -70,7 +70,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage }) => {
       <IconButton
         title="나의 강좌"
         active={activePage === "my-courses"}
-        onClick={() => navigate(PAGE_PATHS.MY_COURSES)}
+        onClick={() => navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES)}
       >
         <FontAwesomeIcon icon={faBookOpen} />
         <IconLabel>나의 강좌</IconLabel>

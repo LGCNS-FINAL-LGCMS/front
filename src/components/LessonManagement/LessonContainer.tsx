@@ -6,7 +6,6 @@ import LessonConfirmModal from "../../components/LessonManagement/LessonConfirmM
 
 interface Props {
   lessons: Lesson[];
-  onUpdate: (id: string, updated: Partial<Lesson>) => void;
   onDelete: (id: string) => void;
   selectedIds: string[];
   setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>;
@@ -19,8 +18,6 @@ const Table = styled.div`
   width: 100%;
   background-color: ${({ theme }) => theme.colors.background_B};
   box-shadow: ${({ theme }) => theme.shadow.sm};
-
-  max-height: 500px;
   overflow-y: auto;
 `;
 
@@ -32,14 +29,14 @@ const ScrollableContainer = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.colors.header}; /* 스크롤바 색상 */
-    border-radius: 10px; /* 스크롤바 둥근 모서리 */
-    border: 2px solid ${({ theme }) => theme.colors.header}; /* 테두리 색상 */
+    background-color: ${({ theme }) => theme.colors.header};
+    border-radius: 10px;
+    border: 2px solid ${({ theme }) => theme.colors.header};
   }
 
   &::-webkit-scrollbar-track {
     background: ${({ theme }) => theme.colors.header};
-    border-radius: 10px; /* 트랙의 둥근 모서리 */
+    border-radius: 10px;
   }
 
   scrollbar-width: thin;
@@ -65,7 +62,6 @@ const HeaderRow = styled.div`
 
 const LessonContainer: React.FC<Props> = ({
   lessons,
-  onUpdate,
   onDelete,
   selectedIds,
   setSelectedIds,
@@ -97,16 +93,16 @@ const LessonContainer: React.FC<Props> = ({
       <ScrollableContainer>
         <HeaderRow>
           <div>순서</div>
-          <div>강의</div>
-          <div>날짜</div>
+          <div>강좌</div>
+          <div>생성 일자</div>
           <div>액션</div>
         </HeaderRow>
 
         {lessons.map((lesson, idx) => (
           <LessonCell
             key={lesson.id}
-            lesson={{ ...lesson, index: idx }}
-            onUpdate={onUpdate}
+            lesson={lesson}
+            index={idx}
             onEditClick={onEditClick}
             onDelete={handleDeleteClick}
             checked={selectedIds.includes(lesson.id)}
