@@ -13,7 +13,7 @@ export const API_ENDPOINTS = {
     CHECK_LECTURE_PURCHASED: "/lecturer/lecture/verify",
     INFO: "/member", //get
     UPDATE: "/member/change/info", // patch
-    CATEGORY_LIST: "/member/categories",
+    CATEGORY_LIST: "/student/member/categories",
   },
 
   LECTURER: {
