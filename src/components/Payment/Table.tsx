@@ -7,7 +7,7 @@ type TableVersion = 'v1' | 'v2';
 const tableBase = css`
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: auto;
 `;
 const thBase = css`
   padding: 12px 14px;

@@ -13,6 +13,7 @@ import {
   getLessonDetails,
   postLessonFiles,
 } from "../../api/Lesson/lessonAPI";
+import { getLectureById } from "../../api/LectureInfo/lectureInfoAPI";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -75,8 +76,8 @@ const LessonManagementPage = () => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isDataUpdated, setIsDataUpdated] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [lectureName, setLectureName] = useState<string>("");
 
-  console.log(lectureId);
   const handleDelete = (id: string) => {
     try {
       setLessons((prev) => prev.filter((lesson) => lesson.id !== id));
@@ -99,6 +100,8 @@ const LessonManagementPage = () => {
     const fetchLessons = async () => {
       try {
         const data = await getLessonDetails(lectureId);
+        const res = await getLectureById(lectureId);
+        setLectureName(res.lectureResponseDto.title);
         setLessons(data);
       } catch (error) {
         console.error("레슨 데이터를 불러오는 데 실패했습니다:", error);
@@ -157,7 +160,7 @@ const LessonManagementPage = () => {
   return (
     <PageWrapper>
       <Toolbar>
-        <Title>해당 강의 이름이 뜰 예정</Title>
+        <Title>{lectureName}</Title>
         <div>
           <IconButton
             onClick={() => {
