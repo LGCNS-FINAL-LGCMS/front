@@ -154,8 +154,16 @@ const SummaryComment = styled.p`
   margin: 0 auto;
 `;
 const EmptySummaryMessage = styled.p`
-  border: 2px solid ${(props) => props.theme.colors.gray_M};
-  max-width: 30%;
+  min-width: 30%;
+
+  background-color: white;
+  border: 1px solid ${(props) => props.theme.colors.card};
+  box-shadow: ${(props) => props.theme.shadow.lg};
+  font-size: ${(props) => props.theme.fontSize.contents.medium};
+
+  margin-top: 20px;
+  border-radius: 16px;
+  padding: 22px 24px;
 `;
 
 const FeedbackContainer = styled.div`
