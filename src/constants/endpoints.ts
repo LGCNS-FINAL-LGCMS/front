@@ -81,6 +81,9 @@ export const API_ENDPOINTS = {
     GET_QUESTIONS: "/student/leveltest/questions/generate",
     SUBMIT_ANSWERS: "/student/leveltest/answers/submit-all",
   },
+  STUDENT_REPORT: {
+    GET: "/student/leveltest/reports",
+  },
 
   PAYMENT: {
     CART: {
