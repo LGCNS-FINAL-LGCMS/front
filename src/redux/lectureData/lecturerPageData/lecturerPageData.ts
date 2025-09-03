@@ -5,10 +5,14 @@ import { API_ENDPOINTS } from "../../../constants/endpoints";
 import type { RootState } from "../../store";
 import type { Lecture as LectureType } from "../../../types/lecture";
 
+export interface LectureWithStatus extends LectureType {
+  status: string;
+}
+
 interface PaginationState {
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
-  lectureList: LectureType[];
+  lectureList: LectureWithStatus[];
   totalCount: number;
   currentPage: number;
   pageSize: number;
@@ -29,7 +33,7 @@ interface FetchParams {
 }
 
 export const fetchLecturePage = createAsyncThunk<
-  { content: LectureType[]; totalElements: number },
+  { content: LectureWithStatus[]; totalElements: number },
   FetchParams,
   { rejectValue: string; state: RootState }
 >("lecturerPagination/fetch", async (params, { rejectWithValue }) => {
@@ -41,17 +45,20 @@ export const fetchLecturePage = createAsyncThunk<
     if (response.data?.status === "OK") {
       const { content, totalElements } = response.data.data;
 
-      const lectures: LectureType[] = content.map((item: LectureType) => ({
-        lectureId: item.lectureId,
-        nickname: item.nickname || "",
-        description: item.description || "",
-        title: item.title || "",
-        price: item.price,
-        thumbnail: item.thumbnail,
-        averageStar: item.averageStar,
-        reviewCount: item.reviewCount,
-        information: item.information,
-      }));
+      const lectures: LectureWithStatus[] = content.map(
+        (item: LectureWithStatus) => ({
+          lectureId: item.lectureId,
+          nickname: item.nickname || "",
+          description: item.description || "",
+          title: item.title || "",
+          price: item.price,
+          thumbnail: item.thumbnail,
+          averageStar: item.averageStar,
+          reviewCount: item.reviewCount,
+          information: item.information,
+          status: item.status,
+        })
+      );
 
       return { content: lectures, totalElements };
     } else {
@@ -90,7 +97,7 @@ const lecturePaginationSlice = createSlice({
         (
           state,
           action: PayloadAction<{
-            content: LectureType[];
+            content: LectureWithStatus[];
             totalElements: number;
           }>
         ) => {

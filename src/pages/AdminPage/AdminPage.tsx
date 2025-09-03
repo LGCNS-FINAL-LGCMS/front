@@ -25,15 +25,16 @@ const PageTitle = styled.h1`
   margin: 0 0 16px 5vw;
 `;
 
-const formatDate = (date: Date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-
-
-  return `${year}-${month}-${day} ${hours}시`;
+const formatDate = (createdAt: number[]) => {
+  const [year, month, day, hour, minute] = createdAt;
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")} ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")};}`;
 };
+const isNewItem = (createdAt: number[]) => {
+  const [year, month, day, hour, minute] = createdAt;
+  const itemDate = new Date(year, month - 1, day, hour, minute);
+  const now = new Date();
+  return now.getTime() - itemDate.getTime() < 24 * 60 * 60 * 1000;
+}
 
 const AdminPage: React.FC = () => {
   const [list, setList] = useState<desirerResponseData[]>([
@@ -71,13 +72,15 @@ const AdminPage: React.FC = () => {
     const transformedList = list.map(item => {
       currentItemIds.add(item.memberId);
 
-      const isNewItem = new Date().getTime() - new Date(item.desireLecturerDate).getTime() < 24 * 60 * 60 * 1000;
+      const formatedDate = formatDate(item.desireLecturerDate);
+      // formatedDate가 오늘 날짜로부터 24시간 이내인지 확인
+
       return {
         id: item.memberId,
         requester: item.nickname,
-        requestedAt: formatDate(new Date(item.desireLecturerDate)),
+        requestedAt: formatedDate,
         status: item.desireLecturer ? '요청' : '승인됨',
-        isNew: isNewItem,
+        isNew: isNewItem(item.desireLecturerDate),
       };
     }) as InstructorRequest[];
 
