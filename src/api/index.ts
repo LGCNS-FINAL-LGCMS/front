@@ -122,7 +122,6 @@ apiClient.interceptors.response.use(
     const errorMessage = (error.response?.data as { message?: string })
       ?.message;
 
-    console.log(error);
     // --- 서버에서 강제 밴 ---
     if (
       error.response?.status === 401 &&
@@ -142,6 +141,12 @@ apiClient.interceptors.response.use(
     }
 
     // --- 토큰 갱신 로직 ---
+    console.log("토큰 갱신 로직");
+    console.log(error);
+    console.log(error.response?.status);
+    console.log(!originalRequest._retry);
+    console.log(originalRequest.url !== REFRESH_URL);
+    console.log(errorMessage);
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
