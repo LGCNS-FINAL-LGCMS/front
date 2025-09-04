@@ -19,6 +19,7 @@ import blueStar from "../../assets/images/levelTestPage/blueStar.svg";
 import blueStar_empty from "../../assets/images/levelTestPage/blueStar_empty.svg";
 
 import Button from "../../components/Common/Button";
+import LevelTestTimer from "../../components/LevelTestTimer/LevelTestTimer";
 
 const LevelTestContainer = styled.div`
   font-family: ${(props) => props.theme.font.primary};
@@ -28,57 +29,6 @@ const LevelTestContainer = styled.div`
   width: ${(props) => props.theme.size.containerMax};
   height: calc(100vh - ${(props) => props.theme.size.header.height} - 80px);
   padding: 10px 20px;
-`;
-
-const TimerSection = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 10px 20px;
-  border-radius: 16px;
-  margin-bottom: 20px;
-`;
-
-const TimeBox = styled.div<{ isWarning: number }>`
-  background: ${(props) => {
-    const { isWarning } = props;
-
-    if (isWarning <= 60) {
-      const progress = (60 - isWarning) / 50; // 10초일 때부터 빨간색
-      return `rgba(220, 53, 69, ${progress})`;
-    } else {
-      return props.theme.colors.border_Light;
-    }
-  }};
-
-  padding: 15px;
-  border-radius: 12px;
-  text-align: center;
-  min-width: 100px;
-  box-shadow: ${(props) => props.theme.shadow.md};
-  transition: ${(props) => props.theme.transition.default};
-  ${(props) =>
-    props.isWarning <= 60 &&
-    `animation: pulse 1s infinite;
-    
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-  `}
-`;
-
-const TimeNumber = styled.div`
-  font-size: ${(props) => props.theme.fontSize.title.min};
-  font-weight: bold;
-  color: ${(props) => props.theme.colors.border_Dark};
-`;
-
-const TimeLabel = styled.div`
-  font-size: ${(props) => props.theme.fontSize.small.min};
-  color: #666;
-  margin-top: 4px;
 `;
 
 const TestContainer = styled.div`
@@ -342,18 +292,9 @@ const LevelTestPage = () => {
   const [showAnswerCheckModal, setShowAnswerCheckModal] = useState(false); // 답변 없을 때 알림 모달
   const [showTimeoverModal, setShowTimeoverModal] = useState(false); // 타임오버 됐을 때 모달
 
-  const [seconds, setSeconds] = useState(30 * 60); // 30분
-
-  const getTimeDisplay = () => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-
-    return {
-      hours: hours.toString().padStart(2, "0"),
-      minutes: minutes.toString().padStart(2, "0"),
-      seconds: secs.toString().padStart(2, "0"),
-    };
+  //타이머 핸들러
+  const handleTimeOver = () => {
+    setShowTimeoverModal(true);
   };
 
   //난이도
@@ -369,18 +310,6 @@ const LevelTestPage = () => {
         return 1;
     }
   };
-
-  // 1초마다 1초씩 빼기(타이머)
-  useEffect(() => {
-    if (seconds > 0) {
-      const timer = setTimeout(() => {
-        setSeconds(seconds - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else {
-      setShowTimeoverModal(true);
-    }
-  }, [seconds]);
 
   //세션에서 문제 불러오기
   useEffect(() => {
@@ -479,7 +408,7 @@ const LevelTestPage = () => {
     }
   };
 
-  // 시험 제출 버튼
+  // 시험 제출 버튼(답변 비어있음 알림)
   const handleTestSuccess = () => {
     const checkAllAnswersCompleted = (): boolean => {
       const session = getSession();
@@ -526,25 +455,9 @@ const LevelTestPage = () => {
     setShowSuccessModal(false);
   };
 
-  const timeDisplay = getTimeDisplay();
-
   return (
     <LevelTestContainer>
-      <TimerSection>
-        <TimeBox isWarning={seconds}>
-          <TimeNumber>{timeDisplay.hours}</TimeNumber>
-          <TimeLabel>Hours</TimeLabel>
-        </TimeBox>
-        <TimeBox isWarning={seconds}>
-          <TimeNumber>{timeDisplay.minutes}</TimeNumber>
-          <TimeLabel>Minutes</TimeLabel>
-        </TimeBox>
-        <TimeBox isWarning={seconds}>
-          <TimeNumber>{timeDisplay.seconds}</TimeNumber>
-          <TimeLabel>Seconds</TimeLabel>
-        </TimeBox>
-      </TimerSection>
-
+      <LevelTestTimer onTimeover={handleTimeOver} />
       <TestContainer>
         <QuestionHeader>
           <QuestionInfo>
