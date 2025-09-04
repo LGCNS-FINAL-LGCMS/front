@@ -286,7 +286,7 @@ const LevelTestPage = () => {
     null
   ); //현재 문제
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // 문제 순서를 세션에서 인덱스로 관리
-  const [answerInput, setAnswerInput] = useState<string | null>(null); // 사용자가 적은 답변
+  const [answerInput, setAnswerInput] = useState<string>(""); // 사용자가 적은 답변
 
   const [showSuccessModal, setShowSuccessModal] = useState(false); // 성공 모달 띄우기
   const [showAnswerCheckModal, setShowAnswerCheckModal] = useState(false); // 답변 없을 때 알림 모달
@@ -329,8 +329,13 @@ const LevelTestPage = () => {
 
   //input 입력시 세션에 데이터 바로 저장
   const handleAnswerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setAnswerInput(e.target.value);
-    saveCurrentAnswer();
+    const newValue = e.target.value;
+    setAnswerInput(newValue);
+
+    if (currentQuestion) {
+      const answerToSave = newValue ? newValue.trim() : "";
+      saveAnswer(currentQuestion.id, answerToSave);
+    }
   };
 
   // 버튼 눌렀을 때 문제 렌더링
@@ -340,17 +345,9 @@ const LevelTestPage = () => {
       setCurrentQuestion(newQuestion);
 
       const savedAnswer = getAnswer(newQuestion.id);
-      setAnswerInput(savedAnswer);
+      setAnswerInput(savedAnswer || "");
     }
   }, [currentQuestionIndex, allQuestions]);
-
-  // 답변 저장 함수
-  const saveCurrentAnswer = () => {
-    if (currentQuestion) {
-      const answerToSave = answerInput ? answerInput.trim() : "";
-      saveAnswer(currentQuestion.id, answerToSave);
-    }
-  };
 
   //페이지네이션_저장된 답변확인-> 채워진 아이콘(boolean)
   const hasAnswerForQuestion = (questionId: number): boolean => {
@@ -514,7 +511,7 @@ const LevelTestPage = () => {
                   <img src={pagenationButton} alt={`문제 ${index + 1}`} />
                   <NumberOverlay hasAnswer={hasAnswer}>
                     {index + 1}
-                  </NumberOverlay>{" "}
+                  </NumberOverlay>
                 </QuestionNavButton>
               );
             })}
@@ -522,7 +519,7 @@ const LevelTestPage = () => {
 
           <NextButton
             onClick={handleNext}
-            disabled={currentQuestionIndex === 9}
+            disabled={currentQuestionIndex >= allQuestions.length - 1}
           >
             <img src={nextButton} alt="다음" />
           </NextButton>
