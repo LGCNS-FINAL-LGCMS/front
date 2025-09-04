@@ -48,6 +48,7 @@ export const fetchStudentLecturePage = createAsyncThunk<
         description: item.description || "",
         title: item.title || "",
         price: item.price,
+        progress: item.progress || 0,
         thumbnail: item.thumbnail,
         averageStar: item.averageStar,
         reviewCount: item.reviewCount,
