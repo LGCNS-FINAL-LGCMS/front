@@ -3,7 +3,7 @@ import styled from "styled-components";
 import LectureCard from "../Common/LectureCard";
 import LectureCardSkeleton from "../LectureCardSkeleton/LectureCardSkeleton";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom"; // ← 추가!
+import { useNavigate } from "react-router-dom";
 
 import {
   fetchStudentLecturePage,
@@ -12,7 +12,6 @@ import {
 } from "../../redux/lectureData/studentPageData/studentPageDataSlice";
 import type { RootState, AppDispatch } from "../../redux/store";
 import type { Lecture } from "../../types/lecture";
-import img from "../../assets/Imgs/기본이미지.gif";
 import Pagination from "react-bootstrap/Pagination";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { PAGE_PATHS } from "../../constants/pagePaths";
@@ -141,22 +140,25 @@ const StudnetLectureContainer: React.FC = () => {
             <LectureCard
               key={item.lectureId}
               id={item.lectureId}
-              imageUrl={img}
+              imageUrl={item.thumbnail ?? ""}
               title={item.title ?? "제목 없음"}
               description={item.description ?? "설명이 없습니다"}
               lecturer={item.nickname ?? "강사 미정"}
               price={item.price}
               rating={item.averageStar}
-              progress={24}
+              reviewCount={item.reviewCount ?? 0}
+              progress={item.progress ?? 0}
               design={1}
               buttons={[
                 {
                   label: "강의 상세보기",
-                  onClick: () => handleLecturePageButton,
+                  onClick: () =>
+                    navigate(`${PAGE_PATHS.LECTURE_INFO}/${item.lectureId}`),
                 },
                 {
                   label: "강의 보러가기",
-                  onClick: () => handleLessonPageButton,
+                  onClick: () =>
+                    navigate(`${PAGE_PATHS.LESSON_VIEW}/${item.lectureId}`),
                 },
               ]}
             />

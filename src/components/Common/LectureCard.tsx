@@ -20,6 +20,7 @@ interface LectureCardProps {
   progress?: number;
   rating?: number | null;
   price?: number;
+  reviewCount?: number;
   onCardClick?: () => void;
 }
 
@@ -28,7 +29,8 @@ const designStyles = {
     background-color: #fff;
     border: 1px solid #e5e5e5;
     border-radius: 3px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 9px 16px rgba(159, 162, 191, 0.08),
+      0px 2px 2px rgba(159, 162, 191, 0.12);
   `,
   2: css`
     background-color: ${({ theme }) => theme.colors.header};
@@ -172,6 +174,11 @@ const RatingWrapper = styled.div`
   gap: 4px;
 `;
 
+const ReviewCount = styled.span`
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.text_D};
+`;
+
 const Star = styled.span`
   color: #ffcc00;
   font-size: 1rem;
@@ -195,6 +202,7 @@ const LectureCard: React.FC<LectureCardProps> = ({
   buttons = [],
   progress,
   rating,
+  reviewCount,
   price,
   onCardClick,
 }) => {
@@ -224,7 +232,7 @@ const LectureCard: React.FC<LectureCardProps> = ({
       }}
     >
       <ImageWrapper>
-        <Image src={imageUrl} alt={title} />
+        {imageUrl && <Image src={imageUrl} alt={title} />}
       </ImageWrapper>
 
       {progress !== undefined && progress >= 0 && progress <= 100 && (
@@ -244,11 +252,16 @@ const LectureCard: React.FC<LectureCardProps> = ({
               <Star key={idx}>★</Star>
             ))}
             {rating % 1 !== 0 && <Star>☆</Star>}
-            <span>({rating})</span>
+            {rating % 1 !== 0 && <span>({rating?.toFixed(1)})</span>}
+            {reviewCount != null && reviewCount > 0 && (
+              <ReviewCount>({reviewCount}개 리뷰)</ReviewCount>
+            )}
           </RatingWrapper>
         )}
 
-        {price !== undefined && <Price>{price.toLocaleString()} 원</Price>}
+        {(price !== null || price !== null) && (
+          <Price>{price?.toLocaleString()} 원</Price>
+        )}
       </Content>
 
       {limitedButtons.length > 0 && (

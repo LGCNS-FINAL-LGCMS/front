@@ -143,6 +143,7 @@ const LecturerLectureContainer: React.FC = () => {
               price={item.price}
               rating={item.averageStar}
               design={1}
+              reviewCount={item.reviewCount ?? 0}
               buttons={[
                 ...(item.status !== "APPROVED"
                   ? [
