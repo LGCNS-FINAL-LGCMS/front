@@ -117,15 +117,6 @@ const StudnetLectureContainer: React.FC = () => {
     );
   };
 
-  //강의 상세 페이지 버튼
-  const handleLecturePageButton = () => {
-    navigate(PAGE_PATHS.HOME);
-  };
-  // lesson 보러가기
-  const handleLessonPageButton = () => {
-    navigate(PAGE_PATHS.HOME);
-  };
-
   return (
     <>
       {status === "loading" ? (
