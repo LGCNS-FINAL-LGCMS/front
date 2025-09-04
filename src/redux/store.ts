@@ -30,9 +30,9 @@ const rootReducer = combineReducers({
   auth: authSlice,
   guide: guideBotSlice,
   payment: PaymentSlice,
-currentLecture: currentLectureSlice,
+  currentLecture: currentLectureSlice,
   currentQna: currentQnaSlice,
-  faq: faqListSlice,
+  faqData: faqListSlice,
 });
 
 // persist 설정 타입 지정

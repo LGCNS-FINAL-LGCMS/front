@@ -1,9 +1,10 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { type FaqItem } from "../../redux/FaqData/FaqDataSlice";
+import { fetchFaqList, type FaqItem } from "../../redux/FaqData/FaqDataSlice";
 import QnaCard from "../../components/Common/QnaCard";
-import type { RootState } from "../../redux/store";
+import type { AppDispatch, RootState } from "../../redux/store";
+import { useEffect } from "react";
 
 const FAQContainer = styled.div`
   font-family: ${(props) => props.theme.font.primary};
@@ -30,13 +31,19 @@ const FaqTitle = styled.div`
 `;
 
 const FaqPage = () => {
-  const faqList = useSelector((state: RootState) => state.faq.faqList);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const faqListData = useSelector((state: RootState) => state.faqData.faqList);
+
+  useEffect(() => {
+    dispatch(fetchFaqList());
+  }, [dispatch]);
 
   return (
     <FAQContainer>
       <FaqTitle>FAQ</FaqTitle>
       <FaqCardSection>
-        {faqList.map((faq: FaqItem) => (
+        {faqListData.map((faq: FaqItem) => (
           <QnaCard
             key={faq.id}
             id={faq.id}
