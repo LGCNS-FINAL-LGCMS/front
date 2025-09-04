@@ -33,7 +33,7 @@ const rootReducer = combineReducers({
   payment: PaymentSlice,
   currentLecture: currentLectureSlice,
   currentQna: currentQnaSlice,
-  faq: faqListSlice,
+  faqData: faqListSlice,
   studentReport: studentReportSlice,
 });
 
