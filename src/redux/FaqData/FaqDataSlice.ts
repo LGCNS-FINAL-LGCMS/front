@@ -1,4 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import apiClient from "../../api";
 import { API_ENDPOINTS } from "../../constants/endpoints";
 
@@ -14,21 +18,6 @@ interface FaqState {
   error: string | null;
 }
 
-export const faqList = createAsyncThunk("faqlist/fetch", async () => {
-  try {
-    const response = await apiClient.get(API_ENDPOINTS.FAQ.GET);
-
-    if (response.data?.status === "OK") {
-      return response.data.data;
-    } else {
-      throw new Error(response.data.message || "FAQ 서버 연결 안됨");
-    }
-  } catch (error) {
-    console.log("FAQ 데이터를 불러올 수 없습니다.", error);
-    throw error;
-  }
-});
-
 //slice
 const initialState: FaqState = {
   faqList: [],
@@ -36,8 +25,36 @@ const initialState: FaqState = {
   error: null,
 };
 
+export const fetchFaqList = createAsyncThunk<
+  { content: FaqItem[] },
+  void,
+  { rejectValue: string }
+>("faqlist/fetch", async (_, { rejectWithValue }) => {
+  try {
+    const response = await apiClient.get(API_ENDPOINTS.FAQ.GET);
+
+    if (response.data?.status === "OK") {
+      const { content } = response.data.data;
+      const faqListData: FaqItem[] = content.map((item: FaqItem) => ({
+        id: item.id,
+        question: item.question || "",
+        answer: item.answer || "",
+      }));
+
+      return { content: faqListData };
+    } else {
+      throw new Error(
+        response.data.message || "FAQ 데이터를 불러오지 못했습니다."
+      );
+    }
+  } catch (error) {
+    console.log("FAQ Api 연동 실패", error);
+    return rejectWithValue("FAQ 데이터 요청 실패");
+  }
+});
+
 const faqListSlice = createSlice({
-  name: "faq",
+  name: "faqListData",
   initialState,
   reducers: {
     resetFaqList: (state) => {
@@ -51,16 +68,24 @@ const faqListSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(faqList.pending, (state) => {
+      .addCase(fetchFaqList.pending, (state) => {
         state.status = "loading";
         state.error = null;
       })
-      .addCase(faqList.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.faqList = action.payload; // FAQ 목록 저장
-        state.error = null;
-      })
-      .addCase(faqList.rejected, (state, action) => {
+      .addCase(
+        fetchFaqList.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            content: FaqItem[];
+          }>
+        ) => {
+          state.status = "succeeded";
+          state.faqList = action.payload.content;
+          state.error = null;
+        }
+      )
+      .addCase(fetchFaqList.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "FAQ를 불러올 수 없음";
       });
