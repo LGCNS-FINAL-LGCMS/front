@@ -54,6 +54,37 @@ export interface LineChartData {
   }[];
 }
 
+export interface LecturerReport {
+  reviewAnalysisResult: string;
+  qnaAnalysisResult: string;
+  overallAnalysisResult: string;
+}
+
+export const getLecturerReportData = async () => {
+  try {
+    const sessionData = getLecturerReportFromSession();
+    if (sessionData) return sessionData;
+
+    const response = await apiClient.get(
+      API_ENDPOINTS.CONSULTING.GET_LECTURER_REPORT
+    );
+    console.log("Response:", response);
+
+    const lecturerReport: LecturerReport = {
+      reviewAnalysisResult: response.data.data.reviewAnalysisResult,
+      qnaAnalysisResult: response.data.data.qnaAnalysisResult,
+      overallAnalysisResult: response.data.data.overallAnalysisResult,
+    };
+
+    sessionStorage.setItem("lecturerReport", JSON.stringify(lecturerReport));
+    return getLecturerReportFromSession();
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, "강사 레포트 조회 실패");
+    console.error("Consulting Report error:", message);
+    throw new Error(message);
+  }
+};
+
 export const getDashboardData = async () => {
   try {
     const sessionData = getDashboardFromSession();
@@ -90,6 +121,17 @@ export const getDashboardFromSession = () => {
   } catch (error: unknown) {
     console.log("세션데이터를 가져오지 못했습니다.", error);
     sessionStorage.removeItem("lecturerDashboard");
+    return null;
+  }
+};
+
+const getLecturerReportFromSession = () => {
+  try {
+    const data = sessionStorage.getItem("lecturerReport");
+    return data ? JSON.parse(data) : null;
+  } catch (error: unknown) {
+    console.log("세션데이터를 가져오지 못했습니다.", error);
+    sessionStorage.removeItem("lecturerReport");
     return null;
   }
 };
