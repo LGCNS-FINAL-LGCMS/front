@@ -3,8 +3,7 @@ import styled from "styled-components";
 import LectureCard from "../Common/LectureCard";
 import LectureCardSkeleton from "../LectureCardSkeleton/LectureCardSkeleton";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom"; // ← 추가!
-
+import { useNavigate } from "react-router-dom";
 import {
   fetchStudentLecturePage,
   resetPaginationState,
@@ -12,7 +11,6 @@ import {
 } from "../../redux/lectureData/studentPageData/studentPageDataSlice";
 import type { RootState, AppDispatch } from "../../redux/store";
 import type { Lecture } from "../../types/lecture";
-import img from "../../assets/Imgs/기본이미지.gif";
 import Pagination from "react-bootstrap/Pagination";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { PAGE_PATHS } from "../../constants/pagePaths";
@@ -92,7 +90,6 @@ const StudnetLectureContainer: React.FC = () => {
 
   const { lectureList, status, totalCount, currentPage, pageSize } =
     useSelector((state: RootState) => state.studentLectureData);
-
   const totalPages = Math.ceil(totalCount / pageSize);
 
   // keyword/category 바뀔 때 첫 페이지 로딩
@@ -118,15 +115,6 @@ const StudnetLectureContainer: React.FC = () => {
     );
   };
 
-  //강의 상세 페이지 버튼
-  const handleLecturePageButton = () => {
-    navigate(PAGE_PATHS.HOME);
-  };
-  // lesson 보러가기
-  const handleLessonPageButton = () => {
-    navigate(PAGE_PATHS.HOME);
-  };
-
   return (
     <>
       {status === "loading" ? (
@@ -138,28 +126,33 @@ const StudnetLectureContainer: React.FC = () => {
       ) : (
         <CardsGrid>
           {lectureList.map((item: Lecture) => (
-            <LectureCard
-              key={item.lectureId}
-              id={item.lectureId}
-              imageUrl={img}
-              title={item.title ?? "제목 없음"}
-              description={item.description ?? "설명이 없습니다"}
-              lecturer={item.nickname ?? "강사 미정"}
-              price={item.price}
-              rating={item.averageStar}
-              progress={24}
-              design={1}
-              buttons={[
-                {
-                  label: "강의 상세보기",
-                  onClick: () => handleLecturePageButton,
-                },
-                {
-                  label: "강의 보러가기",
-                  onClick: () => handleLessonPageButton,
-                },
-              ]}
-            />
+            <>
+              <LectureCard
+                key={item.lectureId}
+                id={item.lectureId}
+                imageUrl={item.thumbnail ?? ""}
+                title={item.title ?? "제목 없음"}
+                description={item.description ?? "설명이 없습니다"}
+                lecturer={item.nickname ?? "강사 미정"}
+                price={item.price}
+                rating={item.averageStar}
+                reviewCount={item.reviewCount ?? 0}
+                progress={item.progress ?? 10}
+                design={1}
+                buttons={[
+                  {
+                    label: "강의 상세보기",
+                    onClick: () =>
+                      navigate(`${PAGE_PATHS.LECTURE_INFO}/${item.lectureId}`),
+                  },
+                  {
+                    label: "강의 보러가기",
+                    onClick: () =>
+                      navigate(`${PAGE_PATHS.LESSON_VIEW}/${item.lectureId}`),
+                  },
+                ]}
+              />
+            </>
           ))}
         </CardsGrid>
       )}
