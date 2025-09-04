@@ -58,7 +58,7 @@ interface TimerProps {
 }
 
 const LevelTestTimer = memo(
-  ({ onTimeover, initialTime = 1 * 60 }: TimerProps) => {
+  ({ onTimeover, initialTime = 30 * 60 }: TimerProps) => {
     const [seconds, setSeconds] = useState(initialTime);
 
     const getTimeDisplay = () => {
