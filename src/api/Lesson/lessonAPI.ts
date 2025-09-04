@@ -136,3 +136,49 @@ export const getLessonSectionData = async (lectureId: string) => {
     throw new Error(message);
   }
 };
+
+export const postLessonProgress = async (
+  lectureId: string,
+  lessonId: string,
+  playtime: number
+) => {
+  try {
+    const response = await apiClient.post(
+      `${API_ENDPOINTS.LESSON.PROGRESS.POST}`,
+      {
+        lectureId,
+        lessonId,
+        playtime,
+      }
+    );
+    console.log("Post Lesson Progress Data Response:", response);
+    return response.data.data;
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, "레슨 진도율 저장 실패");
+    console.error("Post Lesson Progress API error:", message);
+    throw new Error(message);
+  }
+};
+
+export const patchLessonProgress = async (
+  lectureId: string,
+  lessonId: string,
+  playtime: number
+) => {
+  if (playtime < 1) return;
+  try {
+    const response = await apiClient.patch(
+      `${API_ENDPOINTS.LESSON.PROGRESS.PATCH}`,
+      {
+        lectureId,
+        lessonId,
+        playtime,
+      }
+    );
+    return response.data.data;
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, "레슨 진도율 업데이트 실패");
+    console.error("Patch Lesson Progress API error:", message);
+    throw new Error(message);
+  }
+};
