@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import {
   faBookOpen,
-  faFileAlt,
   faChartLine,
   faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
@@ -74,15 +73,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage }) => {
       >
         <FontAwesomeIcon icon={faBookOpen} />
         <IconLabel>나의 강좌</IconLabel>
-      </IconButton>
-
-      <IconButton
-        title="레포트"
-        active={activePage === "report"}
-        onClick={() => navigate(PAGE_PATHS.USER_PAGE.STUDENT.REPORT)}
-      >
-        <FontAwesomeIcon icon={faFileAlt} />
-        <IconLabel>레포트</IconLabel>
       </IconButton>
 
       <IconButton
