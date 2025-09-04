@@ -3,31 +3,37 @@ import {
   type ChangeEvent,
   type KeyboardEvent,
   type MouseEvent,
+  useCallback,
+  useEffect,
 } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faComment } from "@fortawesome/free-solid-svg-icons";
-import type { Qna } from "../../types/qna";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../redux/store";
+import {
+  faArrowRight,
+  faComment,
+  faPen,
+} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { PAGE_PATHS } from "../../constants/pagePaths";
 import {
   deleteQna,
+  getQnaById,
   patchQna,
   postAnswer,
   putAnswer,
 } from "../../api/Qna/qnaAPI";
+import type { Qna, Answer } from "../../types/qna";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60px 20px;
+  padding: 20px 20px;
   font-family: ${({ theme }) => theme.font.primary};
   color: ${({ theme }) => theme.colors.text_D};
   background-color: ${({ theme }) => theme.colors.background_B};
-  min-height: calc(100vh - ${({ theme }) => theme.size.header.height} - 50px);
+  min-height: calc(100vh - ${({ theme }) => theme.size.header.height} - 100px);
 `;
 
 const Container = styled.div`
@@ -106,6 +112,8 @@ const TextButton = styled.button`
   font-weight: 500;
   cursor: pointer;
   transition: color 0.2s;
+  padding: 0px 10px;
+
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
   }
@@ -212,7 +220,7 @@ const AnswerItem = styled.li`
   padding: 18px 24px;
   background-color: ${({ theme }) => theme.colors.border_Light};
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: ${({ theme }) => theme.shadow.md};
   font-size: ${({ theme }) => theme.fontSize.body.min};
 `;
 
@@ -272,46 +280,47 @@ const ButtonGroupModal = styled.div`
   margin-top: 24px;
 `;
 
-const qnaInitial: Qna = {
-  id: 2,
-  title: "React 상태 관리 관련 질문",
-  content: "Redux를 써야 할지, Recoil을 써야 할지 고민입니다.",
-  answers: [
-    {
-      answerId: 1,
-      content: "작은 프로젝트면 Recoil, 큰 프로젝트면 Redux 추천합니다.",
-    },
-    {
-      answerId: 2,
-      content: "작은 프로젝트면 Recoil, 큰 프로젝트면 Redux 추천합니다.",
-    },
-    {
-      answerId: 3,
-      content: "작은 프로젝트면 Recoil, 큰 프로젝트면 Redux 추천합니다.",
-    },
-  ],
-};
+export interface ExtendedQna extends Qna {
+  createdAt: number[];
+  answer: Answer[];
+}
 
 const QnaDetailPage = () => {
   const navigate = useNavigate();
-
-  const [qna, setQna] = useState<Qna>(qnaInitial);
+  const [qna, setQna] = useState<ExtendedQna>();
   const [newAnswer, setNewAnswer] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [editTitle, setEditTitle] = useState(qna.title);
-  const [editContent, setEditContent] = useState(qna.content);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [confirmAction, setConfirmAction] = useState<
     "delete" | "edit" | "editAnswer" | null
   >(null);
   const [editingAnswerId, setEditingAnswerId] = useState<number | null>(null);
   const [editAnswerContent, setEditAnswerContent] = useState("");
+  const { lectureId } = useParams<{ lectureId: string }>();
+  const { qnaId } = useParams<{ qnaId: string }>();
+  const [editTitle, setEditTitle] = useState<string | undefined>("");
+  const [editContent, setEditContent] = useState<string | undefined>("");
 
-  const currentLecture = useSelector(
-    (state: RootState) => state.currentLecture.lecture
-  );
-  const currentUserId = useSelector((state: RootState) => state.auth.memberId);
-  const isAuthor = currentUserId === qna.id;
+  useEffect(() => {
+    if (qna) {
+      setEditTitle(qna.title);
+      setEditContent(qna.content);
+    }
+  }, [qna]);
+
+  const fetchQna = useCallback(async () => {
+    try {
+      const data = await getQnaById(qnaId);
+      setQna(data);
+      console.log(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [qnaId]);
+
+  useEffect(() => {
+    fetchQna();
+  }, [fetchQna, qnaId]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
     setNewAnswer(e.target.value);
@@ -320,22 +329,16 @@ const QnaDetailPage = () => {
     e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
   ) => {
     e.preventDefault();
-    if (!newAnswer.trim() || !currentLecture?.lectureId) return;
+    if (!newAnswer.trim() || !lectureId) return;
 
     try {
-      const addedAnswer = await postAnswer({
-        questionId: qna.id,
-        lectureId: currentLecture.lectureId,
+      await postAnswer({
+        questionId: qnaId,
+        lectureId: lectureId,
         content: newAnswer,
       });
-
-      // 로컬 상태에 새 답변 추가
-      setQna((prev) => ({
-        ...prev,
-        answers: [...prev.answers, addedAnswer],
-      }));
-
       setNewAnswer("");
+      await fetchQna();
     } catch (error) {
       console.error("답변 등록 실패:", error);
     }
@@ -344,12 +347,21 @@ const QnaDetailPage = () => {
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") handleAddAnswer(e);
   };
+  const formatDate = (createdAt: number[] | undefined) => {
+    if (!createdAt) return "날짜 정보 없음";
 
+    const [year, month, day] = createdAt;
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
+      2,
+      "0"
+    )}`;
+  };
   const handleEditQuestion = () => {
     setIsEditing(true);
   };
 
   const handleCancelEdit = () => {
+    if (qna === undefined) return;
     setIsEditing(false);
     setEditTitle(qna.title);
     setEditContent(qna.content);
@@ -371,37 +383,32 @@ const QnaDetailPage = () => {
   const handleConfirm = async () => {
     try {
       if (confirmAction === "edit") {
-        if (!qna?.id) throw new Error("수정할 질문 ID가 없습니다.");
+        if (!qnaId) throw new Error("수정할 질문 ID가 없습니다.");
+
         await patchQna({
-          questionId: qna.id,
+          questionId: qnaId,
           title: editTitle,
           content: editContent,
         });
-        setQna((prev) => ({ ...prev, title: editTitle, content: editContent }));
+
+        fetchQna();
         setIsEditing(false);
       } else if (confirmAction === "delete") {
-        if (!qna?.id) throw new Error("삭제할 질문 ID가 없습니다.");
-        await deleteQna(qna.id);
-        navigate(PAGE_PATHS.HOME);
+        if (!qnaId) throw new Error("삭제할 질문 ID가 없습니다.");
+
+        await deleteQna(qnaId);
+        navigate(`${PAGE_PATHS.LECTURE_INFO}/${lectureId}`);
       } else if (confirmAction === "editAnswer" && editingAnswerId !== null) {
         try {
-          if (!currentLecture?.lectureId)
-            throw new Error("강의 ID가 없습니다.");
+          if (!lectureId) throw new Error("강의 ID가 없습니다.");
 
           await putAnswer({
-            answerId: editingAnswerId,
-            lectureId: currentLecture.lectureId,
+            answerId: editingAnswerId.toString(),
+            lectureId: lectureId,
             content: editAnswerContent,
           });
 
-          setQna((prev) => ({
-            ...prev,
-            answers: prev.answers.map((ans) =>
-              ans.answerId === editingAnswerId
-                ? { ...ans, content: editAnswerContent }
-                : ans
-            ),
-          }));
+          fetchQna();
 
           setEditingAnswerId(null);
           setEditAnswerContent("");
@@ -417,6 +424,7 @@ const QnaDetailPage = () => {
     }
   };
 
+  const answerCount = qna?.answer.length || 0;
   return (
     <Wrapper>
       <Container>
@@ -438,16 +446,14 @@ const QnaDetailPage = () => {
             </>
           ) : (
             <>
-              <Title>{qna.title}</Title>
-              <Meta>작성일: 2025.08.19</Meta>
-              <Content>{qna.content}</Content>
+              <Title>{qna?.title}</Title>
+              <Meta>{formatDate(qna?.createdAt)}</Meta>
+              <Content>{qna?.content}</Content>
 
-              {isAuthor && (
-                <ButtonGroup>
-                  <TextButton onClick={handleEditQuestion}>수정</TextButton>
-                  <TextButton onClick={handleDeleteQuestion}>삭제</TextButton>
-                </ButtonGroup>
-              )}
+              <ButtonGroup>
+                <TextButton onClick={handleEditQuestion}>수정</TextButton>
+                <TextButton onClick={handleDeleteQuestion}>삭제</TextButton>
+              </ButtonGroup>
             </>
           )}
         </Header>
@@ -466,12 +472,11 @@ const QnaDetailPage = () => {
 
         <AnswerSection>
           <AnswerHeader>
-            <FontAwesomeIcon icon={faComment} /> {qna.answers.length}
+            <FontAwesomeIcon icon={faComment} /> {answerCount}
           </AnswerHeader>
-          {qna.answers.length > 0 ? (
+          {qna?.answer && qna.answer.length > 0 ? (
             <AnswerList>
-              {qna.answers.map((ans) => {
-                const isAnswerAuthor = currentUserId === ans.answerId;
+              {qna?.answer.map((ans) => {
                 const isEditingThisAnswer = editingAnswerId === ans.answerId;
 
                 return (
@@ -504,16 +509,14 @@ const QnaDetailPage = () => {
                     ) : (
                       <>
                         {ans.content}
-                        {isAnswerAuthor && (
-                          <TextButton
-                            onClick={() => {
-                              setEditingAnswerId(ans.answerId);
-                              setEditAnswerContent(ans.content);
-                            }}
-                          >
-                            수정
-                          </TextButton>
-                        )}
+                        <TextButton
+                          onClick={() => {
+                            setEditingAnswerId(ans.answerId);
+                            setEditAnswerContent(ans.content);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faPen} />
+                        </TextButton>
                       </>
                     )}
                   </AnswerItem>

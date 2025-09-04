@@ -12,19 +12,19 @@ interface PostQnaPayload {
 }
 
 interface PatchQnaPayload {
-  questionId: number;
+  questionId: string;
   title?: string;
   content?: string;
 }
 
 interface PostAnswerPayload {
-  questionId: number;
+  questionId: string | undefined;
   lectureId: string;
   content: string;
 }
 
 interface PutAnswerPayload {
-  answerId: number;
+  answerId: string;
   lectureId: string;
   content: string;
 }
@@ -38,6 +38,19 @@ export const getLectureQnas = async (lectureId: string): Promise<Qna[]> => {
   } catch (error: unknown) {
     const message = getErrorMessage(error, "현재 강의 Q&A 불러오기 실패");
     console.error("Get Q&As API error:", message);
+    throw new Error(message);
+  }
+};
+
+export const getQnaById = async (qnaId: string | undefined) => {
+  try {
+    const response = await apiClient.get(
+      `${API_ENDPOINTS.QNA.GET_DETAIL}/${qnaId}`
+    );
+    return response.data.data;
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, "id 기반 Q&A 불러오기 실패");
+    console.error("Get Q&A by Id API error:", message);
     throw new Error(message);
   }
 };
@@ -61,7 +74,7 @@ export const postQna = async ({
   }
 };
 
-export const deleteQna = async (questionId: number) => {
+export const deleteQna = async (questionId: string) => {
   try {
     const response = await apiClient.delete(
       `${API_ENDPOINTS.QNA.DELETE}/${questionId}`

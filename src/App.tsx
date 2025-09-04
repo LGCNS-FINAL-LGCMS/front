@@ -202,7 +202,7 @@ function App() {
           />
 
           <Route
-            path={`${PAGE_PATHS.QNA}/:qnaId?`}
+            path={`${PAGE_PATHS.QNA}/:lectureId?/:qnaId?`}
             element={
               <Layout>
                 <QnaPage />
