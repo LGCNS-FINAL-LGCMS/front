@@ -35,6 +35,7 @@ import PaymentSuccess from "./pages/PaymentPage/PaymentSuccess";
 import AdminPage from "./pages/AdminPage/AdminPage";
 import ProtectedRoute from "./components/Admin/ProtectedRoute";
 import StudentReportPage from "./pages/StudentReportPage/StudentReportPage";
+import LecturerReportPage from "./pages/LecturerPage/LecturerReportPage";
 
 function App() {
   return (
@@ -215,6 +216,15 @@ function App() {
             element={
               <Layout>
                 <LecturerDashboardPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={PAGE_PATHS.USER_PAGE.LECTURER.REPORT}
+            element={
+              <Layout>
+                <LecturerReportPage />
               </Layout>
             }
           />
