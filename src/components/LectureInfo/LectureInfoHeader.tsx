@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 // import { PAGE_PATHS } from "../../constants/pagePaths";
 import styled from "styled-components";
 import Button from "../Common/Button";
-import { theme } from "../../assets/styles/theme";
 import { postCartItem } from "../../api/Cart/cartAPI";
 import type { LectureResponse } from "../../api/LectureInfo/lectureInfoAPI";
 import { PAGE_PATHS } from "../../constants/pagePaths";
