@@ -260,7 +260,7 @@ const LessonViewPage: React.FC = () => {
     const lessonId = currentLesson.id;
 
     try {
-      if (progress === null) {
+      if (progress === 0) {
         await postLessonProgress(lectureId, lessonId, currentLesson.playtime);
         setProgress(playtime);
       } else {
