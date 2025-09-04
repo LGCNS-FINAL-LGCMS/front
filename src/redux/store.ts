@@ -19,12 +19,13 @@ import studentLecturePagenationSlice from "./lectureData/studentPageData/student
 import currentLectureSlice from "./lectureData/currentLectureData/currentLectureSlice";
 import currentQnaSlice from "./qna/currentQnaSlice";
 import faqListSlice from "./FaqData/FaqDataSlice";
+import studentReportSlice from "./StudentReport/StudentReportSlice";
 
 const rootReducer = combineReducers({
   keyword: keywordSlice,
   lectureData: lectureDataSlice,
   lecturerLectureData: lecturePaginationSlice,
-  studnetLectureData: studentLecturePagenationSlice,
+  studentLectureData: studentLecturePagenationSlice,
   token: tokenSlice,
   category: categorySlice,
   auth: authSlice,
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   currentLecture: currentLectureSlice,
   currentQna: currentQnaSlice,
   faqData: faqListSlice,
+  studentReport: studentReportSlice,
 });
 
 // persist 설정 타입 지정

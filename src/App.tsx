@@ -34,6 +34,7 @@ import PaymentPage from "./pages/PaymentPage/PaymentPage";
 import PaymentSuccess from "./pages/PaymentPage/PaymentSuccess";
 import AdminPage from "./pages/AdminPage/AdminPage";
 import ProtectedRoute from "./components/Admin/ProtectedRoute";
+import StudentReportPage from "./pages/StudentReportPage/StudentReportPage";
 
 function App() {
   return (
@@ -66,7 +67,7 @@ function App() {
           />
 
           <Route
-            path={PAGE_PATHS.USER_INFO}
+            path={PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO}
             element={
               <Layout>
                 <UpdateUserInfoPage />
@@ -88,6 +89,15 @@ function App() {
             element={
               <Layout>
                 <LevelTestPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path={`${PAGE_PATHS.USER_PAGE.STUDENT.REPORT}/:reportId?`}
+            element={
+              <Layout>
+                <StudentReportPage />
               </Layout>
             }
           />

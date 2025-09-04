@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import styled, { keyframes } from "styled-components";
-import { getCategorys } from "../../api/Category/categoryApi";
+import React from "react";
+import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCategory, setCategory } from "../../redux/Category/categorySlice";
 import type { RootState } from "../../redux/store";
@@ -49,26 +48,26 @@ const Button = styled.button<{ isActive: boolean }>`
   }
 `;
 
-const shimmer = keyframes`
-  0% { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
-`;
+// const shimmer = keyframes`
+//   0% { background-position: -400px 0; }
+//   100% { background-position: 400px 0; }
+// `;
 
-const SkeletonButton = styled.div<{ width: string }>`
-  width: ${({ width }) => width};
-  height: 36px; /* 버튼 높이와 동일 */
-  background: linear-gradient(
-    90deg,
-    #bfbfbfff 25%,
-    #9d9d9dff 50%,
-    #bfbfbfff 75%
-  );
-  background-size: 800px 100%;
-  animation: ${shimmer} 1.2s infinite;
-  border-radius: 4px;
-  margin: 0 12px;
-  overflow: hidden;
-`;
+// const SkeletonButton = styled.div<{ width: string }>`
+//   width: ${({ width }) => width};
+//   height: 36px; /* 버튼 높이와 동일 */
+//   background: linear-gradient(
+//     90deg,
+//     #bfbfbfff 25%,
+//     #9d9d9dff 50%,
+//     #bfbfbfff 75%
+//   );
+//   background-size: 800px 100%;
+//   animation: ${shimmer} 1.2s infinite;
+//   border-radius: 4px;
+//   margin: 0 12px;
+//   overflow: hidden;
+// `;
 
 interface CategoryButtonsProps {
   onCategoryClick: (keyword: string, category: string) => void;
@@ -77,37 +76,10 @@ interface CategoryButtonsProps {
 const CategoryButtons: React.FC<CategoryButtonsProps> = () => {
   const dispatch = useDispatch();
   const selectedCategory = useSelector((state: RootState) => state.category);
-
+  const myCategories = useSelector((state: RootState) => state.auth.categories);
   const selectedCategoryId = selectedCategory?.id
     ? Number(selectedCategory.id)
     : null;
-
-  const [categories, setCategories] = useState<{ name: string; id: number }[]>(
-    []
-  );
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    async function fetchCategories() {
-      setLoading(true);
-      try {
-        const data = await getCategorys();
-        setCategories(data);
-      } catch (error) {
-        console.log(error);
-        setCategories([
-          { name: "백엔드", id: 1 },
-          { name: "Spring", id: 2 },
-          { name: "리액트", id: 3 },
-          { name: "DB", id: 4 },
-          { name: "쿠버네티스", id: 5 },
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchCategories();
-  }, []);
 
   const handleButtonClick = (id: number, name: string) => {
     if (selectedCategoryId === id) {
@@ -119,19 +91,15 @@ const CategoryButtons: React.FC<CategoryButtonsProps> = () => {
 
   return (
     <CategorysWrapper>
-      {loading
-        ? Array.from({ length: 5 }).map((_, index) => (
-            <SkeletonButton key={index} width="100px" />
-          ))
-        : categories.map((category) => (
-            <Button
-              key={category.id}
-              isActive={selectedCategoryId === category.id}
-              onClick={() => handleButtonClick(category.id, category.name)}
-            >
-              {category.name}
-            </Button>
-          ))}
+      {myCategories.map((category) => (
+        <Button
+          key={category.id}
+          isActive={selectedCategoryId === category.id}
+          onClick={() => handleButtonClick(category.id, category.name)}
+        >
+          {category.name}
+        </Button>
+      ))}
     </CategorysWrapper>
   );
 };
