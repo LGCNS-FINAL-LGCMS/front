@@ -8,8 +8,6 @@ export const PAGE_PATHS = {
   HOME: "/home",
   LOGIN: "/login",
   SIGNUP: "/signup",
-  USER_INFO: "/userinfo",
-  REPORT: "/??",
   LEVEL_TEST: {
     DASHBOARD: "/member/student/leveltest/dashboard",
     TEST: "/member/student/leveltest",
@@ -25,6 +23,8 @@ export const PAGE_PATHS = {
     STUDENT: {
       MY_LECTURES: "/userpage/student",
       QNA: "/member/qna",
+      REPORT: "/member/student/report",
+      USER_INFO: "/userinfo",
     },
     LECTURER: {
       MAIN: "/userpage/lecturer",
