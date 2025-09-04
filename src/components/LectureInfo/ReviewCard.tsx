@@ -5,7 +5,7 @@ import type { Review } from "../../types/review";
 const Card = styled.div`
   padding: 16px;
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.colors.background_B};
+  background-color: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   margin-bottom: 12px;
 `;

@@ -194,6 +194,7 @@ const InfiniteScrollController: React.FC = () => {
             price={item.price}
             rating={item.averageStar}
             design={1}
+            reviewCount={item.reviewCount ?? 0}
             onCardClick={() =>
               navigate(`${PAGE_PATHS.LECTURE_INFO}/${item.lectureId}`)
             }
