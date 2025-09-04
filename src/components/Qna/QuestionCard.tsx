@@ -58,14 +58,15 @@ const CommentCount = styled.div`
 
 interface QuestionCardProps {
   qna: Qna;
+  lectureId: string | undefined;
 }
 
-const QuestionCard: React.FC<QuestionCardProps> = ({ qna }) => {
+const QuestionCard: React.FC<QuestionCardProps> = ({ qna, lectureId }) => {
   const navigate = useNavigate();
   const answerCount = qna.answers?.length ?? 0;
 
   const handleClick = (): void => {
-    navigate(`${PAGE_PATHS.QNA}/${qna.id}`);
+    navigate(`${PAGE_PATHS.QNA}/${lectureId}/${qna.id}`);
   };
 
   return (

@@ -56,15 +56,16 @@ export const API_ENDPOINTS = {
 
   QNA: {
     GET: "/lecture/qna", // /{lectureId}
+    GET_DETAIL: "/lecture/qna/detail",
     POST: "/student/lecture/qna",
-    DELETE: "/lecture/qna", // /{lectureId}
-    PATCH: "/lecture/qna", // /{lectureId}
+    DELETE: "/student/lecture/qna", // /{lectureId}
+    PATCH: "/student/lecture/qna", // /{lectureId}
 
     MEMBER: {
       GET: "/lecture/qna/member", // GET - 특정 멤버의 QNA
       LECTURE: {
-        POST: "/lecture/qna/answer", // /{questionId} 답변 작성
-        PUT: "/lecture/qna/answer", // /{answerId} 답변 수정
+        POST: "/lecturer/lecture/qna/answer", // /{questionId} 답변 작성
+        PUT: "/lecturer/lecture/qna/answer", // /{answerId} 답변 수정
       },
     },
   },

@@ -173,19 +173,20 @@ const LectureInfoPage = () => {
     }
   }, [lecture]);
 
-  useEffect(() => {
+  const fetchLectureData = async () => {
     if (!lectureId) return;
+    try {
+      const data = await getLectureById(lectureId);
+      setLecture(data);
+      setLessonList(data.lessonResponses);
+      setProgress(data?.progress ?? 0);
+    } catch (err) {
+      console.error("Failed to fetch lecture data", err);
+    }
+  };
 
-    (async () => {
-      try {
-        const data = await getLectureById(lectureId);
-        setLecture(data);
-        setLessonList(data.lessonResponses);
-        setProgress(data?.progress ?? 0);
-      } catch (err) {
-        console.error("Failed to fetch lecture", err);
-      }
-    })();
+  useEffect(() => {
+    fetchLectureData();
   }, [lectureId]);
 
   useEffect(() => {
@@ -193,7 +194,7 @@ const LectureInfoPage = () => {
 
     fetchQnaList();
     fetchReviews();
-  }, [lecture, fetchQnaList, fetchReviews]);
+  }, [lecture]);
 
   return (
     <Wrapper>
@@ -296,7 +297,7 @@ const LectureInfoPage = () => {
               }}
             >
               {qnaList.map((qna) => (
-                <QuestionCard key={qna.id} qna={qna} />
+                <QuestionCard key={qna.id} qna={qna} lectureId={lectureId} />
               ))}
             </div>
           )}
@@ -310,7 +311,8 @@ const LectureInfoPage = () => {
           try {
             if (lecture == null) return;
             await postReviewRequest(lecture.lectureResponseDto.lectureId, data);
-            fetchReviews();
+            await fetchReviews();
+            await fetchLectureData();
             setIsAddReviewModalOpen(false);
           } catch (err) {
             console.error(err);
