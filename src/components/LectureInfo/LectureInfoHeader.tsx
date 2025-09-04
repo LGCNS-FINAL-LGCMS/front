@@ -81,13 +81,46 @@ const ProgressWrapper = styled.div`
 const ProgressBar = styled.div<{ progress: number }>`
   width: ${({ progress }) => progress}%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    ${({ theme }) => theme.colors.primary} 0%,
-    ${({ theme }) => theme.colors.success} 100%
-  );
+  background: ${({ theme }) => theme.colors.primary};
   border-radius: 14px;
+  position: relative;
+  overflow: hidden;
   transition: width 0.3s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: rgba(116, 178, 255, 0.57);
+    transform: rotate(45deg);
+    animation: wave 3s ease-in-out infinite;
+  }
+
+  @keyframes wave {
+    0% {
+      left: -110%;
+    }
+    50% {
+      left: 50%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+`;
+
+const ProgressText = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  color: ${({ theme }) => theme.colors.text_D};
+  font-weight: 600;
+  font-size: ${({ theme }) => theme.fontSize.body.max};
 `;
 
 const ModalBackdrop = styled.div`
@@ -194,22 +227,7 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
             <ButtonRow>
               <div style={{ flex: 1 }}>
                 <ProgressWrapper>
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      color: theme.colors.text_D,
-                      fontWeight: 600,
-                    }}
-                  >
-                    진행률: {progress ?? 0}%
-                  </div>
+                  <ProgressText>진도율: {progress ?? 0}%</ProgressText>
                   <ProgressBar progress={progress ?? 0} />
                 </ProgressWrapper>
               </div>
@@ -234,14 +252,16 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
                     console.error("파일 다운로드 실패", err);
                   }
                 }}
-                design={1}
+                design={2}
+                fontWeight={700}
               />
               <Button
                 text="강의 들으러 가기"
                 onClick={() =>
                   navigate(`${PAGE_PATHS.LESSON_VIEW}/${lecture?.lectureId}`)
                 }
-                design={1}
+                design={2}
+                fontWeight={700}
               />
             </ButtonRow>
           )}

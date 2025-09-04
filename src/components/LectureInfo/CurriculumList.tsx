@@ -30,7 +30,7 @@ const Lesson = styled.div`
   padding: 0.75rem 1rem;
   border-radius: 12px;
   gap: 0.5rem;
-  background-color: ${({ theme }) => theme.colors.background_B};
+  background-color: white;
   box-shadow: ${({ theme }) => theme.shadow.sm};
   width: 100%;
   transition: ${({ theme }) => theme.transition.default};
