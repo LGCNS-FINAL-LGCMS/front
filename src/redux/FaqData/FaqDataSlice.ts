@@ -34,13 +34,13 @@ export const fetchFaqList = createAsyncThunk<
     const response = await apiClient.get(API_ENDPOINTS.FAQ.GET);
 
     if (response.data?.status === "OK") {
-      const { content } = response.data.data;
-      const faqListData: FaqItem[] = content.map((item: FaqItem) => ({
+      const faqData = response.data.data;
+      const faqListData: FaqItem[] = faqData.map((item: FaqItem) => ({
         id: item.id,
         question: item.question || "",
         answer: item.answer || "",
       }));
-
+      console.log();
       return { content: faqListData };
     } else {
       throw new Error(
