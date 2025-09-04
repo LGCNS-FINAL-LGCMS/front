@@ -5,7 +5,11 @@ import type { Level } from "hls.js";
 import type { ManifestParsedData } from "hls.js";
 import styled from "styled-components";
 import Button from "../../components/Common/Button";
-import { getLessonDetails } from "../../api/Lesson/lessonAPI";
+import {
+  getLessonDetails,
+  postLessonProgress,
+  patchLessonProgress,
+} from "../../api/Lesson/lessonAPI";
 import type { Lesson } from "../../types/lesson";
 
 const Container = styled.div`
@@ -150,11 +154,13 @@ const LessonViewPage: React.FC = () => {
   const [selectedLesson, setSelectedLesson] = useState<number | null>(null);
   const [lessonList, setLessonList] = useState<Lesson[] | null>(null);
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
+  const [progress, setProgress] = useState<number | null>(null);
 
   useEffect(() => {
     if (lessonList && lessonList.length > 0) {
       setSelectedLesson(0);
       setCurrentLesson(lessonList[0]);
+      setProgress(currentLesson?.progress ?? null);
     }
   }, [lessonList]);
 
@@ -163,10 +169,12 @@ const LessonViewPage: React.FC = () => {
 
     hlsRef.current?.destroy();
 
+    const hls = new Hls();
+
     if (Hls.isSupported()) {
-      const hls = new Hls();
       hls.loadSource(currentLesson.videoUrl);
       hls.attachMedia(videoRef.current);
+
       hls.on(
         Hls.Events.MANIFEST_PARSED,
         (_event, data: { levels: Level[] }) => {
@@ -178,6 +186,15 @@ const LessonViewPage: React.FC = () => {
     } else if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
       videoRef.current.src = currentLesson.videoUrl;
     }
+
+    if (videoRef.current && currentLesson.progress != null) {
+      videoRef.current.currentTime =
+        (currentLesson.playtime * currentLesson.progress) / 100;
+    }
+
+    return () => {
+      hlsRef.current?.destroy();
+    };
   }, [currentLesson]);
 
   useEffect(() => {
@@ -235,6 +252,95 @@ const LessonViewPage: React.FC = () => {
     if (secs === 0) return `${minutes}분`;
     return `${minutes}분 ${secs}초`;
   };
+
+  const saveProgress = async () => {
+    if (!currentLesson || !lectureId || !videoRef.current) return;
+
+    const playtime = Math.floor(videoRef.current.currentTime);
+    const lessonId = currentLesson.id;
+
+    try {
+      if (progress === null) {
+        await postLessonProgress(lectureId, lessonId, currentLesson.playtime);
+        setProgress(playtime);
+      } else {
+        await patchLessonProgress(lectureId, lessonId, playtime);
+      }
+      console.log("진도 저장 성공:", playtime);
+    } catch (error) {
+      console.error("진도 저장 실패:", error);
+    }
+  };
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleSeeked = () => {
+      if (!video.paused && !video.ended) {
+        saveProgress();
+      }
+    };
+
+    video.addEventListener("seeked", handleSeeked);
+
+    return () => {
+      video.removeEventListener("seeked", handleSeeked);
+    };
+  }, [currentLesson]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    let interval: NodeJS.Timeout | null = null;
+
+    const startProgressInterval = () => {
+      if (interval === null) {
+        interval = setInterval(() => {
+          if (!video.paused && !video.ended) {
+            saveProgress();
+          }
+        }, 5000);
+      }
+    };
+
+    const stopProgressInterval = () => {
+      if (interval !== null) {
+        clearInterval(interval);
+        interval = null;
+      }
+    };
+
+    video.addEventListener("play", startProgressInterval);
+    video.addEventListener("pause", stopProgressInterval);
+    video.addEventListener("ended", stopProgressInterval);
+
+    return () => {
+      video.removeEventListener("play", startProgressInterval);
+      video.removeEventListener("pause", stopProgressInterval);
+      video.removeEventListener("ended", stopProgressInterval);
+      stopProgressInterval();
+    };
+  }, [currentLesson]);
+
+  useEffect(() => {
+    const handleUnload = () => {
+      saveProgress();
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        saveProgress();
+      }
+    });
+
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+      document.removeEventListener("visibilitychange", handleUnload);
+    };
+  }, [currentLesson]);
 
   return (
     <Container>

@@ -52,6 +52,10 @@ export const API_ENDPOINTS = {
       TITLE: "/lesson/title",
       SECTION: "/lesson/section",
     },
+    PROGRESS: {
+      POST: "/student/lesson/progress",
+      PATCH: "/student/lesson/progress",
+    },
   },
 
   QNA: {
