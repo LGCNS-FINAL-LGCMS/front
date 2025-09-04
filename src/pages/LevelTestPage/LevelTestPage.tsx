@@ -270,7 +270,7 @@ const SubmitButton = styled.button`
   background: none;
   border: none;
   padding: 0;
-  margin: 0;
+  margin: 10px;
   cursor: pointer;
 
   & > * {
@@ -524,13 +524,12 @@ const LevelTestPage = () => {
             <img src={nextButton} alt="다음" />
           </NextButton>
         </ButtonContainer>
+        <SubmitContainer>
+          <SubmitButton type="button">
+            <Button text="시험 제출" onClick={handleTestSuccess} design={1} />
+          </SubmitButton>
+        </SubmitContainer>
       </TestContainer>
-
-      <SubmitContainer>
-        <SubmitButton type="button">
-          <Button text="시험 제출" onClick={handleTestSuccess} design={2} />
-        </SubmitButton>
-      </SubmitContainer>
 
       <InfoCheckModal
         isOpen={showSuccessModal}
