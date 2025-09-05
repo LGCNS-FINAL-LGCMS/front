@@ -154,13 +154,18 @@ const LessonViewPage: React.FC = () => {
   const [selectedLesson, setSelectedLesson] = useState<number | null>(null);
   const [lessonList, setLessonList] = useState<Lesson[] | null>(null);
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
-  const [progress, setProgress] = useState<number | null>(null);
 
   useEffect(() => {
     if (lessonList && lessonList.length > 0) {
       setSelectedLesson(0);
       setCurrentLesson(lessonList[0]);
-      setProgress(currentLesson?.progress ?? null);
+      if (currentLesson && currentLesson?.progress === null && lectureId) {
+        postLessonProgress(
+          lectureId,
+          currentLesson?.id,
+          currentLesson?.playtime
+        );
+      }
     }
   }, [lessonList]);
 
@@ -260,12 +265,7 @@ const LessonViewPage: React.FC = () => {
     const lessonId = currentLesson.id;
 
     try {
-      if (progress === 0) {
-        await postLessonProgress(lectureId, lessonId, currentLesson.playtime);
-        setProgress(playtime);
-      } else {
-        await patchLessonProgress(lectureId, lessonId, playtime);
-      }
+      await patchLessonProgress(lectureId, lessonId, playtime);
       console.log("진도 저장 성공:", playtime);
     } catch (error) {
       console.error("진도 저장 실패:", error);
