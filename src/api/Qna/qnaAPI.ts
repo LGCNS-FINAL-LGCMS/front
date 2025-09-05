@@ -111,7 +111,9 @@ export const patchQna = async ({
 export const getMemberQnas = async (): Promise<Qna[]> => {
   try {
     const response = await apiClient.get(`${API_ENDPOINTS.QNA.MEMBER.GET}`);
-    return response.data;
+
+    console.log(response);
+    return response.data.data;
   } catch (error: unknown) {
     const message = getErrorMessage(error, "유저 Q&A 불러오기 실패");
     console.error("Get User Q&As API error:", message);
