@@ -19,14 +19,6 @@ interface ReportList {
   reportId: number;
   totalScore: number;
   studentLevel: "HIGH" | "MEDIUM" | "LOW";
-  createdAt: string | number[];
-  category: string;
-}
-
-interface ApiReportList {
-  reportId: number;
-  totalScore: number;
-  studentLevel: "HIGH" | "MEDIUM" | "LOW";
   createdAt: number[];
   category: string;
 }
@@ -255,13 +247,7 @@ const LevelTestDashboardPage = () => {
         const response = await apiClient.get(API_ENDPOINTS.STUDENT_REPORT.GET);
         if (response.data.status === "OK") {
           if (response.data.data) {
-            const convertedReports = response.data.data.map(
-              (report: ApiReportList) => ({
-                ...report,
-                createdAt: formatReportDate(report.createdAt),
-              })
-            );
-            setReportList(convertedReports);
+            setReportList(response.data.data);
           } else {
             console.log("레포트 데이터 없음");
           }
@@ -290,15 +276,12 @@ const LevelTestDashboardPage = () => {
     }
   };
 
-  const formatReportDate = (dateArray: number[]) => {
-    const [year, month, day] = dateArray;
-    return new Date(year, month - 1, day)
-      .toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      })
-      .replace(/\.$/, "");
+  const formatDate = (createdAt: number[]) => {
+    const [year, month, day] = createdAt;
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
+      2,
+      "0"
+    )}`;
   };
 
   const getLevelIcon = (level: string) => {
@@ -386,7 +369,7 @@ const LevelTestDashboardPage = () => {
               >
                 <ReportInfo>
                   <ReportNumber>{index + 1}</ReportNumber>
-                  <ReportDate>{report.createdAt}</ReportDate>
+                  <ReportDate>{formatDate(report.createdAt)}</ReportDate>
                   <ReportCategory>{report.category}</ReportCategory>
                   <StudentLevelIcon
                     src={getLevelIcon(report.studentLevel)}
