@@ -75,12 +75,12 @@ export const API_ENDPOINTS = {
   },
 
   GUIDE: {
-    POST: "/guide/ask", // POST
+    POST: "/guide", // POST
   },
 
   FAQ: {
     GET: "/core/faq", // GET
-    POST: "/guide/ask",
+    POST: "/guide",
   },
   LEVEL_TEST: {
     GET_QUESTIONS: "/student/leveltest/questions/generate",
