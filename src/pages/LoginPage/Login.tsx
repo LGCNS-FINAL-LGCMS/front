@@ -20,7 +20,7 @@ const LoginCard = styled.div`
   border: 2px solid ${(props) => props.theme.colors.gray_M};
   border-radius: 16px;
   text-align: center;
-  width: ${(props) => props.theme.size.container_S};
+  min-width: ${(props) => props.theme.size.container_S};
   max-width: 90vw;
   min-height: 400px;
   padding: 40px;
