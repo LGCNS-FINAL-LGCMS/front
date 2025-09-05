@@ -130,7 +130,7 @@ const StudentQnaPage = () => {
             {memberQnaList.length > 0 ? (
               memberQnaList.map((qna: Qna) => (
                 <CardWrapper key={qna.id}>
-                  <QuestionCard qna={qna} lectureId={undefined} />
+                  <QuestionCard qna={qna} />
                 </CardWrapper>
               ))
             ) : (

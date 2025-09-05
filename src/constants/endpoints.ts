@@ -111,4 +111,10 @@ export const API_ENDPOINTS = {
     GET_DASHBOARD: "/lecturer/consulting/dashboard", // get
     GET_LECTURER_REPORT: "/lecturer/consulting/report", // get
   },
+
+  NOTIFICATION: {
+    SUBSCRIBE: "/student/notification/subscribe",
+    GET: "/student/notification",
+    DELETE: "/student/notification/read",
+  },
 };
