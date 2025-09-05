@@ -66,7 +66,7 @@ export const API_ENDPOINTS = {
     PATCH: "/student/lecture/qna", // /{lectureId}
 
     MEMBER: {
-      GET: "/lecture/qna/member", // GET - 특정 멤버의 QNA
+      GET: "/student/lecture/qna/member", // GET - 특정 멤버의 QNA
       LECTURE: {
         POST: "/lecturer/lecture/qna/answer", // /{questionId} 답변 작성
         PUT: "/lecturer/lecture/qna/answer", // /{answerId} 답변 수정
