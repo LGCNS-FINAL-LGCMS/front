@@ -283,6 +283,7 @@ const ButtonGroupModal = styled.div`
 export interface ExtendedQna extends Qna {
   createdAt: number[];
   answer: Answer[];
+  lectureId: string;
 }
 
 const QnaDetailPage = () => {
@@ -296,7 +297,6 @@ const QnaDetailPage = () => {
   >(null);
   const [editingAnswerId, setEditingAnswerId] = useState<number | null>(null);
   const [editAnswerContent, setEditAnswerContent] = useState("");
-  const { lectureId } = useParams<{ lectureId: string }>();
   const { qnaId } = useParams<{ qnaId: string }>();
   const [editTitle, setEditTitle] = useState<string | undefined>("");
   const [editContent, setEditContent] = useState<string | undefined>("");
@@ -309,6 +309,7 @@ const QnaDetailPage = () => {
   }, [qna]);
 
   const fetchQna = useCallback(async () => {
+    if (!qnaId) return;
     try {
       const data = await getQnaById(qnaId);
       setQna(data);
@@ -329,12 +330,12 @@ const QnaDetailPage = () => {
     e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
   ) => {
     e.preventDefault();
-    if (!newAnswer.trim() || !lectureId) return;
+    if (!newAnswer.trim() || !qna?.lectureId) return;
 
     try {
       await postAnswer({
         questionId: qnaId,
-        lectureId: lectureId,
+        lectureId: qna?.lectureId,
         content: newAnswer,
       });
       setNewAnswer("");
@@ -397,14 +398,14 @@ const QnaDetailPage = () => {
         if (!qnaId) throw new Error("삭제할 질문 ID가 없습니다.");
 
         await deleteQna(qnaId);
-        navigate(`${PAGE_PATHS.LECTURE_INFO}/${lectureId}`);
+        navigate(`${PAGE_PATHS.LECTURE_INFO}/${qna?.lectureId}`);
       } else if (confirmAction === "editAnswer" && editingAnswerId !== null) {
         try {
-          if (!lectureId) throw new Error("강의 ID가 없습니다.");
+          if (!qna?.lectureId) throw new Error("강의 ID가 없습니다.");
 
           await putAnswer({
             answerId: editingAnswerId.toString(),
-            lectureId: lectureId,
+            lectureId: qna?.lectureId,
             content: editAnswerContent,
           });
 

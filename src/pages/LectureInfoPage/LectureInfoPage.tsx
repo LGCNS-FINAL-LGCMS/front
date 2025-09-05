@@ -297,7 +297,7 @@ const LectureInfoPage = () => {
               }}
             >
               {qnaList.map((qna) => (
-                <QuestionCard key={qna.id} qna={qna} lectureId={lectureId} />
+                <QuestionCard key={qna.id} qna={qna} />
               ))}
             </div>
           )}

@@ -274,7 +274,7 @@ const VideoUploadModal: React.FC<Props> = ({
         </Section>
 
         <Section>
-          <SectionTitle>강의 설명</SectionTitle>
+          <SectionTitle>강좌 설명</SectionTitle>
           {errors.description && (
             <ErrorMessage>{errors.description}</ErrorMessage>
           )}
