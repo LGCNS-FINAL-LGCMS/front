@@ -14,6 +14,7 @@ import {
 interface MessageInputProps {
   onSend: (message: string) => void;
   initialSuggestions?: string[];
+  showInitialSuggestions?: boolean;
 }
 
 const Container = styled.div`
@@ -107,12 +108,15 @@ const MessageInput: React.FC<MessageInputProps> = ({
     "자동으로 검색을 수행합니다.",
     "자동으로 사라집니다.",
   ],
+  showInitialSuggestions = true,
 }) => {
   const [input, setInput] = useState("");
   const dispatch = useDispatch();
   // 최초 'idle' 상태
   const status = useSelector((state: RootState) => state.guide.status);
-  const [showSuggestions, setShowSuggestions] = useState(true); // 추천 검색어 표시 상태 추가
+  const [showSuggestions, setShowSuggestions] = useState(
+    showInitialSuggestions
+  );
 
   const handleSend = async (message: string) => {
     if (message.trim()) {
