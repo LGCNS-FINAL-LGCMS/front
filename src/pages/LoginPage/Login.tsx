@@ -17,7 +17,6 @@ const LoginCard = styled.div`
   gap: 30px;
 
   background: white;
-  border: 2px solid ${(props) => props.theme.colors.gray_M};
   border-radius: 16px;
   text-align: center;
   min-width: ${(props) => props.theme.size.container_S};
