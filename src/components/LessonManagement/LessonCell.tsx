@@ -42,8 +42,7 @@ const Thumb = styled.div<{ imageUrl?: string }>`
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: ${({ imageUrl }) =>
-      imageUrl ? `url(${imageUrl})` : "none"};
+    background-image: ${({ imageUrl }) => (imageUrl ? `url(${imageUrl})` : "")};
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -151,11 +150,15 @@ const LessonCell: React.FC<Props> = ({
     )}`;
   };
 
+  const safeImageUrl = lesson.thumbnail
+    ? encodeURI(lesson.thumbnail)
+    : undefined;
+
   return (
     <Row>
       <IndexCell>{index + 1}</IndexCell>
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <Thumb imageUrl={lesson.thumbnail || undefined} />
+        <Thumb imageUrl={safeImageUrl} />
         <div>
           <Title>{lesson.title}</Title>
           <SmallText>{lesson.information}</SmallText>
