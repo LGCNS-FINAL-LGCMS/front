@@ -24,11 +24,8 @@ const CategoryGrid = styled.div`
 `;
 
 const CategoryCountMessage = styled.p`
-  font-size: ${(props) => props.theme.fontSize.small.max};
+  font-size: ${(props) => props.theme.fontSize.modal.max};
   color: ${(props) => props.theme.colors.caution};
-  font-family: ${({ theme }) => theme.font.primary};
-  text-align: center;
-  display: block;
 `;
 
 interface CategorySelectProps {

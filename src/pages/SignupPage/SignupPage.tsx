@@ -76,7 +76,7 @@ const NicknameInputBox = styled.input`
 `;
 
 const NicknameCheckMessage = styled.div`
-  font-size: ${(props) => props.theme.fontSize.small.max};
+  font-size: ${(props) => props.theme.fontSize.modal.max};
   color: ${(props) => props.theme.colors.caution};
 `;
 
