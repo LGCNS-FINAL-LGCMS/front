@@ -68,12 +68,8 @@ const RoleLabel = styled.div<{ selected?: boolean }>`
 `;
 
 const RoleCheckMessage = styled.div`
-  text-align: center;
-  font-family: ${(props) => props.theme.font.primary};
-  font-size: ${(props) => props.theme.fontSize.body.min};
+  font-size: ${(props) => props.theme.fontSize.modal.max};
   color: ${(props) => props.theme.colors.caution};
-  font-weight: 400;
-  min-height: 20px;
 `;
 
 // 체크박스 컨테이너
