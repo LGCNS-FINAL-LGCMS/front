@@ -117,4 +117,8 @@ export const API_ENDPOINTS = {
     GET: "/student/notification",
     DELETE: "/student/notification/read",
   },
+
+  TUTOR: {
+    POST: "/student/tutor",
+  },
 };
