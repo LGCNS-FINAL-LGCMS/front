@@ -10,26 +10,22 @@ import { getErrorMessage } from "../../utils/handleApiError";
 
 // 카테고리 선택
 const CategorySection = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  padding: 10px;
+  gap: 20px;
+  margin: 10px;
 `;
 
 const CategoryGrid = styled.div`
   text-align: center;
-  padding: 20px;
-  margin-bottom: 10px;
 `;
 
 const CategoryCountMessage = styled.p`
-  font-size: ${(props) => props.theme.fontSize.small.max};
+  font-size: ${(props) => props.theme.fontSize.modal.max};
   color: ${(props) => props.theme.colors.caution};
-  min-height: 20px;
-  margin: 4px 0 0 0;
-  font-family: ${({ theme }) => theme.font.primary};
-  font-weight: 500;
-  text-align: center;
-  display: block;
-  width: 100%;
 `;
 
 interface CategorySelectProps {
