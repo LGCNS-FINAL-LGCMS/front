@@ -42,7 +42,7 @@ export const getLectureQnas = async (lectureId: string): Promise<Qna[]> => {
   }
 };
 
-export const getQnaById = async (qnaId: string | undefined) => {
+export const getQnaById = async (qnaId: string) => {
   try {
     const response = await apiClient.get(
       `${API_ENDPOINTS.QNA.GET_DETAIL}/${qnaId}`

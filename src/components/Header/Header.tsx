@@ -4,13 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useMobileDetect from "../../hooks/useMobileDetect";
 import { PAGE_PATHS } from "../../constants/pagePaths";
-import AlertCell from "./AlertCell";
+import { AlertCell } from "./AlertCell";
+import type { Notification } from "../../types/notification";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../../redux/store";
 import { clearCategory } from "../../redux/Category/categorySlice";
 import { logoutUsingToken } from "../../redux/token/tokenSlice";
 import { resetUserInfo } from "../../redux/Auth/authSlice";
-
 import {
   faCircleUser,
   faBars,
@@ -20,13 +20,11 @@ import {
   faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
 import { theme } from "../../assets/styles/theme";
-
-interface Alert {
-  id: number;
-  message: string;
-  date?: string;
-  url?: string;
-}
+import { useSseConnect } from "./alertSSE";
+import {
+  getNotification,
+  readNotificationRequest,
+} from "../../api/Notification/notificationAPI";
 
 const HeaderWrapper = styled.header`
   position: fixed;
@@ -36,7 +34,6 @@ const HeaderWrapper = styled.header`
   z-index: ${({ theme }) => theme.zIndex.header};
   background-color: ${({ theme }) => theme.colors.header};
   height: ${({ theme }) => theme.size.header.height};
-  backdrop-filter: blur(5px);
   padding: 0 1rem;
 `;
 
@@ -174,9 +171,7 @@ const AlertDropdown = styled(DropdownMenu)`
 const AlertItem = styled.div`
   padding: 0.5rem 1rem;
   cursor: pointer;
-  &:hover {
-    background-color: ${theme.colors.header};
-  }
+  color: white;
 `;
 const Nickname = styled.span`
   font-size: ${theme.fontSize.small.max};
@@ -193,7 +188,7 @@ const ping = keyframes`
 
 const DotWrapper = styled.span`
   position: absolute;
-  top: 0px; // 아이콘 크기에 맞게 미세 조정
+  top: 0px;
   right: 5px;
   width: 12px;
   height: 12px;
@@ -226,69 +221,35 @@ const Dot = styled.span`
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    setAlerts([
-      {
-        id: 1,
-        message: "새 댓글이 달렸습니다.",
-        date: "2025-07-24",
-        url: "/",
-      },
-      {
-        id: 2,
-        message: "주문이 완료되었습니다.",
-        date: "2025-07-23",
-        url: "/orders/123",
-      },
-      {
-        id: 3,
-        message: "답변이 달렸습니다.",
-        date: "2025-07-23",
-        url: "/answers/45",
-      },
-      {
-        id: 4,
-        message: "주문이 완료되었습니다.",
-        date: "2025-07-23",
-        url: "/orders/124",
-      },
-      {
-        id: 5,
-        message: "주문이 완료되었습니다.",
-        date: "2025-07-23",
-        url: "/orders/125",
-      },
-    ]);
-  }, []);
-
-  const handleAlertClick = (url?: string) => {
-    if (url) {
-      navigate(url);
-      setIsAlertOpen(false);
-    }
-  };
-
-  const handleLogoClick = () => {
-    dispatch(clearCategory());
-    navigate(PAGE_PATHS.HOME);
-  };
-
+  const message = useSseConnect();
   const auth = useSelector((state: RootState) => state.auth);
   const isAuthenticated: boolean = useSelector(
     (state: RootState) => state.token.isAuthenticated
   );
   const nickname: string = auth.nickname;
   const isLecturer: boolean = auth.role === "LECTURER" || auth.role === "ADMIN";
-  const hasUnreadAlerts = true;
   const dropdownRef = useRef<HTMLDivElement>(null);
   const alertRef = useRef<HTMLDivElement>(null);
   const isMobile: boolean = useMobileDetect();
-  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [alerts, setAlerts] = useState<Notification[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const hasUnreadAlerts = alerts.length > 0;
 
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const notifications = await getNotification();
+        setAlerts(notifications);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -311,17 +272,42 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (!message) return;
+    setAlerts((prev) => [...prev, message]);
+    console.log(message);
+  }, [message]);
+
   const onLogin = () => {
     navigate(PAGE_PATHS.LOGIN);
   };
 
-  const handleLogout = () => {
-    dispatch(logoutUsingToken())
-      .unwrap()
-      .then(() => {
-        dispatch(resetUserInfo());
-        navigate(PAGE_PATHS.LOGIN);
-      });
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutUsingToken()).unwrap();
+      dispatch(resetUserInfo());
+      navigate(PAGE_PATHS.LOGIN);
+    } catch (err) {
+      console.error("로그아웃 실패:", err);
+    }
+  };
+
+  const handleLogoClick = () => {
+    dispatch(clearCategory());
+    navigate(PAGE_PATHS.HOME);
+  };
+
+  const handleAlertCellClick = async (item: Notification) => {
+    try {
+      await readNotificationRequest(item.id);
+      const notifications = await getNotification();
+      setAlerts(notifications);
+      navigate(item.webPath);
+      setIsAlertOpen(false);
+    } catch (err) {
+      console.error("알림 읽기 실패:", err);
+      navigate(item.webPath);
+    }
   };
 
   return (
@@ -445,12 +431,7 @@ const Header = () => {
                 <AlertDropdown ref={alertRef}>
                   {alerts.length > 0 ? (
                     alerts.map((alert) => (
-                      <AlertCell
-                        key={alert.id}
-                        message={alert.message}
-                        date={alert.date}
-                        onClick={() => handleAlertClick(alert.url)}
-                      />
+                      <AlertCell item={alert} onClick={handleAlertCellClick} />
                     ))
                   ) : (
                     <AlertItem>새 알림이 없습니다.</AlertItem>
