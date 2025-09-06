@@ -19,7 +19,7 @@ interface ReportList {
   reportId: number;
   totalScore: number;
   studentLevel: "HIGH" | "MEDIUM" | "LOW";
-  createdAt: string;
+  createdAt: number[];
   category: string;
 }
 
@@ -193,6 +193,8 @@ const ReportCategory = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  min-width: 100px;
 `;
 
 const StudentLevelIcon = styled.img`
@@ -229,14 +231,37 @@ const LevelTestDashboardPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<number>(-1);
   const [reportList, setReportList] = useState<ReportList[]>([]);
 
-  const getCategory = async () => {
-    try {
-      const result = await getcategoriesList();
-      if (result.status === "OK") setCategoryList(result.data.categories);
-    } catch (error) {
-      console.log("카테고리 API 호출 실패", error);
-    }
-  };
+  useEffect(() => {
+    //카테고리
+    const getCategory = async () => {
+      try {
+        const result = await getcategoriesList();
+        if (result.status === "OK") setCategoryList(result.data.categories);
+      } catch (error) {
+        console.log("카테고리 API 호출 실패", error);
+      }
+    };
+    // Report
+    const getReportList = async () => {
+      try {
+        const response = await apiClient.get(API_ENDPOINTS.STUDENT_REPORT.GET);
+        if (response.data.status === "OK") {
+          if (response.data.data) {
+            setReportList(response.data.data);
+          } else {
+            console.log("레포트 데이터 없음");
+          }
+        } else {
+          console.log("StudentReport API 연결 실패");
+        }
+      } catch (error) {
+        console.log("StudentReport API 호출 실패", error);
+      }
+    };
+
+    getCategory();
+    getReportList();
+  }, []);
 
   const handleStartTest = async () => {
     if (selectedCategory === -1) {
@@ -251,22 +276,12 @@ const LevelTestDashboardPage = () => {
     }
   };
 
-  // Report
-  const getReportList = async () => {
-    try {
-      const response = await apiClient.get(API_ENDPOINTS.STUDENT_REPORT.GET);
-      if (response.data.status === "OK") {
-        if (response.data.data) {
-          setReportList(response.data.data);
-        } else {
-          console.log("레포트 데이터 없음");
-        }
-      } else {
-        console.log("StudentReport API 연결 실패");
-      }
-    } catch (error) {
-      console.log("StudentReport API 호출 실패", error);
-    }
+  const formatDate = (createdAt: number[]) => {
+    const [year, month, day] = createdAt;
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
+      2,
+      "0"
+    )}`;
   };
 
   const getLevelIcon = (level: string) => {
@@ -285,11 +300,6 @@ const LevelTestDashboardPage = () => {
   const handleReportClick = (reportId: number) => {
     navigate(`${PAGE_PATHS.USER_PAGE.STUDENT.REPORT}/${reportId}`);
   };
-
-  useEffect(() => {
-    getCategory();
-    getReportList();
-  }, []);
 
   //sideTab
   const tabItems = [
@@ -359,15 +369,7 @@ const LevelTestDashboardPage = () => {
               >
                 <ReportInfo>
                   <ReportNumber>{index + 1}</ReportNumber>
-                  <ReportDate>
-                    {new Date(report.createdAt)
-                      .toLocaleDateString("ko-KR", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                      })
-                      .replace(/\.$/, "")}
-                  </ReportDate>
+                  <ReportDate>{formatDate(report.createdAt)}</ReportDate>
                   <ReportCategory>{report.category}</ReportCategory>
                   <StudentLevelIcon
                     src={getLevelIcon(report.studentLevel)}
