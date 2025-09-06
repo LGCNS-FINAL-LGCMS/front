@@ -49,7 +49,9 @@ const UserInfoTitle = styled.h1`
   font-family: ${({ theme }) => theme.font.primary};
 `;
 
-const NicknameSection = styled.div``;
+const NicknameSection = styled.div`
+  gap: 10px;
+`;
 
 const NicknameLabel = styled.h3`
   font-size: ${(props) => props.theme.fontSize.contents.medium};
@@ -92,11 +94,6 @@ const CategorySection = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 10px;
-`;
-
-const CategoryTitle = styled.span`
-  text-align: center;
-  font-size: ${(props) => props.theme.fontSize.title.min};
 `;
 
 const CategorySubTitle = styled.span`
@@ -336,7 +333,6 @@ const UpdateUserInfoPage = () => {
         </NicknameSection>
 
         <CategorySection>
-          <CategoryTitle>Category</CategoryTitle>
           <CategorySubTitle>관심있는 카테고리를 추가하세요.</CategorySubTitle>
           <CategorySelect onCategoryChange={handleCategorySelection} />
         </CategorySection>
