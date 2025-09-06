@@ -101,13 +101,16 @@ const CategoryTitle = styled.span`
 
 const CategorySubTitle = styled.span`
   text-align: center;
+  font-size: ${(props) => props.theme.fontSize.contents.medium};
 `;
 
 const RoleSection = styled.div`
   gap: 30px;
 `;
 
-const RoleSelectSubtitle = styled.p``;
+const RoleSelectSubtitle = styled.p`
+  font-size: ${(props) => props.theme.fontSize.contents.medium};
+`;
 
 const ButtonSection = styled.div``;
 
@@ -270,8 +273,7 @@ const UpdateUserInfoPage = () => {
   // 확인 누르면 변경된 회원수정페이지 보여주기
   const handelConfirm = () => {
     setShowSuccessModal(true);
-    navigate(PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO);
-    setShowSuccessModal(false);
+    navigate(PAGE_PATHS.HOME);
   };
 
   //취소 버튼 없어
@@ -313,7 +315,7 @@ const UpdateUserInfoPage = () => {
       <SideTab title="MyPage" items={tabItems} onSelect={handleTabSelect} />
       <UserInfoContainer>
         <TitleSection>
-          <UserInfoTitle>User profile</UserInfoTitle>
+          <UserInfoTitle>회원 정보 수정</UserInfoTitle>
         </TitleSection>
 
         <NicknameSection>

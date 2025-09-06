@@ -95,7 +95,7 @@ const CategoryTitle = styled.span`
 
 const CategorySubTitle = styled.span`
   text-align: center;
-  ${(props) => props.theme.fontSize.contents.medium};
+  font-size: ${(props) => props.theme.fontSize.contents.medium};
 `;
 
 const RoleSelectContainer = styled.div`
@@ -107,7 +107,7 @@ const RoleSelectContainer = styled.div`
 `;
 
 const RoleTitle = styled.h2`
-  font-size: ${(props) => props.theme.fontSize.subtitle};
+  font-size: ${(props) => props.theme.fontSize.contents.medium};
 `;
 
 const SignupPage = () => {
@@ -243,7 +243,7 @@ const SignupPage = () => {
   return (
     <SignupWrapper>
       <SignupContainer>
-        <SignupTitle>Signup</SignupTitle>
+        <SignupTitle>회원가입</SignupTitle>
         <NicknameSection>
           <NicknameLabel>닉네임을 입력해주세요.</NicknameLabel>
           <NicknameInputBox
