@@ -24,7 +24,7 @@ const CenteredWrapper = styled.div`
 const Container = styled.div`
   padding: 0rem;
   width: 100%;
-  height: 
+  height: 100%;
   max-width: 1200px;
 `;
 
