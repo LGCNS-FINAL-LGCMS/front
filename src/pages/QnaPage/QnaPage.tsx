@@ -24,6 +24,8 @@ import {
   putAnswer,
 } from "../../api/Qna/qnaAPI";
 import type { Qna, Answer } from "../../types/qna";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../redux/store";
 
 const Wrapper = styled.div`
   display: flex;
@@ -287,6 +289,7 @@ export interface ExtendedQna extends Qna {
 }
 
 const QnaDetailPage = () => {
+  const role = useSelector((state: RootState) => state.auth.role);
   const navigate = useNavigate();
   const [qna, setQna] = useState<ExtendedQna>();
   const [newAnswer, setNewAnswer] = useState("");
@@ -510,14 +513,16 @@ const QnaDetailPage = () => {
                     ) : (
                       <>
                         {ans.content}
-                        <TextButton
-                          onClick={() => {
-                            setEditingAnswerId(ans.answerId);
-                            setEditAnswerContent(ans.content);
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faPen} />
-                        </TextButton>
+                        {role !== "STUDENT" && (
+                          <TextButton
+                            onClick={() => {
+                              setEditingAnswerId(ans.answerId);
+                              setEditAnswerContent(ans.content);
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faPen} />
+                          </TextButton>
+                        )}
                       </>
                     )}
                   </AnswerItem>
