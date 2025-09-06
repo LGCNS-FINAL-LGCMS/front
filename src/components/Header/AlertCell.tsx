@@ -1,9 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { theme } from "../../assets/styles/theme";
-import { useNavigate } from "react-router-dom";
 import type { Notification } from "../../types/notification";
-import { readNotificationRequest } from "../../api/Notification/notificationAPI";
 
 const AlertItemWrapper = styled.div`
   padding: 0.5rem 1rem;
@@ -24,13 +22,13 @@ interface AlertCellProps {
   onClick?: (item: Notification) => void;
 }
 
-const formatDate = (createdAt: number[]) => {
-  const [year, month, day] = createdAt;
-  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
-    2,
-    "0"
-  )}`;
-};
+// const formatDate = (createdAt: number[]) => {
+//   const [year, month, day] = createdAt;
+//   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
+//     2,
+//     "0"
+//   )}`;
+// };
 
 export const AlertCell: React.FC<AlertCellProps> = ({ item, onClick }) => {
   return (
