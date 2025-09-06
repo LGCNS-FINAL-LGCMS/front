@@ -13,21 +13,30 @@ import { checkNicknameAPI, signupAPI } from "../../api/Signup/signupAPI";
 import type { UserCategoriesList } from "../../types/authInfo";
 import { setUserInfo } from "../../redux/Auth/authSlice";
 
-const SignupContainer = styled.div`
+const SignupWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   width: ${({ theme }) => theme.size.container_S};
-  margin: 10px auto; // 위 오른쪽 아래 왼쪽
-  padding: 60px 40px;
-  border: 2px solid;
-  border-radius: 8px;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 12px;
   background-color: white;
 
   font-family: ${(props) => props.theme.font.primary};
 `;
 
-const SignupTitle = styled.h1`
-  margin: 10px 0 40px 0; // 위 오른쪽 아래 왼쪽
+const SignupContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+`;
 
+const SignupTitle = styled.h1`
+  margin: 20px;
   text-align: center;
   font-size: ${(props) => props.theme.fontSize.title.max};
   font-weight: 700;
@@ -35,23 +44,21 @@ const SignupTitle = styled.h1`
 
 // 닉네임 입력
 const NicknameSection = styled.div`
-  padding: 10px;
+  gap: 10px;
 `;
 
 const NicknameLabel = styled.h3`
-  margin-bottom: 30px;
-
-  font-size: ${(props) => props.theme.fontSize.small};
+  font-size: ${(props) => props.theme.fontSize.contents.medium};
 `;
 
 const NicknameInputBox = styled.input`
   width: 180px;
   height: 45px;
-  margin: 0 10px 20px 0; // 위 오른쪽 아래 왼쪽
+  margin: 10px; // 위 오른쪽 아래 왼쪽
   padding: 12px 16px;
 
   border: 1px solid ${(props) => props.theme.colors.gray_L};
-  border-radius: 8px;
+  border-radius: 12px;
 
   font-family: ${(props) => props.theme.font.primary};
   font-size: ${(props) => props.theme.fontSize.button.min};
@@ -71,24 +78,33 @@ const NicknameInputBox = styled.input`
 `;
 
 const NicknameCheckMessage = styled.div`
-  font-size: ${(props) => props.theme.fontSize.small.max};
+  font-size: ${(props) => props.theme.fontSize.modal.max};
   color: ${(props) => props.theme.colors.caution};
-  min-height: 20px;
-  padding-left: 4px;
 `;
 
 const CategorySection = styled.div`
-  margin-bottom: 20px;
-`;
-const CategoryTitle = styled.h1`
-  text-align: center;
-  margin: 10px; // 위아래 간격
-
-  font-size: ${(props) => props.theme.fontSize.title.min};
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 `;
 
-const CategorySubTitle = styled.p`
+const CategorySubTitle = styled.span`
   text-align: center;
+  font-size: ${(props) => props.theme.fontSize.contents.medium};
+`;
+
+const RoleSelectContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+`;
+
+const RoleTitle = styled.h2`
+  font-size: ${(props) => props.theme.fontSize.contents.medium};
 `;
 
 const SignupPage = () => {
@@ -222,41 +238,46 @@ const SignupPage = () => {
   };
 
   return (
-    <SignupContainer>
-      <SignupTitle>회원가입</SignupTitle>
-      <NicknameSection>
-        <NicknameLabel>닉네임을 입력해주세요.</NicknameLabel>
-        <NicknameInputBox
-          value={nickname}
-          onChange={handleNicknameInput}
-          placeholder="nickname"
-        ></NicknameInputBox>
+    <SignupWrapper>
+      <SignupContainer>
+        <SignupTitle>회원가입</SignupTitle>
+        <NicknameSection>
+          <NicknameLabel>닉네임을 입력해주세요.</NicknameLabel>
+          <NicknameInputBox
+            value={nickname}
+            onChange={handleNicknameInput}
+            placeholder="nickname"
+          ></NicknameInputBox>
+          <Button
+            text="중복확인"
+            onClick={checkNickname}
+            design={3}
+            fontWeight={400}
+            disabled={isCheckingNickname}
+          />
+          <NicknameCheckMessage>{nicknameCheckMessage}</NicknameCheckMessage>
+        </NicknameSection>
+
+        <CategorySection>
+          <CategorySubTitle>관심있는 카테고리를 추가하세요.</CategorySubTitle>
+          <CategorySelect onCategoryChange={handleCategorySelection} />
+        </CategorySection>
+
+        <RoleSelectContainer>
+          <RoleTitle>사용하시는 분이 누구인가요 ?</RoleTitle>
+          <RoleSelect
+            selectedRole={selectedRole}
+            onRoleChange={handleRoleSelection}
+          />
+        </RoleSelectContainer>
+
         <Button
-          text="중복확인"
-          onClick={checkNickname}
-          design={3}
+          text="회원가입완료"
+          onClick={signupClick}
+          design={2}
           fontWeight={400}
-          disabled={isCheckingNickname}
         />
-        <NicknameCheckMessage>{nicknameCheckMessage}</NicknameCheckMessage>
-      </NicknameSection>
-
-      <CategorySection>
-        <CategoryTitle>Category</CategoryTitle>
-        <CategorySubTitle>관심있는 카테고리를 추가하세요.</CategorySubTitle>
-        <CategorySelect onCategoryChange={handleCategorySelection} />
-      </CategorySection>
-
-      <RoleSelect
-        selectedRole={selectedRole}
-        onRoleChange={handleRoleSelection}
-      />
-      <Button
-        text="회원가입완료"
-        onClick={signupClick}
-        design={2}
-        fontWeight={400}
-      />
+      </SignupContainer>
 
       <InfoCheckModal
         isOpen={showSuccessModal}
@@ -273,7 +294,7 @@ const SignupPage = () => {
         onCancel={handelCancel}
         confirmText="확인"
       />
-    </SignupContainer>
+    </SignupWrapper>
   );
 };
 

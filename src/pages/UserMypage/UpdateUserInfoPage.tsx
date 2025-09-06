@@ -18,25 +18,26 @@ const PageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  width: ${({ theme }) => theme.size.container_S};
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 12px;
+  background-color: white;
 
-  padding: 0px;
-  background-color: ${({ theme }) => theme.colors.background_B};
+  font-family: ${(props) => props.theme.font.primary};
 `;
 
 const UserInfoContainer = styled.div`
-  text-align: center;
-  width: ${({ theme }) => theme.size.container_S};
-  padding: 60px 40px;
-  border: 2px solid ${({ theme }) => theme.colors.border_Light};
-  border-radius: 12px;
-  background-color: white;
-  font-family: ${({ theme }) => theme.font.primary};
-  box-shadow: ${({ theme }) => theme.shadow.lg};
-  transition: ${({ theme }) => theme.transition.default};
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
 `;
 
 const TitleSection = styled.div`
-  margin-bottom: 40px;
+  margin: 20px;
 `;
 
 const UserInfoTitle = styled.h1`
@@ -49,83 +50,66 @@ const UserInfoTitle = styled.h1`
 `;
 
 const NicknameSection = styled.div`
-  padding: 10px;
-  margin-bottom: 30px;
+  gap: 10px;
 `;
 
 const NicknameLabel = styled.h3`
-  margin-bottom: 20px;
-  font-size: ${({ theme }) => theme.fontSize.subtitle};
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text_D};
-  font-family: ${({ theme }) => theme.font.primary};
+  font-size: ${(props) => props.theme.fontSize.contents.medium};
 `;
 
 const NicknameInputBox = styled.input`
-  width: 200px;
-  height: 48px;
-  margin: 0 12px 8px 0;
+  width: 180px;
+  height: 45px;
+  margin: 10px; // 위 오른쪽 아래 왼쪽
   padding: 12px 16px;
-  border: 2px solid ${({ theme }) => theme.colors.border_Light};
-  border-radius: 8px;
-  font-family: ${({ theme }) => theme.font.primary};
-  font-size: ${({ theme }) => theme.fontSize.body.max};
+
+  border: 1px solid ${(props) => props.theme.colors.gray_L};
+  border-radius: 12px;
+
+  font-family: ${(props) => props.theme.font.primary};
+  font-size: ${(props) => props.theme.fontSize.button.min};
+
   background-color: white;
-  color: ${({ theme }) => theme.colors.text_D};
-  transition: ${({ theme }) => theme.transition.fast};
+  color: ${(props) => props.theme.colors.gray_D};
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.gray_M};
+    color: ${(props) => props.theme.colors.gray_M};
     font-weight: 400;
   }
-
   &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: ${({ theme }) => theme.shadow.md};
-    transform: translateY(-1px);
-  }
-
-  &:hover {
-    border-color: ${({ theme }) => theme.colors.gray_M};
+    outline: none; /* 기본 파란 테두리 제거 */
+    border-color: ${(props) => props.theme.colors.gray_D}; /* 파란색 테두리 */
+    box-shadow: ${(props) => props.theme.shadow.md};
   }
 `;
 
 const NicknameCheckMessage = styled.p`
-  font-size: ${({ theme }) => theme.fontSize.small.max};
-  color: ${({ theme }) => theme.colors.caution};
-  min-height: 20px;
-  margin: 4px 0 0 0;
-  font-family: ${({ theme }) => theme.font.primary};
-  font-weight: 500;
-  text-align: center;
-  display: block;
-  width: 100%;
+  font-size: ${(props) => props.theme.fontSize.modal.max};
+  color: ${(props) => props.theme.colors.caution};
 `;
 
 const CategorySection = styled.div`
-  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 `;
-const CategoryTitle = styled.h1`
+
+const CategorySubTitle = styled.span`
   text-align: center;
-  margin: 20px; // 위아래 간격
-
-  font-size: ${(props) => props.theme.fontSize.title.min};
+  font-size: ${(props) => props.theme.fontSize.contents.medium};
 `;
-
-const CategorySubTitle = styled.p`
-  text-align: center;
-`;
-
-const RoleSelectSubtitle = styled.p``;
 
 const RoleSection = styled.div`
-  margin-bottom: 30px;
+  gap: 30px;
 `;
 
-const ButtonSection = styled.div`
-  margin-top: 20px;
+const RoleSelectSubtitle = styled.p`
+  font-size: ${(props) => props.theme.fontSize.contents.medium};
 `;
+
+const ButtonSection = styled.div``;
 
 const UpdateUserInfoPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -286,8 +270,7 @@ const UpdateUserInfoPage = () => {
   // 확인 누르면 변경된 회원수정페이지 보여주기
   const handelConfirm = () => {
     setShowSuccessModal(true);
-    navigate(PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO);
-    setShowSuccessModal(false);
+    navigate(PAGE_PATHS.HOME);
   };
 
   //취소 버튼 없어
@@ -350,14 +333,12 @@ const UpdateUserInfoPage = () => {
         </NicknameSection>
 
         <CategorySection>
-          <CategoryTitle>Category</CategoryTitle>
           <CategorySubTitle>관심있는 카테고리를 추가하세요.</CategorySubTitle>
           <CategorySelect onCategoryChange={handleCategorySelection} />
         </CategorySection>
 
         <RoleSection>
           <RoleSelectSubtitle>강사로 전환하시겠습니까?</RoleSelectSubtitle>
-
           <RoleSelect
             onRoleChange={handleRoleSelection}
             selectedRole={selectedRole}
@@ -373,23 +354,23 @@ const UpdateUserInfoPage = () => {
             fontWeight={400}
           />
         </ButtonSection>
-
-        <InfoCheckModal
-          isOpen={showSuccessModal}
-          message="회원정보수정이 완료되었습니다."
-          onConfirm={handelConfirm}
-          onCancel={handelConfirm}
-          confirmText="확인"
-        />
-
-        <InfoCheckModal
-          isOpen={showFailModal}
-          message="회원가입에 실패했습니다."
-          onConfirm={handelCancel}
-          onCancel={handelCancel}
-          confirmText="확인"
-        />
       </UserInfoContainer>
+
+      <InfoCheckModal
+        isOpen={showSuccessModal}
+        message="회원정보수정이 완료되었습니다."
+        onConfirm={handelConfirm}
+        onCancel={handelConfirm}
+        confirmText="확인"
+      />
+
+      <InfoCheckModal
+        isOpen={showFailModal}
+        message="회원가입에 실패했습니다."
+        onConfirm={handelCancel}
+        onCancel={handelCancel}
+        confirmText="확인"
+      />
     </PageWrapper>
   );
 };
