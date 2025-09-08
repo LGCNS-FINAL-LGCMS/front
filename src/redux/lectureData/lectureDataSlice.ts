@@ -97,18 +97,10 @@ const lectureDataSlice = createSlice({
           state.status = "succeeded";
           const { content, totalElements } = action.payload;
 
-          // 기존 lectureList에서 lectureId를 기준으로 중복 제거
-          const newLectures = content.filter(
-            (newLecture) =>
-              !state.lectureList.some(
-                (existingLecture) =>
-                  existingLecture.lectureId === newLecture.lectureId
-              )
-          );
-
-          state.lectureList = [...state.lectureList, ...newLectures];
+          state.lectureList = [...state.lectureList, ...content];
           state.totalCount = totalElements || 0;
-          state.hasMore = totalElements > state.lectureList.length;
+          state.hasMore = state.lectureList.length < totalElements;
+
           state.error = null;
         }
       )
