@@ -291,6 +291,14 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
               onClick={() => setModalOpen(false)}
               design={1}
             />
+            <Button
+              text="장바구니로 이동"
+              onClick={() => {
+                setModalOpen(false);
+                navigate(PAGE_PATHS.PAYMENT.PAYMENT);
+              }}
+              design={1}
+            />
           </ModalContent>
         </ModalBackdrop>
       )}
