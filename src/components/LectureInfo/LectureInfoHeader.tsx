@@ -187,8 +187,7 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
         price: lecture.price,
         thumbnailUrl: lecture.thumbnail,
       });
-
-      setModalMessage("장바구니 담기 성공");
+setModalMessage("장바구니 담기 성공");
       setIsSuccess(true);
       setModalOpen(true);
     } catch (err: unknown) {
@@ -248,8 +247,8 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
                     link.click();
                     document.body.removeChild(link);
                     window.URL.revokeObjectURL(url);
-                  } catch (err) {
-                    console.error("파일 다운로드 실패", err);
+                  } catch {
+                    // console.error("파일 다운로드 실패", err);
                   }
                 }}
                 design={2}
@@ -282,7 +281,7 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
               {isSuccess ? "성공" : "실패"}
             </h2>
             <p>{modalMessage}</p>
-            <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+<div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
               {isSuccess ? (
                 <>
                   <Button
