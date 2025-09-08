@@ -27,28 +27,16 @@ const Container = styled.div`
   max-width: 1200px;
 `;
 
-const ScrollableContainer = styled.div.attrs({ id: "scrollableDiv" })`
-  height: calc(100vh - ${theme.size.header.height} - 195px);
-  overflow-y: auto;
-  &::-webkit-scrollbar {
-    width: 10px; /* 스크롤바 너비 */
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: ${theme.colors.header}; /* 스크롤바 색상 */
-    border-radius: 10px; /* 스크롤바 둥근 모서리 */
-    border: 2px solid ${theme.colors.header}; /* 테두리 색상 */
-  }
-
-  &::-webkit-scrollbar-track {
-    background: ${theme.colors.header}; /* 스크롤바 트랙 색상 */
-    border-radius: 10px; /* 트랙의 둥근 모서리 */
-  }
-
-  /* IE / Edge 에서 지원하는 스크롤바 */
-  scrollbar-width: thin;
-  scrollbar-color: ${theme.colors.header} ${theme.colors.gray_L};
-`;
+// const StickyWrapper = styled.div`
+//   position: sticky;
+//   top: ${theme.size.header.height};
+//   z-index: 50;
+//   background-color: ${({ theme }) => theme.colors.background_B};
+//   display: flex;
+//   flex-direction: column;
+//   gap: 1rem;
+//   padding: 0.5rem 0;
+// `;
 
 const MainPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -85,7 +73,6 @@ const MainPage: React.FC = () => {
     <CenteredWrapper>
       <Container>
         <Sidebar />
-
         <SearchBar
           value={localSearchKeyword}
           onChange={handleInputChange}
@@ -93,12 +80,9 @@ const MainPage: React.FC = () => {
           design={1}
           fontColor={2}
         />
-
         <CategoryButtons />
 
-        <ScrollableContainer>
-          <InfiniteScrollController />
-        </ScrollableContainer>
+        <InfiniteScrollController />
       </Container>
     </CenteredWrapper>
   );
