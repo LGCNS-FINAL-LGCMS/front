@@ -1,5 +1,3 @@
-import type { AxiosError } from "axios";
-
 interface AxiosErrorData {
   response?: {
     data?: {
