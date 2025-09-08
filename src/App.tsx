@@ -5,6 +5,8 @@ import { PAGE_PATHS } from "./constants/pagePaths";
 import Header from "./components/Header/Header";
 import { ThemeProvider } from "styled-components";
 import ChatWrapper from "./components/Common/Chat/ChatWrapper";
+import LecturerSideBar from "./components/LecturerSideBar/LecturerSideBar";
+import RoleGuard from "./components/Common/RoleGuard";
 
 // =========== 레이아웃 임포트 ===========
 import Layout from "./layouts/Layout";
@@ -32,10 +34,10 @@ import PaymentResultPage from "./pages/PaymentPage/PaymentResultPage";
 import PaymentPage from "./pages/PaymentPage/PaymentPage";
 import PaymentSuccess from "./pages/PaymentPage/PaymentSuccess";
 import AdminPage from "./pages/AdminPage/AdminPage";
-import ProtectedRoute from "./components/Admin/ProtectedRoute";
+// import ProtectedRoute from "./components/Admin/ProtectedRoute";
 import StudentReportPage from "./pages/StudentReportPage/StudentReportPage";
 import LecturerReportPage from "./pages/LecturerPage/LecturerReportPage";
-import LoginGuard from "./components/Admin/LoginGuard";
+// import LoginGuard from "./components/Admin/LoginGuard";
 
 function App() {
   return (
@@ -44,188 +46,226 @@ function App() {
         <GlobalStyle />
         <Header />
         <ChatWrapper />
+        <LecturerSideBar />
 
         <Routes>
           {/* 일반 Layout */}
           <Route
             path={PAGE_PATHS.LOGIN}
             element={
-              <Layout>
-                <Login />
-              </Layout>
+              <RoleGuard minRole="GUEST">
+                <Layout>
+                  <Login />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={PAGE_PATHS.SIGNUP}
             element={
-              <Layout>
-                <SignupPage />
-              </Layout>
+              <RoleGuard minRole="GUEST">
+                <Layout>
+                  <SignupPage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO}
             element={
-              <Layout>
-                <UpdateUserInfoPage />
-              </Layout>
+              <RoleGuard minRole="STUDENT">
+                <Layout>
+                  <UpdateUserInfoPage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={PAGE_PATHS.LEVEL_TEST.DASHBOARD}
             element={
-              <Layout>
-                <LevelTestDashboardPage />
-              </Layout>
+              <RoleGuard minRole="STUDENT">
+                <Layout>
+                  <LevelTestDashboardPage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={PAGE_PATHS.LEVEL_TEST.TEST}
             element={
-              <Layout>
-                <LevelTestPage />
-              </Layout>
+              <RoleGuard minRole="STUDENT">
+                <Layout>
+                  <LevelTestPage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={`${PAGE_PATHS.USER_PAGE.STUDENT.REPORT}/:reportId?`}
             element={
-              <Layout>
-                <StudentReportPage />
-              </Layout>
+              <RoleGuard minRole="STUDENT">
+                <Layout>
+                  <StudentReportPage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES}
             element={
-              <Layout>
-                <StudentLecturePage />
-              </Layout>
+              <RoleGuard minRole="STUDENT">
+                <Layout>
+                  <StudentLecturePage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={PAGE_PATHS.USER_PAGE.STUDENT.QNA}
             element={
-              <Layout>
-                <StudentQnaPage />
-              </Layout>
+              <RoleGuard minRole="STUDENT">
+                <Layout>
+                  <StudentQnaPage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={PAGE_PATHS.FAQ}
             element={
-              <Layout>
-                <FaqPage />
-              </Layout>
+              <RoleGuard minRole="GUEST">
+                <Layout>
+                  <FaqPage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={`${PAGE_PATHS.HOME}/:keyword?/:category?`}
             element={
-              <Layout>
-                <MainPage />
-              </Layout>
+              <RoleGuard minRole="GUEST">
+                <Layout>
+                  <MainPage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={`${PAGE_PATHS.CREATE_LECTURE}`}
             element={
-              <Layout>
-                <CreateLecturePage />
-              </Layout>
+              <RoleGuard minRole="LECTURER">
+                <Layout>
+                  <CreateLecturePage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={`${PAGE_PATHS.USER_PAGE.LECTURER.MAIN}`}
             element={
-              <Layout>
-                <LecturerMainPage />
-              </Layout>
+              <RoleGuard minRole={"LECTURER"}>
+                <Layout>
+                  <LecturerMainPage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={PAGE_PATHS.PAYMENT.PAYMENT}
             element={
-              <Layout>
-                <PaymentPage />
-              </Layout>
+              <RoleGuard minRole="STUDENT">
+                <Layout>
+                  <PaymentPage />
+                </Layout>
+              </RoleGuard>
             }
           />
+
           <Route
             path={PAGE_PATHS.PAYMENT.RESULT}
             element={
-              <LoginGuard>
+              <RoleGuard minRole="STUDENT">
                 <Layout>
                   <PaymentResultPage />
                 </Layout>
-              </LoginGuard>
+              </RoleGuard>
             }
           />
 
           <Route
             path={`${PAGE_PATHS.LESSON_MANAGEMENT}/:lectureId?`}
             element={
-              <Layout>
-                <LessonManagementPage />
-              </Layout>
+              <RoleGuard minRole={"LECTURER"}>
+                <Layout>
+                  <LessonManagementPage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={`${PAGE_PATHS.LECTURE_INFO}/:lectureId`}
             element={
-              <Layout>
-                <LectureInfoPage />
-              </Layout>
+              <RoleGuard minRole={"GUEST"}>
+                <Layout>
+                  <LectureInfoPage />
+                </Layout>
+              </RoleGuard>
             }
           />
           <Route
             path={PAGE_PATHS.ADMIN}
             element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <RoleGuard minRole="ADMIN">
                 <Layout>
                   <AdminPage />
                 </Layout>
-              </ProtectedRoute>
+              </RoleGuard>
             }
           />
 
           <Route
             path={`${PAGE_PATHS.QNA}/:qnaId?`}
             element={
-              <Layout>
-                <QnaPage />
-              </Layout>
+              <RoleGuard minRole="STUDENT">
+                <Layout>
+                  <QnaPage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={PAGE_PATHS.USER_PAGE.LECTURER.DASHBOARD}
             element={
-              <Layout>
-                <LecturerDashboardPage />
-              </Layout>
+              <RoleGuard minRole="LECTURER">
+                <Layout>
+                  <LecturerDashboardPage />
+                </Layout>
+              </RoleGuard>
             }
           />
 
           <Route
             path={PAGE_PATHS.USER_PAGE.LECTURER.REPORT}
             element={
-              <Layout>
-                <LecturerReportPage />
-              </Layout>
+              <RoleGuard minRole="LECTURER">
+                <Layout>
+                  <LecturerReportPage />
+                </Layout>
+              </RoleGuard>
             }
           />
           {/* =========================== */}
@@ -234,19 +274,35 @@ function App() {
 
           <Route
             path={`${PAGE_PATHS.LESSON_VIEW}/:lectureId?`}
-            element={<LessonViewPage />}
+            element={
+              <RoleGuard minRole="STUDENT">
+                <LessonViewPage />
+              </RoleGuard>
+            }
           />
           <Route
             path={`${PAGE_PATHS.PAYMENT.SUCCESS}`}
-            element={<PaymentSuccess />}
+            element={
+              <RoleGuard minRole="STUDENT">
+                <PaymentSuccess />
+              </RoleGuard>
+            }
           />
           <Route
             path={`${PAGE_PATHS.PAYMENT.FAIL}`}
-            element={<PaymentSuccess />}
+            element={
+              <RoleGuard minRole="STUDENT">
+                <PaymentSuccess />
+              </RoleGuard>
+            }
           />
           <Route
             path={`${PAGE_PATHS.PAYMENT.CANCEL}`}
-            element={<PaymentSuccess />}
+            element={
+              <RoleGuard minRole="STUDENT">
+                <PaymentSuccess />
+              </RoleGuard>
+            }
           />
         </Routes>
       </Router>
