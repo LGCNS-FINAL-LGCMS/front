@@ -396,6 +396,7 @@ const CreateLecturePage = () => {
         <SectionSubtitle>강의 카테고리를 추가해주세요.</SectionSubtitle>
         {errors.category && <ErrorMessage>{errors.category}</ErrorMessage>}
         <InterestSelector
+          maxSelectable={1}
           interests={interests}
           onSelectionChange={handleSelectionChange}
         />
