@@ -6,7 +6,6 @@ import type { UserCategoriesList } from "../../types/authInfo";
 import type { Interest } from "../../types/interset";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store"; // store 타입 확인
-import { getErrorMessage } from "../../utils/handleApiError";
 
 // 카테고리 선택
 const CategorySection = styled.div`

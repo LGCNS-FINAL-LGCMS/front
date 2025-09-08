@@ -86,11 +86,9 @@ const StudentQnaPage = () => {
         const result = await getMemberQnas();
         if (result) {
           setMemberQnaList(result);
-        } else {
-          console.log("학생 QnA정보를 불러올 수 없습니다.");
         }
-      } catch (error) {
-        console.error("QnA 목록 불러오기 실패:", error);
+      } catch {
+        return null;
       }
     };
     getMemberQna();
