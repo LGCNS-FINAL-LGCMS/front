@@ -19,16 +19,17 @@ const PageWrapper = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  width: ${({ theme }) => theme.size.container_S};
-  margin: 0 auto;
-  padding: 40px;
-  border-radius: 12px;
-  background-color: white;
+  min-height: 80vh;
 
   font-family: ${(props) => props.theme.font.primary};
 `;
 
 const UserInfoContainer = styled.div`
+  width: ${({ theme }) => theme.size.container_S};
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 12px;
+  background-color: white;
   display: flex;
   justify-content: center;
   flex-direction: column;
