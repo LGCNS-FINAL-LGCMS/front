@@ -148,7 +148,7 @@ const ModalContent = styled.div<{ isSuccess: boolean }>`
   h2 {
     font-size: ${({ theme }) => theme.fontSize.title.max};
     color: ${({ isSuccess, theme }) =>
-      isSuccess ? theme.colors.success : theme.colors.danger};
+    isSuccess ? theme.colors.success : theme.colors.danger};
     margin: 0;
     display: flex;
     align-items: center;
@@ -181,20 +181,30 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
   const handleAddCart = async () => {
     try {
       if (!lecture) return;
-      await postCartItem({
+      const postResponse = await postCartItem({
         lectureId: lecture.lectureId,
         title: lecture.title,
         price: lecture.price,
         thumbnailUrl: lecture.thumbnail,
+      }).catch((err) => {
+        setModalMessage(err.response.data.message);
+        setIsSuccess(false);
+        setModalOpen(true);
+        return;
       });
+
+      if (!postResponse) {
+        setModalMessage("네트워크 오류 또는 서버에 접속할 수 없습니다.");
+        setIsSuccess(false);
+        setModalOpen(true);
+        return;
+      }
       setModalMessage("장바구니 담기 성공");
       setIsSuccess(true);
       setModalOpen(true);
-    } catch (err) {
-      console.error(err);
-      setModalMessage("장바구니 담기 실패");
-      setIsSuccess(false);
-      setModalOpen(true);
+    } catch {
+      // console.error(err);
+
     }
   };
 
