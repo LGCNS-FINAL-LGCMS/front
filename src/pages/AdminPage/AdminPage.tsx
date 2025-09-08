@@ -116,20 +116,26 @@ const AdminPage: React.FC = () => {
       if (itemToApprove?.role === 'LECTURER') {
         console.log("이미 처리된 요청입니다.");
       } else {
-        alert("승인되었습니다!");
 
-        setList(prev =>
-          prev.map(item =>
-            item.memberId === selectedItemId ? { ...item, desireLecturer: false } : item
-          )
-        );
+
 
         // post요청
-        const response: desirerResponse = await postConfirmDesirer([selectedItemId]);
-        console.log('결과 : {}', response.data.forEach(item => (item.nickname)));
+        try {
+          await postConfirmDesirer([selectedItemId]);
+          // console.log('결과 : {}', response.data.forEach(item => (item.nickname)));
+          alert("승인되었습니다!");
+          setList(prev =>
+            prev.map(item =>
+              item.memberId === selectedItemId ? { ...item, desireLecturer: false } : item
+            )
+          );
+          // 표에서 제거
+          setList(prev => prev.filter(item => item.memberId !== selectedItemId));
 
-        // 표에서 제거
-        setList(prev => prev.filter(item => item.memberId !== selectedItemId));
+        } catch (err: unknown) {
+          const message = err instanceof Error ? err.message : "승인 처리 실패";
+          alert(message);
+        }
 
       }
       setIsModalOpen(false);
