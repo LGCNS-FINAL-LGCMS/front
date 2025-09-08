@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../redux/store";
 import {
   faCircleCheck,
   faCircleXmark,
@@ -165,13 +167,18 @@ interface LectureHeaderProps {
   lecture: LectureResponse | undefined;
   purchased: boolean | undefined;
   progress: number;
+  hasLessons?: boolean;
 }
 
 const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
   lecture,
   purchased,
   progress,
+  hasLessons,
 }) => {
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.token.isAuthenticated
+  );
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
@@ -215,11 +222,13 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
             <ButtonRow>
               <Price>{lecture?.price?.toLocaleString() ?? 0}원</Price>
               <div style={{ marginLeft: "auto", display: "flex", gap: "1rem" }}>
-                <Button
-                  text="장바구니에 추가"
-                  onClick={handleAddCart}
-                  design={1}
-                />
+                {isAuthenticated && (
+                  <Button
+                    text="장바구니에 추가"
+                    onClick={handleAddCart}
+                    design={1}
+                  />
+                )}
               </div>
             </ButtonRow>
           ) : (
@@ -261,6 +270,7 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
                 }
                 design={2}
                 fontWeight={700}
+                disabled={!hasLessons}
               />
             </ButtonRow>
           )}
