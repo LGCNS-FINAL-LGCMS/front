@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../redux/store";
 import {
   faBookOpen,
   faChartLine,
@@ -63,35 +65,51 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ activePage }) => {
   const navigate = useNavigate();
+  const isAuthenticated: boolean = useSelector(
+    (state: RootState) => state.token.isAuthenticated
+  );
 
   return (
     <SidebarWrapper>
-      <IconButton
-        title="나의 강좌"
-        active={activePage === "my-courses"}
-        onClick={() => navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES)}
-      >
-        <FontAwesomeIcon icon={faBookOpen} />
-        <IconLabel>나의 강좌</IconLabel>
-      </IconButton>
+      {isAuthenticated ? (
+        <>
+          <IconButton
+            title="나의 강좌"
+            active={activePage === "my-courses"}
+            onClick={() => navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES)}
+          >
+            <FontAwesomeIcon icon={faBookOpen} />
+            <IconLabel>나의 강좌</IconLabel>
+          </IconButton>
 
-      <IconButton
-        title="레벨테스트"
-        active={activePage === "level-test"}
-        onClick={() => navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD)}
-      >
-        <FontAwesomeIcon icon={faChartLine} />
-        <IconLabel>레벨테스트</IconLabel>
-      </IconButton>
+          <IconButton
+            title="레벨테스트"
+            active={activePage === "level-test"}
+            onClick={() => navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD)}
+          >
+            <FontAwesomeIcon icon={faChartLine} />
+            <IconLabel>레벨테스트</IconLabel>
+          </IconButton>
 
-      <IconButton
-        title="FAQ"
-        active={activePage === "faq"}
-        onClick={() => navigate(PAGE_PATHS.FAQ)}
-      >
-        <FontAwesomeIcon icon={faQuestionCircle} />
-        <IconLabel>FAQ</IconLabel>
-      </IconButton>
+          <IconButton
+            title="FAQ"
+            active={activePage === "faq"}
+            onClick={() => navigate(PAGE_PATHS.FAQ)}
+          >
+            <FontAwesomeIcon icon={faQuestionCircle} />
+            <IconLabel>FAQ</IconLabel>
+          </IconButton>
+        </>
+      ) : (
+        <IconButton
+          title="FAQ"
+          active={activePage === "faq"}
+          onClick={() => navigate(PAGE_PATHS.FAQ)}
+        >
+          <FontAwesomeIcon icon={faQuestionCircle} />
+          <IconLabel>FAQ</IconLabel>
+        </IconButton>
+      )}
     </SidebarWrapper>
   );
 };
