@@ -76,22 +76,22 @@ const UserButton = styled.button`
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   font-size: 1.3rem;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors.text_D};
+  color: ${({ theme }) => theme.colors.text_B};
   background: none;
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-
+  transition: ${({ theme }) => theme.transition.default};
   &:hover {
-    color: ${({ theme }) => theme.colors.text_B};
+    color: ${({ theme }) => theme.colors.gray_M};
   }
 `;
 
 const Container = styled.nav`
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   height: 100%;
   display: grid;
@@ -153,9 +153,9 @@ const LogoText = styled.span`
   cursor: pointer;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.text_B};
-
+  transition: ${({ theme }) => theme.transition.default};
   &:hover {
-    color: ${({ theme }) => theme.colors.text_D};
+    color: ${({ theme }) => theme.colors.gray_M};
   }
 `;
 
