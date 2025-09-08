@@ -181,30 +181,25 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
   const handleAddCart = async () => {
     try {
       if (!lecture) return;
-      const postResponse = await postCartItem({
+      await postCartItem({
         lectureId: lecture.lectureId,
         title: lecture.title,
         price: lecture.price,
         thumbnailUrl: lecture.thumbnail,
-      }).catch((err) => {
-        setModalMessage(err.response.data.message);
-        setIsSuccess(false);
-        setModalOpen(true);
-        return;
       });
-
-      if (!postResponse) {
-        setModalMessage("네트워크 오류 또는 서버에 접속할 수 없습니다.");
-        setIsSuccess(false);
-        setModalOpen(true);
-        return;
-      }
       setModalMessage("장바구니 담기 성공");
       setIsSuccess(true);
       setModalOpen(true);
-    } catch {
-      // console.error(err);
+    } catch (err) {
+      let errorMessage = "알 수 없는 에러가 발생했습니다.";
 
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+
+      setModalMessage(errorMessage);
+      setIsSuccess(false);
+      setModalOpen(true);
     }
   };
 
@@ -257,8 +252,8 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
                     link.click();
                     document.body.removeChild(link);
                     window.URL.revokeObjectURL(url);
-                  } catch (err) {
-                    console.error("파일 다운로드 실패", err);
+                  } catch {
+                    // console.error("파일 다운로드 실패", err);
                   }
                 }}
                 design={2}
@@ -294,6 +289,14 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
             <Button
               text="확인"
               onClick={() => setModalOpen(false)}
+              design={1}
+            />
+            <Button
+              text="장바구니로 이동"
+              onClick={() => {
+                setModalOpen(false);
+                navigate(PAGE_PATHS.PAYMENT.PAYMENT);
+              }}
               design={1}
             />
           </ModalContent>
