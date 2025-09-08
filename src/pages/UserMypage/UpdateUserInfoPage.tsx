@@ -214,6 +214,7 @@ const UpdateUserInfoPage = () => {
     }
 
     if (categoryChanged) {
+      setNicknameCheck(true);
       // 카테고리 5개이상이면 리스트에 안보냄
       if (selectedCategories.length === 0) {
         alert("카테고리를 다시 선택해주세요.");
