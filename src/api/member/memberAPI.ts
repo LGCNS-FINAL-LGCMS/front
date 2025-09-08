@@ -26,7 +26,7 @@ export const getDesirers = async (): Promise<desirerResponse> => {
         const response = await apiClient.get<desirerResponse>(
             API_ENDPOINTS.MEMBER.DESIRER
         );
-        console.log("강사 승인대기자 목록 API 응답 성공!", response?.data);
+        // console.log("강사 승인대기자 목록 API 응답 성공!", response?.data);
         return response.data;
     } catch (error: unknown) {
         const errorMessage = getErrorMessage(
@@ -34,7 +34,7 @@ export const getDesirers = async (): Promise<desirerResponse> => {
             "강사승인대기자 목록 불러오기 실패"
         );
 
-        console.error("Member API error : ", errorMessage);
+        // console.error("Member API error : ", errorMessage);
         throw new Error(errorMessage);
     }
 };
@@ -48,14 +48,14 @@ export const postConfirmDesirer = async (
             API_ENDPOINTS.MEMBER.CONFIRM,
             { memberIds }
         );
-        console.log("강사 승인 API 응답 성공!", response?.data);
+        // console.log("강사 승인 API 응답 성공!", response?.data);
         return response.data;
     } catch (error: unknown) {
         const errorMessage = getErrorMessage(
             error,
             "승인완료 요청 보내기 실패"
         );
-        console.error("Member API error : ", errorMessage);
+        // console.error("Member API error : ", errorMessage);
         throw new Error(errorMessage);
     }
 }
