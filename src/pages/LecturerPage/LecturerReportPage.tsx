@@ -8,14 +8,13 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-const PageTitle = styled.h1`
-  font-family: ${({ theme }) => theme.font.primary};
-  font-size: ${({ theme }) => theme.fontSize.title.max};
-  border-color: ${({ theme }) => theme.colors.gray_M};
-  max-width: 100%;
-  padding-bottom: 12px;
+const PageTitle = styled.p`
   border-bottom: 2px solid;
-  width: ${({ theme }) => theme.size.bottomLine};
+  width: 1080px;
+  font-size: ${(props) => props.theme.fontSize.title.max};
+  font-family: ${(props) => props.theme.font.primary};
+  border-color: ${(props) => props.theme.colors.border_Dark};
+  margin: 0 auto 30px auto;
 `;
 
 const LecturerReportContainer = styled.div`
@@ -43,44 +42,33 @@ const NotFoundMessage = styled.p`
   text-align: center;
 `;
 
-const shimmer = keyframes`
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
 `;
 
-const SkeletonCard = styled.div`
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200px 100%;
-  animation: ${shimmer} 1.5s infinite;
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 `;
 
-const SkeletonLine = styled.div<{ width?: string; height?: string }>`
-  height: ${({ height }) => height || "16px"};
-  width: ${({ width }) => width || "100%"};
-  background: #f0f0f0;
-  border-radius: 4px;
-  margin-bottom: 12px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
+const LoadingSpinner = styled.div`
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid ${({ theme }) => theme.colors.primary};
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+  margin-bottom: 20px;
 `;
 
-const SkeletonTitle = styled.div`
-  height: 32px;
-  width: 200px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200px 100%;
-  animation: ${shimmer} 1.5s infinite;
-  border-radius: 4px;
-  margin-bottom: 24px;
+const LoadingMessage = styled.p`
+  font-size: ${({ theme }) => theme.fontSize.subtitle};
+  color: ${({ theme }) => theme.colors.gray_D};
+  font-weight: 500;
 `;
 
 const LecturerReportPage = () => {
@@ -110,27 +98,11 @@ const LecturerReportPage = () => {
   if (isLoading) {
     return (
       <LecturerReportContainer>
-        <SkeletonTitle />
-        <SkeletonCard>
-          <SkeletonLine width="90%" />
-          <SkeletonLine width="75%" />
-          <SkeletonLine width="85%" />
-          <SkeletonLine width="60%" />
-          <SkeletonLine width="80%" />
-        </SkeletonCard>
-        <SkeletonCard>
-          <SkeletonLine width="85%" />
-          <SkeletonLine width="70%" />
-          <SkeletonLine width="90%" />
-          <SkeletonLine width="65%" />
-        </SkeletonCard>
-        <SkeletonCard>
-          <SkeletonLine width="80%" />
-          <SkeletonLine width="85%" />
-          <SkeletonLine width="70%" />
-          <SkeletonLine width="90%" />
-          <SkeletonLine width="75%" />
-        </SkeletonCard>
+        <PageTitle>강사 레포트</PageTitle>
+        <LoadingContainer>
+          <LoadingSpinner />
+          <LoadingMessage>강사 레포트를 생성중입니다...</LoadingMessage>
+        </LoadingContainer>
       </LecturerReportContainer>
     );
   }
