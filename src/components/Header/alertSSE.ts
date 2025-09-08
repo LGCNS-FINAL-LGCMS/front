@@ -13,8 +13,12 @@ export const useSseConnect = () => {
     (state: RootState) => state.token.accessToken
   );
 
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.token.isAuthenticated
+  );
+
   useEffect(() => {
-    if (!accessToken) return;
+    if (!accessToken || !isAuthenticated) return;
 
     const eventSource = new EventSourcePolyfill(
       `${API_BASE_URL}${API_ENDPOINTS.NOTIFICATION.SUBSCRIBE}`,
