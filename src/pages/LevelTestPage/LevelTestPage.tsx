@@ -365,8 +365,6 @@ const LevelTestPage = () => {
     const submitData = getSession();
 
     if (!submitData?.answers) {
-      console.log("제출할 데이터가 없어요");
-      console.log(submitData);
       return false;
     } else {
       try {
@@ -376,7 +374,6 @@ const LevelTestPage = () => {
         );
 
         if (response.data.status === "OK") {
-          console.log("answer 제출 완료");
           clearSession(); // 제출성공하면 세션 삭제
           return true;
         } else {
@@ -384,8 +381,7 @@ const LevelTestPage = () => {
             response.data.message || "answer 제출 비즈니스 로직 에러"
           );
         }
-      } catch (error: unknown) {
-        console.log("answer 제출 실패", error);
+      } catch {
         return false;
       }
     }
@@ -439,8 +435,7 @@ const LevelTestPage = () => {
         alert("제출에 실패했습니다. 다시 시도해주세요.");
         setShowSuccessModal(false);
       }
-    } catch (error) {
-      console.error("제출 중 에러:", error);
+    } catch {
       alert("오류가 발생했습니다. 다시 시도해주세요.");
       setShowSuccessModal(false);
     }

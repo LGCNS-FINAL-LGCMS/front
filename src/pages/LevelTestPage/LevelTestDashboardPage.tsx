@@ -237,8 +237,8 @@ const LevelTestDashboardPage = () => {
       try {
         const result = await getcategoriesList();
         if (result.status === "OK") setCategoryList(result.data.categories);
-      } catch (error) {
-        console.log("카테고리 API 호출 실패", error);
+      } catch {
+        setCategoryList([]);
       }
     };
     // Report
