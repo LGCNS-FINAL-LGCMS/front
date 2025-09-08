@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 interface InfoCheckModalProps {
   isOpen: boolean;
-  message: string;
+  message: string | React.ReactNode;
   onConfirm: () => void; // 확인 클릭 시 함수
   onCancel: () => void;
   confirmText?: string;
