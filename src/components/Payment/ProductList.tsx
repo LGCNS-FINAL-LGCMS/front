@@ -181,6 +181,7 @@ const Thumb = styled.div<{ imageUrl?: string }>`
 
   &::before {
     content: "";
+    display: block;
     top: 0;
     left: 0;
     width: 100%;
