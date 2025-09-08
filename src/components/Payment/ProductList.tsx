@@ -106,7 +106,7 @@ const ProductList: React.FC<ProductListProps> = ({ items, setItems }) => {
                   {/* 썸네일 */}
                   <T.Td >
 
-                    <Thumb imageUrl={it.thumbnailUrl || undefined} />
+                    <Thumb $imageUrl={it.thumbnailUrl || undefined} />
 
                   </T.Td>
 
@@ -170,7 +170,7 @@ const CheckBox = styled.input`
   cursor: pointer;
 `;
 
-const Thumb = styled.div<{ imageUrl?: string }>`
+const Thumb = styled.div<{ $imageUrl?: string }>`
   width: 90px;
   aspect-ratio: 16 / 9;
 
@@ -186,8 +186,8 @@ const Thumb = styled.div<{ imageUrl?: string }>`
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: ${({ imageUrl }) =>
-    imageUrl ? `url(${imageUrl})` : "none"};
+    background-image: ${({ $imageUrl }) => //
+    $imageUrl ? `url(${$imageUrl})` : "none"};
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
