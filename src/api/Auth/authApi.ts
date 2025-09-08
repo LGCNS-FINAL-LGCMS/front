@@ -2,15 +2,16 @@
 
 import apiClient from "../index";
 import { API_ENDPOINTS } from "../../constants/endpoints";
+import { getErrorMessage } from "../../utils/handleApiError";
 
-// 일단 로그아웃만 만들어둠
 export const logoutRequest = async () => {
   try {
     const response = await apiClient.delete(API_ENDPOINTS.AUTH.LOGOUT);
     return response.data;
   } catch (error: unknown) {
-    const message = error;
-    console.error("Logout API error:", message);
-    throw message;
+    const message = getErrorMessage(error, "로그아웃 실패");
+    console.error("LogOut API error:", message);
+
+    throw new Error(message);
   }
 };
