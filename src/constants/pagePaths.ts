@@ -4,7 +4,8 @@
 // 잘 모르겠으면 형균씨 찾아오세요
 
 export const PAGE_PATHS = {
-  HOME: "/",
+  LANDING: "/",
+  HOME: "/home",
   LOGIN: "/login",
   SIGNUP: "/signup",
   LEVEL_TEST: {

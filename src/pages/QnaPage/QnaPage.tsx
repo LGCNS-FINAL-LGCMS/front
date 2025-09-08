@@ -1,6 +1,6 @@
 import {
   useState,
-  // type ChangeEvent,
+  type ChangeEvent,
   type KeyboardEvent,
   type MouseEvent,
   useCallback,
@@ -24,8 +24,6 @@ import {
   putAnswer,
 } from "../../api/Qna/qnaAPI";
 import type { Qna, Answer } from "../../types/qna";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../redux/store";
 
 const Wrapper = styled.div`
   display: flex;
@@ -144,7 +142,7 @@ const InputContainer = styled.div`
   }
 `;
 
-const AnswerTextarea = styled.textarea`
+const AnswerInput = styled.input`
   flex-grow: 1;
   padding: 14px 20px;
   font-size: 16px;
@@ -153,10 +151,6 @@ const AnswerTextarea = styled.textarea`
   background-color: transparent;
   font-family: ${({ theme }) => theme.font.primary}, sans-serif;
   color: ${({ theme }) => theme.colors.text_D};
-  resize: none;
-  min-height: 46px;
-  max-height: 300px;
-  line-height: 1.5;
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray_M};
@@ -293,7 +287,6 @@ export interface ExtendedQna extends Qna {
 }
 
 const QnaDetailPage = () => {
-  const role = useSelector((state: RootState) => state.auth.role);
   const navigate = useNavigate();
   const [qna, setQna] = useState<ExtendedQna>();
   const [newAnswer, setNewAnswer] = useState("");
@@ -330,8 +323,8 @@ const QnaDetailPage = () => {
     fetchQna();
   }, [fetchQna, qnaId]);
 
-  // const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
-  //   setNewAnswer(e.target.value);
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setNewAnswer(e.target.value);
 
   const handleAddAnswer = async (
     e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
@@ -352,13 +345,9 @@ const QnaDetailPage = () => {
     }
   };
 
-  const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleAddAnswer(e as unknown as KeyboardEvent<HTMLInputElement>);
-    }
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") handleAddAnswer(e);
   };
-
   const formatDate = (createdAt: number[] | undefined) => {
     if (!createdAt) return "날짜 정보 없음";
 
@@ -471,18 +460,11 @@ const QnaDetailPage = () => {
         </Header>
 
         <InputContainer>
-          <AnswerTextarea
+          <AnswerInput
             value={newAnswer}
-            onChange={(e) => {
-              setNewAnswer(e.target.value);
-
-              // 자동 높이 조절
-              e.target.style.height = "auto";
-              e.target.style.height = `${e.target.scrollHeight}px`;
-            }}
+            onChange={handleInputChange}
             placeholder="답변을 입력하세요"
-            onKeyDown={(e) => handleKeyPress(e)}
-            maxLength={5000}
+            onKeyPress={handleKeyPress}
           />
           <SubmitButton onClick={handleAddAnswer}>
             <FontAwesomeIcon icon={faArrowRight} />
@@ -528,16 +510,14 @@ const QnaDetailPage = () => {
                     ) : (
                       <>
                         {ans.content}
-                        {role !== "STUDENT" && (
-                          <TextButton
-                            onClick={() => {
-                              setEditingAnswerId(ans.answerId);
-                              setEditAnswerContent(ans.content);
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faPen} />
-                          </TextButton>
-                        )}
+                        <TextButton
+                          onClick={() => {
+                            setEditingAnswerId(ans.answerId);
+                            setEditAnswerContent(ans.content);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faPen} />
+                        </TextButton>
                       </>
                     )}
                   </AnswerItem>
