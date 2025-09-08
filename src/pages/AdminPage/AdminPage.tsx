@@ -27,7 +27,7 @@ const PageTitle = styled.h1`
 
 const formatDate = (createdAt: number[]) => {
   const [year, month, day, hour, minute] = createdAt;
-  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")} ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")};}`;
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")} ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 };
 const isNewItem = (createdAt: number[]) => {
   const [year, month, day, hour, minute] = createdAt;

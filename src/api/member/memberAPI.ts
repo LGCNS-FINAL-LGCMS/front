@@ -41,12 +41,12 @@ export const getDesirers = async (): Promise<desirerResponse> => {
 
 // approve요청
 export const postConfirmDesirer = async (
-    memberId: number[]
+    memberIds: number[]
 ): Promise<desirerResponse> => {
     try {
         const response = await apiClient.post<desirerResponse>(
             API_ENDPOINTS.MEMBER.CONFIRM,
-            { memberId }
+            { memberIds }
         );
         console.log("강사 승인 API 응답 성공!", response?.data);
         return response.data;
