@@ -15,10 +15,13 @@ export const Board = styled.div`
   box-shadow: 0 1px 2px ${({ theme }) => theme.shadow.lg};
   height: 450px; 
   position: relative;
-  width: 800px;
+
+  width: 100%;
+  max-width: 800px;
   margin: auto;
 
   overflow-y: auto; 
+  overflow-x: auto; 
 
   &::-webkit-scrollbar {
     width: 6px; 
@@ -39,6 +42,8 @@ export const Table = styled.table`
   border-collapse: collapse;
   table-layout: fixed;
   padding-right: 6px;
+
+  min-width: 700px;
 `;
 
 export const TrHead = styled.tr`
@@ -51,13 +56,8 @@ export const TrHead = styled.tr`
 
 export const TrBody = styled.tr`
   border-bottom: 1px solid ${({ theme }) => theme.colors.border_Dark};
-  background: ${({ theme }) => theme.colors.secondary};
+  background: ${({ theme }) => theme.colors.card};
   transition: ${({ theme }) => theme.transition.default};
-  &:hover {
-    background: ${({ theme }) => theme.colors.success};
-  }
-
-
 `;
 
 export const TrEmpty = styled.tr`
@@ -89,6 +89,7 @@ export const ActionRow = styled.div`
 const ApprovalTable: React.FC<Props> = ({ items, onApprove }) => {
   return (
     <Board>
+
       <Table role="table" aria-label="강사 승인 요청 목록">
         <thead>
           <TrHead>
