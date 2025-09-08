@@ -60,7 +60,7 @@ const AdminPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response: desirerResponse = await getDesirers();
-      console.log(response.data);
+      // console.log(response.data);
       setList(response.data);
     };
     fetchData();
@@ -114,7 +114,7 @@ const AdminPage: React.FC = () => {
     if (selectedItemId !== null) {
       const itemToApprove = list.find(item => item.memberId === selectedItemId);
       if (itemToApprove?.role === 'LECTURER') {
-        console.log("이미 처리된 요청입니다.");
+        alert("이미 처리된 요청입니다.");
       } else {
 
 
