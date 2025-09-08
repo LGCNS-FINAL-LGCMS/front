@@ -105,10 +105,6 @@ const RoleSection = styled.div`
   gap: 30px;
 `;
 
-const RoleSelectSubtitle = styled.p`
-  font-size: ${(props) => props.theme.fontSize.contents.medium};
-`;
-
 const ButtonSection = styled.div``;
 
 const UpdateUserInfoPage = () => {
@@ -163,14 +159,11 @@ const UpdateUserInfoPage = () => {
         if (result.data.isUsed === true) {
           setNicknameCheck(false);
           setNicknameCheckMessage("사용할 수 없는 닉네임입니다.");
-          console.log("isUsed: ", result.data.isUsed);
         } else if (result.data.isUsed === false) {
           setNicknameCheckMessage("사용가능한 닉네임입니다.");
           setNicknameCheck(true);
-          console.log("isUsed: ", result.data.isUsed);
         }
-      } catch (error) {
-        console.error("닉네임중복확인 오류:", error);
+      } catch {
         setNicknameCheckMessage("오류가 발생했습니다. 다시 시도해주세요.");
       } finally {
         setIsCheckingNickname(false);
@@ -236,8 +229,6 @@ const UpdateUserInfoPage = () => {
         );
 
         if (result.status === "OK") {
-          console.log("서버연결 성공");
-
           const {
             memberId,
             nickname,
@@ -258,10 +249,9 @@ const UpdateUserInfoPage = () => {
           setShowSuccessModal(true);
         } else {
           setShowFailModal(true);
-          console.log("회원가입수정 실패");
         }
-      } catch (error) {
-        console.error("회원가입수정 서버 오류 : ", error);
+      } catch {
+        setShowFailModal(true);
       }
     }
     return;
@@ -338,7 +328,6 @@ const UpdateUserInfoPage = () => {
         </CategorySection>
 
         <RoleSection>
-          <RoleSelectSubtitle>강사로 전환하시겠습니까?</RoleSelectSubtitle>
           <RoleSelect
             onRoleChange={handleRoleSelection}
             selectedRole={selectedRole}
