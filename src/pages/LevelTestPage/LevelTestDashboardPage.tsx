@@ -248,14 +248,10 @@ const LevelTestDashboardPage = () => {
         if (response.data.status === "OK") {
           if (response.data.data) {
             setReportList(response.data.data);
-          } else {
-            console.log("레포트 데이터 없음");
           }
-        } else {
-          console.log("StudentReport API 연결 실패");
         }
-      } catch (error) {
-        console.log("StudentReport API 호출 실패", error);
+      } catch {
+        return null;
       }
     };
 
@@ -271,8 +267,8 @@ const LevelTestDashboardPage = () => {
     try {
       const result = await levelTestApi(selectedCategory, auth.memberId);
       if (result) navigate(PAGE_PATHS.LEVEL_TEST.TEST);
-    } catch (error) {
-      console.log("레벨 테스트 API 호출 실패", error);
+    } catch {
+      return null;
     }
   };
 
