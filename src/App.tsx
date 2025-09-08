@@ -35,6 +35,7 @@ import AdminPage from "./pages/AdminPage/AdminPage";
 import ProtectedRoute from "./components/Admin/ProtectedRoute";
 import StudentReportPage from "./pages/StudentReportPage/StudentReportPage";
 import LecturerReportPage from "./pages/LecturerPage/LecturerReportPage";
+import LoginGuard from "./components/Admin/LoginGuard";
 
 function App() {
   return (
@@ -165,9 +166,11 @@ function App() {
           <Route
             path={PAGE_PATHS.PAYMENT.RESULT}
             element={
-              <Layout>
-                <PaymentResultPage />
-              </Layout>
+              <LoginGuard>
+                <Layout>
+                  <PaymentResultPage />
+                </Layout>
+              </LoginGuard>
             }
           />
 
