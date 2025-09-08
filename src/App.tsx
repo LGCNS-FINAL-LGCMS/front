@@ -12,6 +12,7 @@ import Layout from "./layouts/Layout";
 // =========== 레이아웃 임포트 ===========
 
 // =========== 페이지 임포트 ===========
+import LandingPage from "./pages/LandingPage/LandingPage";
 import Login from "./pages/LoginPage/Login";
 import SignupPage from "./pages/SignupPage/SignupPage";
 import StudentLecturePage from "./pages/UserMypage/StudentLecturePage";
@@ -45,6 +46,8 @@ function App() {
         <ChatWrapper />
 
         <Routes>
+          <Route path={PAGE_PATHS.LANDING} element={<LandingPage />} />
+
           {/* 일반 Layout */}
           <Route
             path={PAGE_PATHS.LOGIN}
