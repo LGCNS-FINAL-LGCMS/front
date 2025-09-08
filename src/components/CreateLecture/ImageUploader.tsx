@@ -183,7 +183,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onFileSelect }) => {
 
     setOriginalImage({ file, preview });
     setCroppedImage(null);
-    setIsModalOpen(false);
+    setIsModalOpen(true);
 
     onFileSelect(file, preview);
 
