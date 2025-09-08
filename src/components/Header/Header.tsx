@@ -9,6 +9,7 @@ import type { Notification } from "../../types/notification";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../../redux/store";
 import { clearCategory } from "../../redux/Category/categorySlice";
+import { clearKeyword } from "../../redux/keyword/keywordSlice";
 import { logoutUsingToken } from "../../redux/token/tokenSlice";
 import { resetUserInfo } from "../../redux/Auth/authSlice";
 import {
@@ -295,6 +296,7 @@ const Header = () => {
 
   const handleLogoClick = () => {
     dispatch(clearCategory());
+    dispatch(clearKeyword());
     navigate(PAGE_PATHS.HOME);
   };
 
