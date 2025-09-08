@@ -95,7 +95,6 @@ const LessonContainer: React.FC<Props> = ({
           <div>순서</div>
           <div>강좌</div>
           <div>생성 일자</div>
-          <div>액션</div>
         </HeaderRow>
 
         {lessons.map((lesson, idx) => (
