@@ -220,11 +220,10 @@ const SectionSubtitle = styled.p`
 const ConfirmRow = styled.div`
   margin-bottom: 12px;
   font-size: ${({ theme }) => theme.fontSize.body.min};
-
   strong {
     font-weight: 600;
     display: inline-block;
-    width: 90px;
+    min-width: 65px;
   }
 `;
 
@@ -234,6 +233,7 @@ const CreateLecturePage = () => {
 
   const navigate = useNavigate();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [selectedInterests, setSelectedInterests] = useState<Interest[]>([]);
@@ -496,14 +496,18 @@ const CreateLecturePage = () => {
               <Button
                 text="취소"
                 onClick={() => setShowConfirmModal(false)}
+                disabled={isSubmitting}
                 design={1}
               />
               <Button
-                text="제출"
+                text={isSubmitting ? "제출 중..." : "제출"}
                 onClick={async () => {
+                  if (isSubmitting) return;
+                  setIsSubmitting(true);
                   try {
                     if (selectedImageFile == null || selectedFile == null)
                       return;
+
                     const response = await openLectureRequest({
                       title,
                       category: selectedInterests[0]?.name ?? "",
@@ -525,9 +529,12 @@ const CreateLecturePage = () => {
                     navigate(PAGE_PATHS.USER_PAGE.LECTURER.MAIN);
                   } catch (error) {
                     console.error("강의 개설 중 오류 발생:", error);
-                    alert("강의 개설 중 오류 발생");
+                    alert(error);
+                  } finally {
+                    setIsSubmitting(false);
                   }
                 }}
+                disabled={isSubmitting}
                 design={1}
               />
             </div>

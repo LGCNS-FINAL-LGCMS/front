@@ -1,9 +1,14 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import LectureCard from "../Common/LectureCard";
 import LectureCardSkeleton from "../LectureCardSkeleton/LectureCardSkeleton";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import {
+  faCircleCheck,
+  faCircleXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   fetchLecturePage,
   resetPaginationState,
@@ -15,9 +20,15 @@ import Pagination from "react-bootstrap/Pagination";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { PAGE_PATHS } from "../../constants/pagePaths";
 import { publishLectureRequest } from "../../api/Lecture/lectureAPI";
+import Button from "../Common/Button";
 
 export interface LectureWithStatus extends Lecture {
   status: string;
+}
+
+interface ModalProps {
+  message: string;
+  onClose: () => void;
 }
 
 // 카드 그리드
@@ -87,6 +98,68 @@ const CustomPaginationButton = styled(Pagination.First)`
   }
 `;
 
+const Overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: ${({ theme }) => theme.colors.background_Overlay};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: ${({ theme }) => theme.zIndex.modal};
+`;
+
+const ModalBox = styled.div<{ isSuccess: boolean }>`
+  background: #fff;
+  width: ${({ theme }) => theme.size.modal.width};
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: ${({ theme }) => theme.shadow.lg};
+  text-align: center;
+  animation: fadeIn 0.3s ${({ theme }) => theme.transition.default};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  h2 {
+    font-size: ${({ theme }) => theme.fontSize.title.max};
+    color: ${({ isSuccess, theme }) =>
+      isSuccess ? theme.colors.success : theme.colors.danger};
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  p {
+    font-size: ${({ theme }) => theme.fontSize.body.max};
+    color: ${({ theme }) => theme.colors.text_D};
+    margin: 0;
+  }
+`;
+
+const Modal: React.FC<ModalProps & { isSuccess?: boolean }> = ({
+  message,
+  onClose,
+  isSuccess = true,
+}) => (
+  <Overlay onClick={onClose}>
+    <ModalBox onClick={(e) => e.stopPropagation()} isSuccess={isSuccess}>
+      <h2>
+        <FontAwesomeIcon
+          icon={isSuccess ? faCircleCheck : faCircleXmark}
+          size="2x"
+        />
+        {isSuccess ? "성공" : "실패"}
+      </h2>
+      <p>{message}</p>
+      <div style={{ marginTop: "1rem" }}>
+        <Button text="확인" onClick={onClose} design={1} />
+      </div>
+    </ModalBox>
+  </Overlay>
+);
+
 const PAGE_SIZE = 12;
 
 const LecturerLectureContainer: React.FC = () => {
@@ -99,6 +172,8 @@ const LecturerLectureContainer: React.FC = () => {
   const keyword = useSelector((state: RootState) => state.keyword.searchText);
   const category = useSelector((state: RootState) => state.category.category);
   const totalPages = Math.ceil(totalCount / pageSize);
+  const [modalMessage, setModalMessage] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(true);
 
   useEffect(() => {
     dispatch(resetPaginationState());
@@ -151,21 +226,28 @@ const LecturerLectureContainer: React.FC = () => {
                         label: "강의 출시",
                         onClick: async () => {
                           try {
-                            const res = await publishLectureRequest(
+                            await publishLectureRequest(
                               item.lectureId,
                               "APPROVED"
                             );
-                            alert("강의를 성공적으로 출시하였습니다");
                             dispatch(
                               fetchLecturePage({
                                 page: currentPage - 1,
                                 size: PAGE_SIZE,
                               })
                             );
-                            console.log("Lecture publish success:", res);
+                            setIsSuccess(true); // 성공
+                            setModalMessage(
+                              "강의를 성공적으로 출시하였습니다."
+                            );
                           } catch (error) {
-                            alert("강의 출시에 실패하였습니다");
-                            console.error(error);
+                            setIsSuccess(false); // 실패
+                            if (error instanceof Error)
+                              setModalMessage(error.message);
+                            else
+                              setModalMessage(
+                                "알 수 없는 오류가 발생했습니다."
+                              );
                           }
                         },
                       },
@@ -222,6 +304,13 @@ const LecturerLectureContainer: React.FC = () => {
           />
         </Pagination>
       </PaginationContainer>
+      {modalMessage && (
+        <Modal
+          message={modalMessage}
+          onClose={() => setModalMessage(null)}
+          isSuccess={isSuccess}
+        />
+      )}
     </>
   );
 };
