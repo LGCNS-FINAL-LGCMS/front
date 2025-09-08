@@ -320,18 +320,14 @@ const QnaDetailPage = () => {
     try {
       const data = await getQnaById(qnaId);
       setQna(data);
-      console.log(data);
-    } catch (err) {
-      console.error(err);
+    } catch {
+      return null;
     }
   }, [qnaId]);
 
   useEffect(() => {
     fetchQna();
   }, [fetchQna, qnaId]);
-
-  // const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
-  //   setNewAnswer(e.target.value);
 
   const handleAddAnswer = async (
     e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
@@ -347,9 +343,7 @@ const QnaDetailPage = () => {
       });
       setNewAnswer("");
       await fetchQna();
-    } catch (error) {
-      console.error("답변 등록 실패:", error);
-    }
+    } catch (error) {}
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {

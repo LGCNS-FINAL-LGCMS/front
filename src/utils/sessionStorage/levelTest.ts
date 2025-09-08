@@ -32,14 +32,6 @@ export const levelTestApi = async (categoryId: number, memberId: number) => {
       `${API_ENDPOINTS.LEVEL_TEST.GET_QUESTIONS}?categoryId=${categoryId}`
     );
 
-    if (response.data.status === "OK") {
-      console.log("레벨 테스트 문제 서버 응답 성공");
-    } else {
-      throw new Error(
-        response.data.message || "레벨 테스트 문제 비즈니스 로직 에러"
-      );
-    }
-
     // 문제 저장
     const session: LevelTestSession = {
       questions: response.data.data,
@@ -50,8 +42,8 @@ export const levelTestApi = async (categoryId: number, memberId: number) => {
 
     sessionStorage.setItem("levelTest", JSON.stringify(session));
     return true;
-  } catch (error: unknown) {
-    console.log("레벨테스트 문제 API 호출 실패", error);
+  } catch {
+    return false;
   }
 };
 
@@ -60,8 +52,7 @@ export const getSession = (): LevelTestSession | null => {
   try {
     const data = sessionStorage.getItem("levelTest");
     return data ? JSON.parse(data) : null;
-  } catch (error: unknown) {
-    console.log("세션데이터를 가져오지 못했습니다.", error);
+  } catch {
     return null;
   }
 };
