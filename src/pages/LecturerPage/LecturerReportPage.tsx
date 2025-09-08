@@ -7,14 +7,15 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 10px;
+  min-height: calc(100vh - ${({ theme }) => theme.size.header.height});
+  font-family: ${({ theme }) => theme.font.primary};
 `;
 const PageTitle = styled.h1`
-  font-family: ${({ theme }) => theme.font.primary};
   font-size: ${({ theme }) => theme.fontSize.title.max};
-  border-color: ${({ theme }) => theme.colors.gray_M};
-  max-width: 100%;
-  padding-bottom: 12px;
-  border-bottom: 2px solid;
+  color: ${({ theme }) => theme.colors.text_D};
+  border-bottom: 2px solid ${({ theme }) => theme.colors.border_Dark};
+  padding: 10px 0;
   width: ${({ theme }) => theme.size.bottomLine};
 `;
 

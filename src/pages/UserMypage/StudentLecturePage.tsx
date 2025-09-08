@@ -5,15 +5,21 @@ import { useNavigate } from "react-router-dom";
 import { PAGE_PATHS } from "../../constants/pagePaths";
 import SideTab from "../../components/Common/SideTab";
 
-const Container = styled.div``;
-
-const MypageTitle = styled.p`
-  border-bottom: 2px solid;
-  width: 1080px;
-  font-size: ${(props) => props.theme.fontSize.title.max};
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-height: calc(100vh - ${({ theme }) => theme.size.header.height});
   font-family: ${(props) => props.theme.font.primary};
-  border-color: ${(props) => props.theme.colors.border_Dark};
-  margin: 0 auto 30px auto; /* 👈 좌우 auto로 가운데 정렬! */
+`;
+
+const MypageTitle = styled.h1`
+  width: ${(props) => props.theme.size.bottomLine};
+  font-size: ${({ theme }) => theme.fontSize.title.max};
+  color: ${({ theme }) => theme.colors.text_D};
+  border-bottom: 2px solid ${({ theme }) => theme.colors.border_Dark};
+  padding: 10px 0;
 `;
 
 const StudentLecturePage = () => {
@@ -23,7 +29,7 @@ const StudentLecturePage = () => {
   const tabItems = [
     {
       id: 1,
-      label: "My Lecture",
+      label: "나의 강의실",
       action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES),
     },
     {
@@ -50,8 +56,8 @@ const StudentLecturePage = () => {
 
   return (
     <Container>
-      <SideTab title="MyPage" items={tabItems} onSelect={handleTabSelect} />
-      <MypageTitle>MY PAGE</MypageTitle>
+      <SideTab title="My Page" items={tabItems} onSelect={handleTabSelect} />
+      <MypageTitle>나의 강의실</MypageTitle>
       <StudentLectureContainer />
     </Container>
   );

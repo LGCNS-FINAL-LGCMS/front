@@ -34,10 +34,10 @@ const ReportHeader = styled.div`
 const PageTitle = styled.h1`
   border-bottom: 2px solid;
   max-width: 100%;
-  font-size: ${(props) => props.theme.fontSize.title.max};
-  font-family: ${(props) => props.theme.font.primary};
-  border-color: ${(props) => props.theme.colors.background_Overlay};
-  color: ${(props) => props.theme.colors.background_Overlay};
+  font-size: ${({ theme }) => theme.fontSize.title.max};
+  font-family: ${({ theme }) => theme.font.primary};
+  border-color: ${({ theme }) => theme.colors.background_Overlay};
+  color: ${({ theme }) => theme.colors.background_Overlay};
   padding-bottom: 12px;
 `;
 
