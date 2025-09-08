@@ -16,23 +16,20 @@ import type {
 } from "../../utils/sessionStorage/consulting";
 
 const DashboardContainer = styled.div`
-  padding: 20px;
-  background-color: ${({ theme }) => theme.colors.background_B};
   min-height: calc(100vh - ${({ theme }) => theme.size.header.height});
   font-family: ${({ theme }) => theme.font.primary};
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 10px;
 `;
 
 const DashboardTitle = styled.h1`
-  font-size: ${({ theme }) => theme.fontSize.title.max};
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.text_D};
-  margin-bottom: 30px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid ${({ theme }) => theme.colors.border_Dark};
   width: ${({ theme }) => theme.size.bottomLine};
+  font-size: ${({ theme }) => theme.fontSize.title.max};
+  color: ${({ theme }) => theme.colors.text_D};
+  border-bottom: 2px solid ${({ theme }) => theme.colors.border_Dark};
+  padding: 10px 0;
 `;
 
 const ChartsGrid = styled.div`
@@ -76,7 +73,6 @@ const ChartCard = styled.div<{ $span?: "col" | "row" | "both" }>`
 
 const ChartTitle = styled.h3`
   font-size: ${({ theme }) => theme.fontSize.subtitle};
-  font-weight: 600;
   color: ${({ theme }) => theme.colors.text_D};
   margin-bottom: 15px;
   text-align: center;
@@ -88,9 +84,9 @@ const ChartContainer = styled.div`
 
 const NotFoundMessage = styled.p`
   font-size: ${({ theme }) => theme.fontSize.subtitle};
-  font-weight: 600;
   color: ${({ theme }) => theme.colors.caution};
   text-align: center;
+  padding: 20px;
 `;
 
 const LecturerDashboardPage = () => {
