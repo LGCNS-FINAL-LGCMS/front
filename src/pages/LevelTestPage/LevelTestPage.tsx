@@ -278,6 +278,14 @@ const SubmitButton = styled.button`
   }
 `;
 
+const ModalTitle = styled.p`
+  font-weight: 700;
+`;
+
+const ModalMessage = styled.p`
+  white-space: pre-line;
+`;
+
 const LevelTestPage = () => {
   const navigate = useNavigate();
 
@@ -533,8 +541,12 @@ const LevelTestPage = () => {
 
       <InfoCheckModal
         isOpen={showSuccessModal}
-        message="레포트 작성을 시작했어요.
-        레포트 작성에 시간이 걸리니 완료되면 알려드릴게요."
+        message={
+          <ModalMessage>
+            <ModalTitle>제출완료</ModalTitle>
+            레포트 작성이 완료되면 알려드릴게요.
+          </ModalMessage>
+        }
         onConfirm={handleSubmit}
         onCancel={handleCancel}
         confirmText="확인"
@@ -552,8 +564,13 @@ const LevelTestPage = () => {
 
       <InfoCheckModal
         isOpen={showTimeoverModal}
-        message="시험 시간이 종료되어 답변이 제출되었어요. 
-        레포트 작성 후 알려드릴게요."
+        message={
+          <ModalMessage>
+            <ModalTitle>시험 시간 종료</ModalTitle>
+            답변이 제출 되었어요. <br />
+            레포트 작성이 완료되면 알려드릴게요.
+          </ModalMessage>
+        }
         onConfirm={handleSubmit}
         onCancel={handleCancel}
         confirmText="확인"
