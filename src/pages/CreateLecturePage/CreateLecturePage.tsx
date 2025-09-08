@@ -220,11 +220,10 @@ const SectionSubtitle = styled.p`
 const ConfirmRow = styled.div`
   margin-bottom: 12px;
   font-size: ${({ theme }) => theme.fontSize.body.min};
-
   strong {
     font-weight: 600;
     display: inline-block;
-    width: 90px;
+    min-width: 65px;
   }
 `;
 
