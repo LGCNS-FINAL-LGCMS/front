@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useParams, useNavigate, generatePath } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setKeyword, clearKeyword } from "../../redux/keyword/keywordSlice";
 import SearchBar from "../../components/Common/SearchBar";
 import { theme } from "../../assets/styles/theme";
 import InfiniteScrollController from "../../components/InfiniteScrollController/InfiniteScrollController";
 import CategoryButtons from "../../components/CategoryButtons/CategoryButtons";
-import { PAGE_PATHS } from "../../constants/pagePaths";
 import Sidebar from "../../components/MainPageSideBar/MainPageSideBar";
 import type { RootState } from "../../redux/store";
 
@@ -51,18 +50,16 @@ const ScrollableContainer = styled.div.attrs({ id: "scrollableDiv" })`
   scrollbar-color: ${theme.colors.header} ${theme.colors.gray_L};
 `;
 
-const MainPage = () => {
-  const navigate = useNavigate();
+const MainPage: React.FC = () => {
   const dispatch = useDispatch();
-  const { keyword } = useParams();
-
-  const [localSearchKeyword, setLocalSearchKeyword] = useState(keyword || "");
-
-  const currentCategoryFromStore = useSelector(
-    (state: RootState) => state.category.category
+  const { keyword } = useParams<{ keyword?: string }>();
+  const currentKeyword = useSelector(
+    (state: RootState) => state.keyword.searchText
   );
 
-  const handleKeywordSearch = () => {};
+  const [localSearchKeyword, setLocalSearchKeyword] = useState(
+    currentKeyword || ""
+  );
 
   useEffect(() => {
     if (keyword) {
@@ -80,17 +77,10 @@ const MainPage = () => {
 
   const handleSearch = (query: string) => {
     const trimmedQuery = query.trim();
-    if (trimmedQuery) {
-      dispatch(setKeyword(trimmedQuery));
-
-      const url = generatePath(`${PAGE_PATHS.HOME}/:keyword?/:category?`, {
-        keyword: trimmedQuery || null,
-        category: currentCategoryFromStore || null,
-      });
-
-      navigate(url);
-    }
+    if (trimmedQuery === currentKeyword) return;
+    dispatch(setKeyword(trimmedQuery));
   };
+
   return (
     <CenteredWrapper>
       <Container>
@@ -100,10 +90,12 @@ const MainPage = () => {
           value={localSearchKeyword}
           onChange={handleInputChange}
           onSearch={handleSearch}
-          design={2}
-          fontColor={1}
+          design={1}
+          fontColor={2}
         />
-        <CategoryButtons onCategoryClick={handleKeywordSearch} />
+
+        <CategoryButtons />
+
         <ScrollableContainer>
           <InfiniteScrollController />
         </ScrollableContainer>
