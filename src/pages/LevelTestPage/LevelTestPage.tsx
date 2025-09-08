@@ -365,8 +365,6 @@ const LevelTestPage = () => {
     const submitData = getSession();
 
     if (!submitData?.answers) {
-      console.log("제출할 데이터가 없어요");
-      console.log(submitData);
       return false;
     } else {
       try {
@@ -376,7 +374,6 @@ const LevelTestPage = () => {
         );
 
         if (response.data.status === "OK") {
-          console.log("answer 제출 완료");
           clearSession(); // 제출성공하면 세션 삭제
           return true;
         } else {
@@ -384,10 +381,26 @@ const LevelTestPage = () => {
             response.data.message || "answer 제출 비즈니스 로직 에러"
           );
         }
-      } catch (error: unknown) {
-        console.log("answer 제출 실패", error);
+      } catch {
         return false;
       }
+    }
+  };
+
+  // 모달 확인 버튼(답변 제출)
+  const handleSubmit = async () => {
+    try {
+      const success = await levelTestSubmit();
+      if (success) {
+        setShowSuccessModal(false);
+        navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD);
+      } else {
+        alert("제출에 실패했습니다. 다시 시도해주세요.");
+        setShowSuccessModal(false);
+      }
+    } catch {
+      alert("오류가 발생했습니다. 다시 시도해주세요.");
+      setShowSuccessModal(false);
     }
   };
 
@@ -428,28 +441,9 @@ const LevelTestPage = () => {
     }
   };
 
-  // 모달 확인 버튼(답변 제출)
-  const handleSubmit = async () => {
-    try {
-      const success = await levelTestSubmit();
-      if (success) {
-        setShowSuccessModal(false);
-        navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD);
-      } else {
-        alert("제출에 실패했습니다. 다시 시도해주세요.");
-        setShowSuccessModal(false);
-      }
-    } catch (error) {
-      console.error("제출 중 에러:", error);
-      alert("오류가 발생했습니다. 다시 시도해주세요.");
-      setShowSuccessModal(false);
-    }
-  };
-
   //모달 취소 버튼
   const handleCancel = () => {
     setShowAnswerCheckModal(false);
-    setShowSuccessModal(false);
   };
 
   return (
@@ -533,7 +527,7 @@ const LevelTestPage = () => {
 
       <InfoCheckModal
         isOpen={showSuccessModal}
-        message="답변이 제출되어 레포트 작성을 시작합니다."
+        message="답변이 제출되어 레포트 작성을 시작합니다. 레포트 작성에 시간이 걸리니 완료되면 알려드릴게요."
         onConfirm={handleSubmit}
         onCancel={handleCancel}
         confirmText="확인"
@@ -550,7 +544,7 @@ const LevelTestPage = () => {
 
       <InfoCheckModal
         isOpen={showTimeoverModal}
-        message="시험시간이 종료되어 작성하신 답변이 제출되었습니다. 레포트를 확인하세요."
+        message="시험 시간이 종료되어 작성하신 답변이 제출되었습니다. 레포트 작성에 시간이 걸리니 완료되면 알려드릴게요."
         onConfirm={handleSubmit}
         onCancel={handleCancel}
         confirmText="확인"
