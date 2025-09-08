@@ -148,7 +148,7 @@ const PaymentPage: React.FC = () => {
             id: 1,
           }))
         );
-      } catch (error) {
+      } catch {
         // console.error("장바구니 데이터를 가져오는데 실패했습니다.", error);
       }
     };
@@ -307,7 +307,7 @@ const PaymentPage: React.FC = () => {
         },
         false
       ); // 버블링(false)인지 캡처링(true)인지 상관없다. mes sage타입 이벤트는 DOM트리를 거치지 않고 window에 직접 전달되니까!
-    } catch (error) {
+    } catch {
       // console.error("결제 처리 중 오류가 발생했습니다.", error);
       alert("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
       dispatch(setFailure());
