@@ -51,13 +51,8 @@ export const TrHead = styled.tr`
 
 export const TrBody = styled.tr`
   border-bottom: 1px solid ${({ theme }) => theme.colors.border_Dark};
-  background: ${({ theme }) => theme.colors.secondary};
+  background: ${({ theme }) => theme.colors.card};
   transition: ${({ theme }) => theme.transition.default};
-  &:hover {
-    background: ${({ theme }) => theme.colors.success};
-  }
-
-
 `;
 
 export const TrEmpty = styled.tr`
