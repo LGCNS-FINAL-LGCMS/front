@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCategory } from "../../redux/Category/categorySlice";
 import { setKeyword, clearKeyword } from "../../redux/keyword/keywordSlice";
 import SearchBar from "../../components/Common/SearchBar";
 import { theme } from "../../assets/styles/theme";
