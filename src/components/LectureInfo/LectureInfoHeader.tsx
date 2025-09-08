@@ -5,7 +5,6 @@ import {
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-// import { PAGE_PATHS } from "../../constants/pagePaths";
 import styled from "styled-components";
 import Button from "../Common/Button";
 import { postCartItem } from "../../api/Cart/cartAPI";
@@ -148,7 +147,7 @@ const ModalContent = styled.div<{ isSuccess: boolean }>`
   h2 {
     font-size: ${({ theme }) => theme.fontSize.title.max};
     color: ${({ isSuccess, theme }) =>
-    isSuccess ? theme.colors.success : theme.colors.danger};
+      isSuccess ? theme.colors.success : theme.colors.danger};
     margin: 0;
     display: flex;
     align-items: center;
@@ -179,27 +178,24 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
   const navigate = useNavigate();
 
   const handleAddCart = async () => {
+    if (!lecture) return;
+
     try {
-      if (!lecture) return;
       await postCartItem({
         lectureId: lecture.lectureId,
         title: lecture.title,
         price: lecture.price,
         thumbnailUrl: lecture.thumbnail,
       });
-      setModalMessage("장바구니 담기 성공");
+setModalMessage("장바구니 담기 성공");
       setIsSuccess(true);
       setModalOpen(true);
-    } catch (err) {
-      let errorMessage = "알 수 없는 에러가 발생했습니다.";
-
-      if (err instanceof Error) {
-        errorMessage = err.message;
-      }
-
-      setModalMessage(errorMessage);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "장바구니 담기 실패";
+      setModalMessage(message);
       setIsSuccess(false);
       setModalOpen(true);
+      console.log(err);
     }
   };
 
@@ -220,11 +216,10 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
               <Price>{lecture?.price?.toLocaleString() ?? 0}원</Price>
               <div style={{ marginLeft: "auto", display: "flex", gap: "1rem" }}>
                 <Button
-                  text="수강신청"
-                  onClick={() => alert("수강신청")}
+                  text="장바구니에 추가"
+                  onClick={handleAddCart}
                   design={1}
                 />
-                <Button text="장바구니" onClick={handleAddCart} design={1} />
               </div>
             </ButtonRow>
           ) : (
@@ -286,19 +281,28 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
               {isSuccess ? "성공" : "실패"}
             </h2>
             <p>{modalMessage}</p>
-            <Button
-              text="확인"
-              onClick={() => setModalOpen(false)}
-              design={1}
-            />
-            <Button
-              text="장바구니로 이동"
-              onClick={() => {
-                setModalOpen(false);
-                navigate(PAGE_PATHS.PAYMENT.PAYMENT);
-              }}
-              design={1}
-            />
+<div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+              {isSuccess ? (
+                <>
+                  <Button
+                    text="계속 보기"
+                    onClick={() => setModalOpen(false)}
+                    design={1}
+                  />
+                  <Button
+                    text="장바구니로 가기"
+                    onClick={() => navigate(`${PAGE_PATHS.PAYMENT.PAYMENT}`)}
+                    design={1}
+                  />
+                </>
+              ) : (
+                <Button
+                  text="확인"
+                  onClick={() => setModalOpen(false)}
+                  design={1}
+                />
+              )}
+            </div>
           </ModalContent>
         </ModalBackdrop>
       )}
