@@ -2,7 +2,7 @@
 
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGOUT: "/auth/logout", // Delete
+    LOGOUT: "/student/auth/logout", // Delete
     GOOGLE_LOGIN: "/auth/sign-in/google", //post
     REFRESH: "/auth/refresh/token", // post
     SIGN_OUT: "/auth/sign-out/google", // post
