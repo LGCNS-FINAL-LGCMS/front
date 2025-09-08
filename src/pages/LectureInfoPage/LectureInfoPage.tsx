@@ -202,6 +202,7 @@ const LectureInfoPage = () => {
         lecture={lecture?.lectureResponseDto}
         purchased={lecture?.isStudent}
         progress={progress}
+        hasLessons={lessonList.length > 0}
       />
 
       <LectureInfoTabMenu

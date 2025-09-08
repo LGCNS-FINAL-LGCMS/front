@@ -167,12 +167,14 @@ interface LectureHeaderProps {
   lecture: LectureResponse | undefined;
   purchased: boolean | undefined;
   progress: number;
+  hasLessons?: boolean;
 }
 
 const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
   lecture,
   purchased,
   progress,
+  hasLessons,
 }) => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.token.isAuthenticated
@@ -268,6 +270,7 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
                 }
                 design={2}
                 fontWeight={700}
+                disabled={!hasLessons}
               />
             </ButtonRow>
           )}
