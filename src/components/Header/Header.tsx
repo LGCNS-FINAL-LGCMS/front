@@ -239,6 +239,7 @@ const Header = () => {
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     const fetchNotifications = async () => {
       try {
         const notifications = await getNotification();
@@ -298,6 +299,7 @@ const Header = () => {
   };
 
   const handleAlertCellClick = async (item: Notification) => {
+    if (!isAuthenticated) return;
     try {
       await readNotificationRequest(item.id);
       const notifications = await getNotification();

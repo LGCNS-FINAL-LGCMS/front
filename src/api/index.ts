@@ -56,7 +56,7 @@ apiClient.interceptors.request.use(
     if (accessToken && config.headers) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     } else {
-      console.warn("⚠️ Access token missing or headers not present");
+      console.warn("Access token missing or headers not present");
     }
 
     if (
@@ -69,7 +69,7 @@ apiClient.interceptors.request.use(
     return config;
   },
   (error: AxiosError): Promise<AxiosError> => {
-    console.error("❌ Request Interceptor Error:", error);
+    console.error("Request Interceptor Error:", error);
     return Promise.reject(error);
   }
 );
@@ -101,11 +101,8 @@ interface RefreshResponse {
   status: string;
   message: string;
   data?: {
-    alreadyMember?: boolean;
-    tokens?: {
-      accessToken: string;
-      refreshToken: string;
-    };
+    accessToken: string;
+    refreshToken: string;
   };
 }
 
@@ -141,12 +138,6 @@ apiClient.interceptors.response.use(
     }
 
     // --- 토큰 갱신 로직 ---
-    console.log("토큰 갱신 로직");
-    console.log(error);
-    console.log(error.response?.status);
-    console.log(!originalRequest._retry);
-    console.log(originalRequest.url !== REFRESH_URL);
-    console.log(errorMessage);
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
@@ -182,6 +173,7 @@ apiClient.interceptors.response.use(
       }
 
       try {
+        console.log("리프레쉬 요청");
         const refreshResponse = await axios.post<RefreshResponse>(
           `${API_BASE_URL}${REFRESH_URL}`,
           { refreshToken },
@@ -194,11 +186,11 @@ apiClient.interceptors.response.use(
 
         if (
           responseData.status === "OK" &&
-          responseData.data?.tokens?.accessToken &&
-          responseData.data.tokens.refreshToken
+          responseData.data?.accessToken &&
+          responseData.data.refreshToken
         ) {
-          const newAccessToken = responseData.data.tokens.accessToken;
-          const newRefreshToken = responseData.data.tokens.refreshToken;
+          const newAccessToken = responseData.data.accessToken;
+          const newRefreshToken = responseData.data.refreshToken;
 
           storeRef.dispatch(
             login({
