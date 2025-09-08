@@ -155,10 +155,8 @@ const RoleSelect = ({
   const handleRoleSelect = (roleType: string) => {
     if (roleType === "student") {
       onRoleChange(false);
-      console.log("학생 선택됨: false");
     } else if (roleType === "teacher") {
       onRoleChange(true);
-      console.log("강사 선택됨:true ");
     }
   };
 

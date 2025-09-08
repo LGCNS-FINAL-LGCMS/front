@@ -89,9 +89,7 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
         );
         setInterests(formattedCategories);
       }
-    } catch (error: unknown) {
-      const message = getErrorMessage(error, "카테고리 서버 에러 발생");
-      console.error(message);
+    } catch {
       setInterests([]);
     }
   };
