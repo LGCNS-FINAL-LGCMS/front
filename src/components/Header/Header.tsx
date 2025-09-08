@@ -433,9 +433,32 @@ const Header = () => {
               {isAuthenticated && isAlertOpen && (
                 <AlertDropdown ref={alertRef}>
                   {alerts.length > 0 ? (
-                    alerts.map((alert) => (
-                      <AlertCell item={alert} onClick={handleAlertCellClick} />
-                    ))
+                    [...alerts]
+                      .sort((a, b) => {
+                        const dateA = new Date(
+                          a.createdAt[0],
+                          (a.createdAt[1] || 1) - 1,
+                          a.createdAt[2] || 1,
+                          a.createdAt[3] || 0,
+                          a.createdAt[4] || 0
+                        ).getTime();
+
+                        const dateB = new Date(
+                          b.createdAt[0],
+                          (b.createdAt[1] || 1) - 1,
+                          b.createdAt[2] || 1,
+                          b.createdAt[3] || 0,
+                          b.createdAt[4] || 0
+                        ).getTime();
+
+                        return dateB - dateA;
+                      })
+                      .map((alert) => (
+                        <AlertCell
+                          item={alert}
+                          onClick={handleAlertCellClick}
+                        />
+                      ))
                   ) : (
                     <AlertItem>새 알림이 없습니다.</AlertItem>
                   )}
