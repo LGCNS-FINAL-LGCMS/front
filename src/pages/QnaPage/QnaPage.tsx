@@ -1,6 +1,6 @@
 import {
   useState,
-  type ChangeEvent,
+  // type ChangeEvent,
   type KeyboardEvent,
   type MouseEvent,
   useCallback,
@@ -330,8 +330,8 @@ const QnaDetailPage = () => {
     fetchQna();
   }, [fetchQna, qnaId]);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setNewAnswer(e.target.value);
+  // const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
+  //   setNewAnswer(e.target.value);
 
   const handleAddAnswer = async (
     e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
