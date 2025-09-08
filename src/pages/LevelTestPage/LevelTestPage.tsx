@@ -441,6 +441,12 @@ const LevelTestPage = () => {
     }
   };
 
+  //setShowAnswerCheckModal 확인 시 다시 확인
+  const handleShowAnswerCheck = () => {
+    setShowAnswerCheckModal(false);
+    setShowSuccessModal(true);
+  };
+
   //모달 취소 버튼
   const handleCancel = () => {
     setShowAnswerCheckModal(false);
@@ -527,7 +533,8 @@ const LevelTestPage = () => {
 
       <InfoCheckModal
         isOpen={showSuccessModal}
-        message="답변이 제출되어 레포트 작성을 시작합니다. 레포트 작성에 시간이 걸리니 완료되면 알려드릴게요."
+        message="레포트 작성을 시작했어요.
+        레포트 작성에 시간이 걸리니 완료되면 알려드릴게요."
         onConfirm={handleSubmit}
         onCancel={handleCancel}
         confirmText="확인"
@@ -535,8 +542,9 @@ const LevelTestPage = () => {
 
       <InfoCheckModal
         isOpen={showAnswerCheckModal}
-        message="답변을 작성하지 않은 문제가 있습니다. 그래도 제출하시겠습니까?"
-        onConfirm={handleSubmit}
+        message="아직 작성하지 않은 문제가 있어요.
+        그래도 제출할까요?"
+        onConfirm={handleShowAnswerCheck}
         onCancel={handleCancel}
         confirmText="제출"
         cancelText="취소"
@@ -544,7 +552,8 @@ const LevelTestPage = () => {
 
       <InfoCheckModal
         isOpen={showTimeoverModal}
-        message="시험 시간이 종료되어 작성하신 답변이 제출되었습니다. 레포트 작성에 시간이 걸리니 완료되면 알려드릴게요."
+        message="시험 시간이 종료되어 답변이 제출되었어요. 
+        레포트 작성 후 알려드릴게요."
         onConfirm={handleSubmit}
         onCancel={handleCancel}
         confirmText="확인"

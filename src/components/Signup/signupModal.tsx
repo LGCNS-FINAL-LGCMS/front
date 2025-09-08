@@ -61,6 +61,7 @@ const ModalMessage = styled.div`
   font-size: ${({ theme }) => theme.fontSize.subtitle};
   color: ${({ theme }) => theme.colors.text_D};
   text-align: center;
+  white-space: pre-line;
 `;
 
 const ButtonContainer = styled.div`
