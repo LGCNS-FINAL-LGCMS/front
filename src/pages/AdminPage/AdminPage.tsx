@@ -27,7 +27,7 @@ const PageTitle = styled.h1`
 
 const formatDate = (createdAt: number[]) => {
   const [year, month, day, hour, minute] = createdAt;
-  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")} ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")};}`;
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")} ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 };
 const isNewItem = (createdAt: number[]) => {
   const [year, month, day, hour, minute] = createdAt;
@@ -60,7 +60,7 @@ const AdminPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response: desirerResponse = await getDesirers();
-      console.log(response.data);
+      // console.log(response.data);
       setList(response.data);
     };
     fetchData();
@@ -114,22 +114,28 @@ const AdminPage: React.FC = () => {
     if (selectedItemId !== null) {
       const itemToApprove = list.find(item => item.memberId === selectedItemId);
       if (itemToApprove?.role === 'LECTURER') {
-        console.log("이미 처리된 요청입니다.");
+        alert("이미 처리된 요청입니다.");
       } else {
-        alert("승인되었습니다!");
 
-        setList(prev =>
-          prev.map(item =>
-            item.memberId === selectedItemId ? { ...item, desireLecturer: false } : item
-          )
-        );
+
 
         // post요청
-        const response: desirerResponse = await postConfirmDesirer([selectedItemId]);
-        console.log('결과 : {}', response.data.forEach(item => (item.nickname)));
+        try {
+          await postConfirmDesirer([selectedItemId]);
+          // console.log('결과 : {}', response.data.forEach(item => (item.nickname)));
+          alert("승인되었습니다!");
+          setList(prev =>
+            prev.map(item =>
+              item.memberId === selectedItemId ? { ...item, desireLecturer: false } : item
+            )
+          );
+          // 표에서 제거
+          setList(prev => prev.filter(item => item.memberId !== selectedItemId));
 
-        // 표에서 제거
-        setList(prev => prev.filter(item => item.memberId !== selectedItemId));
+        } catch (err: unknown) {
+          const message = err instanceof Error ? err.message : "승인 처리 실패";
+          alert(message);
+        }
 
       }
       setIsModalOpen(false);

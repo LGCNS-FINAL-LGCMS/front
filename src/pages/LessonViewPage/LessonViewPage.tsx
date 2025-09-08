@@ -11,6 +11,10 @@ import {
   patchLessonProgress,
 } from "../../api/Lesson/lessonAPI";
 import type { Lesson } from "../../types/lesson";
+import { tutorRequest } from "../../api/Tutor/tutorAPI";
+import MessageList from "../../components/Common/Chat/MessageList";
+import type { ChatMessage } from "../../types/message";
+import MessageInput from "../../components/Common/Chat/MessageInput";
 
 const Container = styled.div`
   display: grid;
@@ -78,20 +82,21 @@ const TabButton = styled.button<{ active: boolean }>`
   }
 `;
 
-const TabContent = styled.div`
+const ScrollableSidebarContent = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 16px;
 
   &::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
   }
   &::-webkit-scrollbar-thumb {
-    background: rgba(0, 93, 159, 0.4);
-    border-radius: 3px;
+    background-color: ${({ theme }) => theme.colors.primary};
+    border-radius: 10px;
   }
   &::-webkit-scrollbar-track {
-    background: ${({ theme }) => theme.colors.background_D};
+    background: ${({ theme }) => theme.colors.gray_D};
+    border-radius: 10px;
   }
 `;
 
@@ -142,6 +147,12 @@ const LessonItem = styled.div<{ selected?: boolean }>`
   }
 `;
 
+const ChatbotContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
 type SidebarTab = "lecture" | "chatbot";
 
 const LessonViewPage: React.FC = () => {
@@ -154,6 +165,7 @@ const LessonViewPage: React.FC = () => {
   const [selectedLesson, setSelectedLesson] = useState<number | null>(null);
   const [lessonList, setLessonList] = useState<Lesson[] | null>(null);
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
     if (lessonList && lessonList.length > 0) {
@@ -342,6 +354,34 @@ const LessonViewPage: React.FC = () => {
     };
   }, [currentLesson]);
 
+  const handleSend = async (message: string) => {
+    if (!message.trim() || !lectureId) return;
+
+    const userMsg: ChatMessage = {
+      id: Date.now().toString(),
+      sender: "user",
+      type: "text",
+      content: message.trim(),
+      timestamp: 0,
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+
+    try {
+      const res = await tutorRequest(lectureId, userMsg.content);
+      const botMsg: ChatMessage = {
+        id: Date.now().toString() + "_bot",
+        sender: "bot",
+        type: "text",
+        content: res.answer ?? "응답이 없습니다.",
+        timestamp: 0,
+      };
+      setMessages((prev) => [...prev, botMsg]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <Container>
       <VideoWrapper>
@@ -375,7 +415,7 @@ const LessonViewPage: React.FC = () => {
             튜터 챗봇
           </TabButton>
         </TabMenu>
-        <TabContent>
+        <ScrollableSidebarContent>
           {activeTab === "lecture" &&
             lessonList?.map((lesson, idx) => (
               <LessonItem
@@ -391,8 +431,16 @@ const LessonViewPage: React.FC = () => {
                 <p>{formatPlaytime(lesson.playtime)}</p>
               </LessonItem>
             ))}
-          {activeTab === "chatbot" && <div>튜터 챗봇 내용 표시</div>}
-        </TabContent>
+          {activeTab === "chatbot" && (
+            <ChatbotContainer>
+              <MessageList messages={messages} />
+              <MessageInput
+                onSend={handleSend}
+                showInitialSuggestions={false}
+              />
+            </ChatbotContainer>
+          )}
+        </ScrollableSidebarContent>
       </Sidebar>
     </Container>
   );

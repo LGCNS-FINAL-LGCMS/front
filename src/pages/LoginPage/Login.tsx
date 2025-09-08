@@ -3,36 +3,40 @@ import styled from "styled-components";
 
 const LoginBoxContainer = styled.div`
   display: flex;
-  justify-content: center; // 가로 중앙 정렬
-  align-items: center; //세로 중앙 정렬
-  min-height: 80vh;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  padding: 20px;
 `;
 
 const LoginCard = styled.div`
-  background: white;
-  border: 2px solid ${(props) => props.theme.colors.border_Dark};
-  border-radius: 16px;
-  padding: 20px 60px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
 
-  width: 600px;
-  height: 400px;
+  background: white;
+  border-radius: 16px;
+  text-align: center;
+  min-width: ${(props) => props.theme.size.container_S};
+  max-width: 90vw;
+  min-height: 400px;
+  padding: 40px;
 `;
 
 const Title = styled.h1`
   font-family: ${(props) => props.theme.font.logo};
-  padding: 30px 60px;
-
-  font-size: 48px;
-  font-weight: bold;
-  color: #333;
+  font-size: ${(props) => props.theme.fontSize.display.min};
+  color: ${(props) => props.theme.colors.border_Dark};
   letter-spacing: 2px;
+  margin: 0;
 `;
 
 const Subtitle = styled.h3`
-  padding: 20px 60px;
-
   font-family: ${(props) => props.theme.font.primary};
+  white-space: nowrap;
+  margin: 0;
 `;
 
 const Login = () => {

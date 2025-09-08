@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { logoutRequest } from "../../api/Auth/authApi";
+import { resetUserInfo } from "../Auth/authSlice";
 
 interface TokenState {
   accessToken: string;
@@ -23,9 +24,10 @@ const initialState: TokenState = {
 
 export const logoutUsingToken = createAsyncThunk(
   "token/logout",
-  async (_, { rejectWithValue }) => {
+  async (_, { dispatch, rejectWithValue }) => {
     try {
       const data = await logoutRequest();
+      dispatch(resetUserInfo());
       return data;
     } catch (error) {
       return rejectWithValue(error || "Logout failed");
@@ -73,10 +75,7 @@ const tokenSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(logoutUsingToken.fulfilled, (state) => {
-        Object.assign(state, {
-          ...initialState,
-          isExpired: false,
-        });
+        Object.assign(state, initialState);
       })
       .addCase(logoutUsingToken.rejected, (state) => {
         Object.assign(state, {

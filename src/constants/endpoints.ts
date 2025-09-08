@@ -2,7 +2,7 @@
 
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGOUT: "/auth/logout", // Delete
+    LOGOUT: "/student/auth/logout", // Delete
     GOOGLE_LOGIN: "/auth/sign-in/google", //post
     REFRESH: "/auth/refresh/token", // post
     SIGN_OUT: "/auth/sign-out/google", // post
@@ -75,12 +75,12 @@ export const API_ENDPOINTS = {
   },
 
   GUIDE: {
-    POST: "/guide/ask", // POST
+    POST: "/guide", // POST
   },
 
   FAQ: {
     GET: "/core/faq", // GET
-    POST: "/guide/ask",
+    POST: "/guide",
   },
   LEVEL_TEST: {
     GET_QUESTIONS: "/student/leveltest/questions/generate",
@@ -116,5 +116,9 @@ export const API_ENDPOINTS = {
     SUBSCRIBE: "/student/notification/subscribe",
     GET: "/student/notification",
     DELETE: "/student/notification/read",
+  },
+
+  TUTOR: {
+    POST: "/student/tutor",
   },
 };

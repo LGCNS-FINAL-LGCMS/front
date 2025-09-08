@@ -4,24 +4,22 @@ import teacherImage from "../../assets/images/signupPage/selectedTeacher.png";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 
-const RollSection = styled.div``;
+const RollSelectContainer = styled.div``;
 
 const RoleCardContainer = styled.div`
-  padding: 10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  margin-bottom: 30px;
-`;
-
-const RoleTitle = styled.h2`
-  margin-bottom: 30px;
-  font-size: ${(props) => props.theme.fontSize.subtitle};
+  gap: 10px;
 `;
 
 const RoleOptionContainer = styled.div`
   display: flex;
-  gap: 20px;
   justify-content: center;
-  margin-bottom: 30px;
+  gap: 30px;
+  margin: 10px;
 `;
 
 const RoleOption = styled.div<{ selected?: boolean }>`
@@ -32,7 +30,6 @@ const RoleOption = styled.div<{ selected?: boolean }>`
 
   width: 150px;
   height: 150px;
-  padding: 15px;
 
   background-color: ${(props) =>
     props.selected ? props.theme.colors.gray_L : "white"};
@@ -71,15 +68,12 @@ const RoleLabel = styled.div<{ selected?: boolean }>`
 `;
 
 const RoleCheckMessage = styled.div`
-  text-align: center;
-  margin: 0 0 10px 0;
-
-  font-family: ${(props) => props.theme.font.primary};
-  font-size: ${(props) => props.theme.fontSize.body.min};
+  font-size: ${(props) => props.theme.fontSize.modal.max};
   color: ${(props) => props.theme.colors.caution};
-  font-weight: 400;
-  margin-top: 10px;
-  min-height: 20px;
+`;
+
+const RoleSelectSubtitle = styled.p`
+  font-size: ${(props) => props.theme.fontSize.contents.medium};
 `;
 
 // 체크박스 컨테이너
@@ -110,7 +104,7 @@ const CustomCheckbox = styled.div<{ checked: boolean }>`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: ${(props) => props.theme.transition.default};
 
   background-color: white;
 
@@ -128,7 +122,7 @@ const CheckboxLabel = styled.label`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   cursor: pointer;
   font-size: ${(props) => props.theme.fontSize.body.min};
   color: ${(props) => props.theme.colors.text_D};
@@ -187,9 +181,11 @@ const RoleSelect = ({
   };
 
   return (
-    <RollSection>
+    <RollSelectContainer>
       {isDesireLecturer ? null : (
         <>
+          <RoleSelectSubtitle>강사로 전환하시겠습니까?</RoleSelectSubtitle>
+
           {styleType === "checkbox" && (
             <CheckboxContainer>
               <CheckboxLabel>
@@ -207,7 +203,6 @@ const RoleSelect = ({
       )}
       {styleType === "card" && (
         <RoleCardContainer>
-          <RoleTitle>사용하시는 분이 누구인가요 ?</RoleTitle>
           <RoleOptionContainer>
             <RoleOption
               selected={selectedRole === false}
@@ -232,7 +227,7 @@ const RoleSelect = ({
           <RoleCheckMessage>{getDescriptionText()}</RoleCheckMessage>
         </RoleCardContainer>
       )}
-    </RollSection>
+    </RollSelectContainer>
   );
 };
 
