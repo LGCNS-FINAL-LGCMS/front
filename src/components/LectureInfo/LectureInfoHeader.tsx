@@ -190,7 +190,7 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
       setModalMessage("장바구니 담기 성공");
       setIsSuccess(true);
       setModalOpen(true);
-    } catch (err: any) {
+    } catch (err) {
       // console.error(err);
       setModalMessage(err.message || "에러 발생");
       setIsSuccess(false);
