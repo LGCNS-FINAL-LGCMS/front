@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../redux/store";
 import {
   faCircleCheck,
   faCircleXmark,
@@ -172,6 +174,9 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
   purchased,
   progress,
 }) => {
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.token.isAuthenticated
+  );
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
@@ -187,7 +192,7 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
         price: lecture.price,
         thumbnailUrl: lecture.thumbnail,
       });
-setModalMessage("장바구니 담기 성공");
+      setModalMessage("장바구니 담기 성공");
       setIsSuccess(true);
       setModalOpen(true);
     } catch (err: unknown) {
@@ -215,11 +220,13 @@ setModalMessage("장바구니 담기 성공");
             <ButtonRow>
               <Price>{lecture?.price?.toLocaleString() ?? 0}원</Price>
               <div style={{ marginLeft: "auto", display: "flex", gap: "1rem" }}>
-                <Button
-                  text="장바구니에 추가"
-                  onClick={handleAddCart}
-                  design={1}
-                />
+                {isAuthenticated && (
+                  <Button
+                    text="장바구니에 추가"
+                    onClick={handleAddCart}
+                    design={1}
+                  />
+                )}
               </div>
             </ButtonRow>
           ) : (
@@ -281,7 +288,7 @@ setModalMessage("장바구니 담기 성공");
               {isSuccess ? "성공" : "실패"}
             </h2>
             <p>{modalMessage}</p>
-<div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+            <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
               {isSuccess ? (
                 <>
                   <Button
