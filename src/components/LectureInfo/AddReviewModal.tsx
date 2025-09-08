@@ -153,7 +153,6 @@ const AddReviewModal: React.FC<AddReviewModalProps> = ({
 
     setErrors(newErrors);
 
-    // 오류가 있으면 제출 막기
     if (Object.values(newErrors).some((e) => e !== "")) return;
 
     const payload = {
@@ -168,7 +167,8 @@ const AddReviewModal: React.FC<AddReviewModalProps> = ({
     };
 
     onSubmit(payload);
-    onClose();
+
+    handleCancel();
   };
 
   return (

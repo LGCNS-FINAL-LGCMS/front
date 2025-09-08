@@ -98,11 +98,9 @@ const LecturerReportPage = () => {
           setLecturerReport(result);
         } else {
           setHasError(true);
-          console.log("강사 레포트 데이터를 불러올 수 없습니다.");
         }
-      } catch (error) {
+      } catch {
         setHasError(true);
-        console.error("강사 레포트 데이터 불러오기 실패:", error);
       } finally {
         setIsLoading(false);
       }

@@ -22,6 +22,7 @@ export const postCartItem = async (
   } catch (error: unknown) {
     const message = getErrorMessage(error, "장바구니 담기 실패");
     console.error("Post Cart API error:", message);
+
     throw new Error(message);
   }
 };

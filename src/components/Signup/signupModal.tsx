@@ -50,14 +50,14 @@ const ModalBox = styled.div`
   background-color: ${({ theme }) => theme.colors.text_B};
   background-color: white;
   border-radius: 8px;
-  padding: 30px;
+  padding: 10px;
 
   box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
 const ModalMessage = styled.div`
   padding: 30px;
-
+  word-break: keep-all;
   font-size: ${({ theme }) => theme.fontSize.subtitle};
   color: ${({ theme }) => theme.colors.text_D};
   text-align: center;

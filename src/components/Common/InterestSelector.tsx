@@ -10,6 +10,7 @@ type Props = {
   interests: Interest[];
   onSelectionChange?: (selected: Interest[]) => void;
   initialSelected?: Interest[];
+  maxSelectable?: number;
 };
 
 const Container = styled.div`
@@ -86,6 +87,7 @@ const InterestSelector: React.FC<Props> = ({
   interests,
   onSelectionChange,
   initialSelected = [],
+  maxSelectable = 5,
 }) => {
   const [selected, setSelected] = useState<Set<number>>(
     new Set(initialSelected.map((i) => i.id))
@@ -112,11 +114,16 @@ const InterestSelector: React.FC<Props> = ({
   const toggleInterest = (id: number) => {
     setSelected((prev) => {
       const newSet = new Set(prev);
+
       if (newSet.has(id)) {
         newSet.delete(id);
       } else {
+        if (maxSelectable && newSet.size >= maxSelectable) {
+          return prev;
+        }
         newSet.add(id);
       }
+
       return newSet;
     });
   };

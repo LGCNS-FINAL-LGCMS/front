@@ -28,14 +28,32 @@ import type { RootState } from "../../redux/store";
 
 const PaymentContainer = styled.div`
   display: flex;
+  box-sizing: border-box;
   font-family: ${({ theme }) => theme.font.primary};
-  justify-content: center;
-  align-items: flex-start;
-  gap: 30px; /* 두 컴포넌트 사이의 간격 */
+  
+  /* Mobile */
+  flex-direction: column; 
+  align-items: center;    
+  gap: 20px;
   width: 100%;
-  max-width: 1200px; /* 최대 너비 설정 */
-  margin: 50px auto; /* 중앙 정렬 */
-  padding: 20px;
+  min-width: 320px;       
+  margin: 20px auto;
+  padding: 15px;
+
+  /* Tablet (768px 이상) */
+  @media (min-width: 768px) {
+    flex-direction: row;            
+    align-items: flex-start;        
+    justify-content: center;
+    gap: 30px;
+    margin: 50px auto;
+    padding: 20px;
+  }
+
+  /* Desktop (1024px 이상) */
+  @media (min-width: 1024px) {
+    max-width: 1200px; 
+  }
 `;
 
 const spin = keyframes`
@@ -130,8 +148,8 @@ const PaymentPage: React.FC = () => {
             id: 1,
           }))
         );
-      } catch (error) {
-        console.error("장바구니 데이터를 가져오는데 실패했습니다.", error);
+      } catch {
+        // console.error("장바구니 데이터를 가져오는데 실패했습니다.", error);
       }
     };
     fetchCartData();
@@ -156,10 +174,10 @@ const PaymentPage: React.FC = () => {
           items.filter((item) => item.selected).map((item) => item.lectureId)
         )
       );
-      console.log(
-        "구매할 아이템",
-        items.filter((item) => item.selected).map((item) => item.cartId)
-      );
+      // console.log(
+      //   "구매할 아이템",
+      //   items.filter((item) => item.selected).map((item) => item.cartId)
+      // );
 
       let response: paymentData;
       let stepUrl = "";
@@ -184,7 +202,7 @@ const PaymentPage: React.FC = () => {
         tid = response.tid;
         sessionStorage.setItem("tid", tid);
         stepUrl = response.nextStepUrl;
-        console.log(response.nextStepUrl);
+        // console.log(response.nextStepUrl);
       } else {
         alert("결제할 항목이 없습니다.");
         dispatch(setPending());
@@ -204,6 +222,10 @@ const PaymentPage: React.FC = () => {
         "카카오페이 결제",
         "width=450,height=700"
       ) as Window;
+      if (!popUp) {
+        alert("팝업 차단을 해제해주세요.");
+        return;
+      }
 
       const checkPopupClosed = setInterval(() => {
         if (popUp.closed) {
@@ -239,14 +261,14 @@ const PaymentPage: React.FC = () => {
           } else {
             const pgToken = event.data.pg_token;
             const tid = sessionStorage.getItem("tid");
-            console.log("pgToken 수신 : ", pgToken);
-            console.log("tid : ", tid);
+            // console.log("pgToken 수신 : ", pgToken);
+            // console.log("tid : ", tid);
             if (pgToken && tid) {
               const pendingCartIdString = sessionStorage.getItem("itemIds");
               const pendingCartId = pendingCartIdString
                 ? JSON.parse(pendingCartIdString)
                 : [];
-              console.log("장바구니 아이디:", pendingCartId);
+              // console.log("장바구니 아이디:", pendingCartId);
 
               const pendingLectureIdString =
                 sessionStorage.getItem("lectureIds");
@@ -258,7 +280,7 @@ const PaymentPage: React.FC = () => {
                 cartId: id,
                 lectureId: pendingLectureId[pendingCartId.indexOf(id)],
               }));
-              console.log("cartIdList:", cartIdList);
+              // console.log("cartIdList:", cartIdList);
               const paymentResult = await postPaymentApprove({
                 token: pgToken,
                 tid: tid,
@@ -285,8 +307,8 @@ const PaymentPage: React.FC = () => {
         },
         false
       ); // 버블링(false)인지 캡처링(true)인지 상관없다. mes sage타입 이벤트는 DOM트리를 거치지 않고 window에 직접 전달되니까!
-    } catch (error) {
-      console.error("결제 처리 중 오류가 발생했습니다.", error);
+    } catch {
+      // console.error("결제 처리 중 오류가 발생했습니다.", error);
       alert("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
       dispatch(setFailure());
       // sessionStorage.removeItem('itemIds');

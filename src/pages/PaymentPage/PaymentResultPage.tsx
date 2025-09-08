@@ -49,7 +49,6 @@ const PaymentResultPage: React.FC = () => {
     const paymentStatus = useSelector((state: RootState) => state.payment.paymentStatus);
     const totalAmount = useSelector((state: RootState) => state.payment.totalAmount);
     const paymentMethod = useSelector((state: RootState) => state.payment.paymentMethod);
-    const transactionId = useSelector((state: RootState) => state.payment.transactionId);
 
     return (
         <PageWrap>
@@ -76,16 +75,13 @@ const PaymentResultPage: React.FC = () => {
                 <SummaryCard>
                     <SummaryRow>
                         <Label>결제 금액</Label>
-                        <Value><Mono>₩ {totalAmount}</Mono></Value>
+                        <Value><Mono>₩ {totalAmount.toLocaleString()}</Mono></Value>
                     </SummaryRow>
                     <SummaryRow>
                         <Label>결제 방법</Label>
                         <Value><Mono>{paymentMethod}</Mono></Value>
                     </SummaryRow>
-                    <SummaryRow>
-                        <Label>거래 ID</Label>
-                        <Value><Mono>{transactionId}</Mono></Value>
-                    </SummaryRow>
+
                 </SummaryCard>
             </Section>
 
