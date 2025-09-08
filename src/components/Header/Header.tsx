@@ -36,12 +36,14 @@ const HeaderWrapper = styled.header`
   background-color: ${({ theme }) => theme.colors.header};
   height: ${({ theme }) => theme.size.header.height};
   padding: 0 1rem;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(10px);
 `;
 
 const DropdownMenu = styled.div`
   position: absolute;
   right: 0;
-  top: calc(100% + 0.5rem);
+  top: calc(100% + 1rem);
   width: 150px;
   background-color: ${({ theme }) => theme.colors.header};
   backdrop-filter: blur(8px);
@@ -161,12 +163,14 @@ const LogoText = styled.span`
 `;
 
 const AlertDropdown = styled(DropdownMenu)`
-  right: 3rem;
+  right: rem;
   width: 250px;
+
+  top: calc(100% - ${({ theme }) => theme.size.header});
   background-color: ${theme.colors.header};
   box-shadow: 0 10px 10px -3px rgba(130, 130, 130, 0.35);
   font-size: 0.85rem;
-  padding: 0.5rem 0;
+  padding: 0;
 `;
 
 const AlertItem = styled.div`
@@ -189,8 +193,8 @@ const ping = keyframes`
 
 const DotWrapper = styled.span`
   position: absolute;
-  top: 0px;
-  right: 5px;
+  top: 1px;
+  right: 7px;
   width: 12px;
   height: 12px;
   display: flex;
@@ -256,15 +260,9 @@ const Header = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsDropdownOpen(false);
-      }
-
-      if (
         alertRef.current &&
-        !alertRef.current.contains(event.target as Node)
+        !alertRef.current.contains(event.target as Node) &&
+        !(event.target as HTMLElement).closest("#alert-button")
       ) {
         setIsAlertOpen(false);
       }
@@ -344,6 +342,7 @@ const Header = () => {
                   </UserButton>
 
                   <UserButton
+                    id="alert-button"
                     onClick={() => {
                       setIsAlertOpen((prev) => !prev);
                       setIsDropdownOpen(false);
