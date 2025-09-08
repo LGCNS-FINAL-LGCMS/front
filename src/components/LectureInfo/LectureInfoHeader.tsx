@@ -191,8 +191,13 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
       setIsSuccess(true);
       setModalOpen(true);
     } catch (err) {
-      // console.error(err);
-      setModalMessage(err.message || "에러 발생");
+      let errorMessage = "알 수 없는 에러가 발생했습니다.";
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+
+      setModalMessage(errorMessage);
       setIsSuccess(false);
       setModalOpen(true);
     }
