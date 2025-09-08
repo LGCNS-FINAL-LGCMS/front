@@ -1,6 +1,5 @@
 import apiClient from "../../api";
 import { API_ENDPOINTS } from "../../constants/endpoints";
-import { getErrorMessage } from "../../utils/handleApiError";
 
 export interface DashboardData {
   monthlyStatusResponse: MonthlyStatusResponse;
@@ -65,10 +64,9 @@ export const getLecturerReportData = async () => {
     const sessionData = getLecturerReportFromSession();
     if (sessionData) return sessionData;
 
-    const response = await apiClient.get(
+    const response = await apiClient.post(
       API_ENDPOINTS.CONSULTING.GET_LECTURER_REPORT
     );
-    console.log("Response:", response);
 
     const lecturerReport: LecturerReport = {
       reviewAnalysisResult: response.data.data.reviewAnalysisResult,
@@ -78,10 +76,8 @@ export const getLecturerReportData = async () => {
 
     sessionStorage.setItem("lecturerReport", JSON.stringify(lecturerReport));
     return getLecturerReportFromSession();
-  } catch (error: unknown) {
-    const message = getErrorMessage(error, "강사 레포트 조회 실패");
-    console.error("Consulting Report error:", message);
-    throw new Error(message);
+  } catch {
+    return null;
   }
 };
 
@@ -93,7 +89,6 @@ export const getDashboardData = async () => {
     const response = await apiClient.get(
       API_ENDPOINTS.CONSULTING.GET_DASHBOARD
     );
-    console.log("Response:", response);
 
     const dashboardData: DashboardData = {
       monthlyStatusResponse: response.data.data.monthlyStatusResponse,
@@ -107,10 +102,8 @@ export const getDashboardData = async () => {
 
     sessionStorage.setItem("lecturerDashboard", JSON.stringify(dashboardData));
     return getDashboardFromSession();
-  } catch (error: unknown) {
-    const message = getErrorMessage(error, "강사 대시보드 조회 실패");
-    console.error("Consulting Dashboard error:", message);
-    throw new Error(message);
+  } catch {
+    return null;
   }
 };
 
@@ -118,8 +111,7 @@ export const getDashboardFromSession = () => {
   try {
     const data = sessionStorage.getItem("lecturerDashboard");
     return data ? JSON.parse(data) : null;
-  } catch (error: unknown) {
-    console.log("세션데이터를 가져오지 못했습니다.", error);
+  } catch {
     sessionStorage.removeItem("lecturerDashboard");
     return null;
   }
@@ -129,8 +121,7 @@ const getLecturerReportFromSession = () => {
   try {
     const data = sessionStorage.getItem("lecturerReport");
     return data ? JSON.parse(data) : null;
-  } catch (error: unknown) {
-    console.log("세션데이터를 가져오지 못했습니다.", error);
+  } catch {
     sessionStorage.removeItem("lecturerReport");
     return null;
   }
