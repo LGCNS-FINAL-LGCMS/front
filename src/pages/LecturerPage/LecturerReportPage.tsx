@@ -7,14 +7,17 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 10px;
+  min-height: calc(100vh - ${({ theme }) => theme.size.header.height});
+  font-family: ${({ theme }) => theme.font.primary};
 `;
-const PageTitle = styled.p`
-  border-bottom: 2px solid;
-  width: 1080px;
-  font-size: ${(props) => props.theme.fontSize.title.max};
-  font-family: ${(props) => props.theme.font.primary};
-  border-color: ${(props) => props.theme.colors.border_Dark};
-  margin: 0 auto 30px auto;
+
+const PageTitle = styled.h1`
+  font-size: ${({ theme }) => theme.fontSize.title.max};
+  color: ${({ theme }) => theme.colors.text_D};
+  border-bottom: 2px solid ${({ theme }) => theme.colors.border_Dark};
+  padding: 10px 0;
+  width: ${({ theme }) => theme.size.bottomLine};
 `;
 
 const LecturerReportContainer = styled.div`

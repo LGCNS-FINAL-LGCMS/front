@@ -129,7 +129,8 @@ const TextArea = styled.textarea`
   border-radius: 6px;
   font-size: ${({ theme }) => theme.fontSize.body.min};
   width: 100%;
-  min-height: 100px;
+  min-height: 300px;
+  resize: none;
 `;
 
 const TopSection = styled.div`
@@ -228,8 +229,9 @@ const ConfirmRow = styled.div`
 `;
 
 const CreateLecturePage = () => {
-  const TITLE_MAX_LENGTH = 20;
-  const DESCRIPTION_MAX_LENGTH = 40;
+  const TITLE_MAX_LENGTH = 50;
+  const DESCRIPTION_MAX_LENGTH = 100;
+  const INFORMATION_MAX_LENGTH = 1000;
 
   const navigate = useNavigate();
 
@@ -286,13 +288,17 @@ const CreateLecturePage = () => {
           : selectedInterests.length > 1
           ? "카테고리는 하나만 선택할 수 있습니다."
           : "",
-      title: title.trim()
+      title: title.trimStart().trimEnd()
         ? title.length > 50
           ? `제목은 ${TITLE_MAX_LENGTH}자 이내로 입력해주세요.`
           : ""
         : "강의 제목을 입력해주세요.",
-      description: description.trim() ? "" : "강의 설명을 입력해주세요.",
-      information: information.trim() ? "" : "상세 설명을 입력해주세요.",
+      description: description.trimStart().trimEnd()
+        ? ""
+        : "강의 설명을 입력해주세요.",
+      information: information.trimStart().trimEnd()
+        ? ""
+        : "상세 설명을 입력해주세요.",
       materials: selectedFile ? "" : "강의 자료를 업로드해주세요.",
     };
 
@@ -305,15 +311,13 @@ const CreateLecturePage = () => {
     const fetchInterests = async () => {
       try {
         const data = await getcategoriesList();
-        console.log(data);
         setInterests(
           data.data.categories.map((cat: { id: number; name: string }) => ({
             id: cat.id,
             name: cat.name.replace(/^"|"$/g, ""),
           }))
         );
-      } catch (error) {
-        console.error("카테고리 불러오기 실패:", error);
+      } catch {
         setInterests([]);
       }
     };
@@ -441,7 +445,11 @@ const CreateLecturePage = () => {
           placeholder="강의에 대한 상세 설명을 입력하세요"
           value={information}
           onChange={(e) => setInformation(e.target.value)}
+          maxLength={INFORMATION_MAX_LENGTH}
         />
+        <div style={{ textAlign: "right", fontSize: "12px", color: "#888" }}>
+          {information.length}/{INFORMATION_MAX_LENGTH}자
+        </div>
       </Section>
       <Section>
         <SectionTitle>강의 자료</SectionTitle>
@@ -460,13 +468,13 @@ const CreateLecturePage = () => {
           <ConfirmModalContent>
             <h3>입력 내용을 확인해주세요</h3>
             <ConfirmRow>
-              <strong>제목:</strong> {title}
+              <strong>제목:</strong> {title.trimStart().trimEnd()}
             </ConfirmRow>
             <ConfirmRow>
-              <strong> 한 줄 설명:</strong> {description}
+              <strong> 한 줄 설명:</strong> {description.trimStart().trimEnd()}
             </ConfirmRow>
             <ConfirmRow>
-              <strong>상세 설명:</strong> {information}
+              <strong>상세 설명:</strong> {information.trimStart().trimEnd()}
             </ConfirmRow>
             <ConfirmRow>
               <strong>난이도:</strong> {selectedLevel}
@@ -477,13 +485,17 @@ const CreateLecturePage = () => {
             </ConfirmRow>
             <ConfirmRow>
               <strong>카테고리:</strong>{" "}
-              {selectedInterests.map((i) => i.name).join(", ")}
+              {selectedInterests
+                .map((i) => i.name.trimStart().trimEnd())
+                .join(", ")}
             </ConfirmRow>
             <ConfirmRow>
-              <strong>썸네일:</strong> {selectedImageFile?.name}
+              <strong>썸네일:</strong>{" "}
+              {selectedImageFile?.name.trimStart().trimEnd()}{" "}
             </ConfirmRow>
             <ConfirmRow>
-              <strong>강의자료:</strong> {selectedFile?.name}
+              <strong>강의자료:</strong>{" "}
+              {selectedFile?.name.trimStart().trimEnd()}{" "}
             </ConfirmRow>
             <div
               style={{
@@ -509,26 +521,24 @@ const CreateLecturePage = () => {
                       return;
 
                     const response = await openLectureRequest({
-                      title,
-                      category: selectedInterests[0]?.name ?? "",
-                      information,
+                      title: title.trimStart().trimEnd(),
+                      category:
+                        selectedInterests[0]?.name.trimStart().trimEnd() ?? "",
+                      information: information.trimStart().trimEnd(),
                       level: selectedLevel,
                       price: isFree ? 0 : priceNum,
-                      description,
+                      description: description.trimStart().trimEnd(),
                       nickname: nickname,
                     });
 
-                    console.log(response);
-                    const res = await lectureFilesUpload({
+                    await lectureFilesUpload({
                       id: response,
                       files: [selectedImageFile, selectedFile],
                     });
 
-                    console.log("강의 개설 성공!", res);
                     setShowConfirmModal(false);
                     navigate(PAGE_PATHS.USER_PAGE.LECTURER.MAIN);
                   } catch (error) {
-                    console.error("강의 개설 중 오류 발생:", error);
                     alert(error);
                   } finally {
                     setIsSubmitting(false);

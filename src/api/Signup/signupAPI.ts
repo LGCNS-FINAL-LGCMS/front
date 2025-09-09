@@ -22,8 +22,7 @@ export const checkNicknameAPI = async (
     });
 
     return response.data;
-  } catch (error) {
-    console.log("닉네임 서버 호출 실패", error);
+  } catch {
     throw new Error("닉네임 중복 체크 실패");
   }
 };
@@ -41,8 +40,7 @@ export const signupAPI = async (
     });
 
     return response.data;
-  } catch (error) {
-    console.log("회원정보 서버 호출 실패", error);
+  } catch {
     throw new Error("회원 서버 호출 실패");
   }
 };
@@ -52,8 +50,7 @@ export const getcategoriesList = async () => {
   try {
     const response = await apiClient.get(API_ENDPOINTS.USER.CATEGORY_LIST);
     return response.data;
-  } catch (error) {
-    console.log("카테고리 서버 호출 실패", error);
+  } catch {
     throw new Error("카테고리 조회 실패");
   }
 };
