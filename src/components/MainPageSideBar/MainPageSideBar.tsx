@@ -12,16 +12,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { theme } from "../../assets/styles/theme";
 import { PAGE_PATHS } from "../../constants/pagePaths";
 
-const SidebarWrapper = styled.nav`
-  width: 100px;
+const Wrapper = styled.nav`
+  width: 80px;
   height: calc(100vh - ${theme.size.header.height});
   position: fixed;
   top: ${theme.size.header.height};
-  left: 0;
+  left: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: ${theme.zIndex.header};
+`;
+
+const SidebarWrapper = styled.nav`
+  width: 80px;
+  height: calc(100vh - ${theme.size.header.height} - 30px);
   background-color: ${theme.colors.text_D};
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-radius: 30px;
   align-items: center;
   gap: 30px;
   z-index: ${theme.zIndex.header};
@@ -70,27 +80,38 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage }) => {
   );
 
   return (
-    <SidebarWrapper>
-      {isAuthenticated ? (
-        <>
-          <IconButton
-            title="나의 강좌"
-            active={activePage === "my-courses"}
-            onClick={() => navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES)}
-          >
-            <FontAwesomeIcon icon={faBookOpen} />
-            <IconLabel>나의 강좌</IconLabel>
-          </IconButton>
+    <Wrapper>
+      <SidebarWrapper>
+        {isAuthenticated ? (
+          <>
+            <IconButton
+              title="나의 강좌"
+              active={activePage === "my-courses"}
+              onClick={() => navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES)}
+            >
+              <FontAwesomeIcon icon={faBookOpen} />
+              <IconLabel>나의 강좌</IconLabel>
+            </IconButton>
 
-          <IconButton
-            title="레벨테스트"
-            active={activePage === "level-test"}
-            onClick={() => navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD)}
-          >
-            <FontAwesomeIcon icon={faChartLine} />
-            <IconLabel>레벨테스트</IconLabel>
-          </IconButton>
+            <IconButton
+              title="레벨테스트"
+              active={activePage === "level-test"}
+              onClick={() => navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD)}
+            >
+              <FontAwesomeIcon icon={faChartLine} />
+              <IconLabel>레벨테스트</IconLabel>
+            </IconButton>
 
+            <IconButton
+              title="FAQ"
+              active={activePage === "faq"}
+              onClick={() => navigate(PAGE_PATHS.FAQ)}
+            >
+              <FontAwesomeIcon icon={faQuestionCircle} />
+              <IconLabel>FAQ</IconLabel>
+            </IconButton>
+          </>
+        ) : (
           <IconButton
             title="FAQ"
             active={activePage === "faq"}
@@ -99,18 +120,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage }) => {
             <FontAwesomeIcon icon={faQuestionCircle} />
             <IconLabel>FAQ</IconLabel>
           </IconButton>
-        </>
-      ) : (
-        <IconButton
-          title="FAQ"
-          active={activePage === "faq"}
-          onClick={() => navigate(PAGE_PATHS.FAQ)}
-        >
-          <FontAwesomeIcon icon={faQuestionCircle} />
-          <IconLabel>FAQ</IconLabel>
-        </IconButton>
-      )}
-    </SidebarWrapper>
+        )}
+      </SidebarWrapper>
+    </Wrapper>
   );
 };
 

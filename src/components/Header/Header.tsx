@@ -12,6 +12,7 @@ import { clearCategory } from "../../redux/Category/categorySlice";
 import { clearKeyword } from "../../redux/keyword/keywordSlice";
 import { logoutUsingToken } from "../../redux/token/tokenSlice";
 import { resetUserInfo } from "../../redux/Auth/authSlice";
+import Button from "../Common/Button";
 import {
   faCircleUser,
   faBars,
@@ -33,11 +34,12 @@ const HeaderWrapper = styled.header`
   left: 0;
   right: 0;
   z-index: ${({ theme }) => theme.zIndex.header};
-  background-color: ${({ theme }) => theme.colors.header};
+  background-color: ${({ theme }) => theme.colors.background_B};
   height: ${({ theme }) => theme.size.header.height};
   padding: 0 1rem;
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(10px);
+  box-shadow: ${({ theme }) => theme.shadow.md};
 `;
 
 const DropdownMenu = styled.div`
@@ -82,7 +84,7 @@ const UserButton = styled.button`
   gap: 0.4rem;
   font-size: 1.3rem;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors.text_B};
+  color: ${({ theme }) => theme.colors.text_D};
   background: none;
   border: none;
   cursor: pointer;
@@ -100,39 +102,6 @@ const Container = styled.nav`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
-`;
-
-const ActionButton = styled.div`
-  padding: 0 16px;
-  font-size: ${({ theme }) => theme.fontSize.button.max};
-  border-radius: 25px;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  line-height: 1;
-  min-height: 38px;
-  text-align: center;
-  vertical-align: middle;
-  user-select: none;
-  outline: none;
-
-  svg {
-    font-size: 1.1em;
-  }
-
-  background-color: rgba(0, 0, 0, 0.25);
-  color: ${({ theme }) => theme.colors.text_B};
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.45);
-  }
-
-  &:active {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
 `;
 
 const UserActionsWrapper = styled.div`
@@ -155,7 +124,7 @@ const LogoText = styled.span`
   font-family: ${({ theme }) => theme.font.logo};
   cursor: pointer;
   font-weight: bold;
-  color: ${({ theme }) => theme.colors.text_B};
+  color: ${({ theme }) => theme.colors.text_D};
   transition: ${({ theme }) => theme.transition.default};
   &:hover {
     color: ${({ theme }) => theme.colors.gray_M};
@@ -286,7 +255,7 @@ const Header = () => {
     try {
       await dispatch(logoutUsingToken()).unwrap();
       dispatch(resetUserInfo());
-      navigate(PAGE_PATHS.LOGIN);
+      navigate(PAGE_PATHS.HOME);
     } catch (err) {
       console.error("로그아웃 실패:", err);
     }
@@ -466,7 +435,7 @@ const Header = () => {
               )}
             </>
           ) : (
-            <ActionButton onClick={onLogin}>Log In</ActionButton>
+            <Button text="Log In" onClick={onLogin} design={1} />
           )}
         </UserActionsWrapper>
       </Container>
