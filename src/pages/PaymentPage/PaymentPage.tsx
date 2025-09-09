@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 
 import type { RootState } from "../../redux/store";
 import { postLectureStudent } from "../../api/Lecture/lectureAPI";
+import InfoCheckModal from "../../components/Signup/signupModal";
 
 const PaymentContainer = styled.div`
   display: flex;
@@ -131,7 +132,11 @@ const PaymentPage: React.FC = () => {
   const navigate = useNavigate();
 
   // 상태관리
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>("");
   const [items, setItems] = useState<LectureItem[]>([]);
+  const [nextAction, setNextAction] = useState<(() => void) | null>(null);
+
   useEffect(() => {
     const fetchCartData = async () => {
       try {
@@ -207,7 +212,11 @@ const PaymentPage: React.FC = () => {
           })
         );
 
-        alert("결제가 완료되었습니다.");
+        // alert("결제가 완료되었습니다.");
+        setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
+        setModalMessage("결제가 완료되었습니다.");
+        setModalIsOpen(true);
+
         dispatch(setSuccess());
         navigate(PAGE_PATHS.PAYMENT.RESULT);
         return;
@@ -230,7 +239,10 @@ const PaymentPage: React.FC = () => {
         stepUrl = response.nextStepUrl;
         // console.log(response.nextStepUrl);
       } else {
-        alert("결제할 항목이 없습니다.");
+        // alert("결제할 항목이 없습니다.");
+        setModalMessage("결제할 항목이 없습니다.");
+        setModalIsOpen(true);
+
         dispatch(setPending());
         return;
       }
@@ -249,19 +261,27 @@ const PaymentPage: React.FC = () => {
         "width=450,height=700"
       ) as Window;
       if (!popUp) {
-        alert("팝업 차단을 해제해주세요.");
+        // alert("팝업 차단을 해제해주세요.");
+        setModalMessage("팝업 차단을 해제해주세요.");
+        setModalIsOpen(true);
         return;
       }
 
       const checkPopupClosed = setInterval(() => {
         try {
           if (!popUp || popUp.closed) {
-            alert("결제창이 닫혔습니다. 결제를 완료해주세요.");
+            // alert("결제창이 닫혔습니다. 결제를 완료해주세요.");
+            setModalMessage("결제창이 닫혔습니다. 결제를 완료해주세요.");
+            setModalIsOpen(true);
+
             dispatch(setPending());
             clearInterval(checkPopupClosed);
           }
         } catch {
-          alert("결제창이 닫혔습니다. 결제를 완료해주세요.");
+          // alert("결제창이 닫혔습니다. 결제를 완료해주세요.");
+          setModalMessage("결제창이 닫혔습니다. 결제를 완료해주세요.");
+          setModalIsOpen(true);
+
           dispatch(setPending());
           clearInterval(checkPopupClosed);
         }
@@ -294,6 +314,8 @@ const PaymentPage: React.FC = () => {
             // console.log("pgToken 수신 : ", pgToken);
             // console.log("tid : ", tid);
             if (pgToken && tid) {
+              clearInterval(checkPopupClosed);
+
               const pendingCartIdString = sessionStorage.getItem("itemIds");
               const pendingCartId = pendingCartIdString
                 ? JSON.parse(pendingCartIdString)
@@ -318,18 +340,20 @@ const PaymentPage: React.FC = () => {
               });
 
               if (paymentResult === "결제가 완료되었습니다.") {
-                alert("결제가 완료되었습니다.");
-
-                // 완료창 넘어가기
+                // alert("결제가 완료되었습니다.");
                 dispatch(setSuccess());
-                navigate(PAGE_PATHS.PAYMENT.RESULT);
+                setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
+                setModalMessage("결제가 완료되었습니다.");
+                setModalIsOpen(true);
+
                 return;
               } else {
-                alert("결제가 실패하였습니다.");
-                // 실패창 넘어가기
+                // alert("결제가 실패하였습니다.");
                 dispatch(setFailure());
-                //  TODO 실패요청 백엔드로 보내기
-                navigate(PAGE_PATHS.PAYMENT.RESULT);
+                setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
+                setModalMessage("결제가 실패하였습니다.");
+                setModalIsOpen(true);
+
                 return;
               }
             }
@@ -340,7 +364,10 @@ const PaymentPage: React.FC = () => {
       ); // 버블링(false)인지 캡처링(true)인지 상관없다. mes sage타입 이벤트는 DOM트리를 거치지 않고 window에 직접 전달되니까!
     } catch {
       // console.error("결제 처리 중 오류가 발생했습니다.", error);
-      alert("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+      // alert("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+      setModalMessage("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+      setModalIsOpen(true);
+
       dispatch(setFailure());
       // sessionStorage.removeItem('itemIds');
 
@@ -350,6 +377,23 @@ const PaymentPage: React.FC = () => {
 
   return (
     <PaymentContainer>
+      {/* 사용자에게 확인시켜주는 용도의 모달 */}
+      <InfoCheckModal
+        isOpen={modalIsOpen}
+        message={modalMessage}
+        onConfirm={function (): void {
+          setModalIsOpen(false);
+          if (nextAction) {
+            nextAction();
+            setNextAction(null);
+          }
+        }}
+        onCancel={function (): void {
+          setModalIsOpen(false);
+          setNextAction(null);
+        }}
+      />
+
       <ProductWrapper>
         <ProductList items={items} setItems={setItems} />
       </ProductWrapper>
