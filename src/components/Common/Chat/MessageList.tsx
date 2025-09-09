@@ -54,6 +54,9 @@ export const MessageBubble = styled.div<{ isUser: boolean; isImage: boolean }>`
   box-shadow: 0 6px 18px ${({ theme }) => theme.shadow.sm};
   animation: pop 180ms cubic-bezier(.2, .8, .2, 1);
 
+  /* \n 줄바꿈 역할 */
+  white-space: pre-wrap;
+
   /* 역할별 바탕 */
   color: ${({ isUser, theme }) => (isUser ? theme.colors.text_B : theme.colors.text_D)};
   background: ${({ isUser, theme }) =>
