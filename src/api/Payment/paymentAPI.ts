@@ -103,7 +103,7 @@ export const postPaymentApprove = async (query: paymentToken) => {
       //   },
       // },
     );
-    console.log(response);
+    // console.log(response);
     if (response.status === 200) {
       return "결제가 완료되었습니다.";
     } else {
