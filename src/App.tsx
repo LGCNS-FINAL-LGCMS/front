@@ -37,6 +37,8 @@ import AdminPage from "./pages/AdminPage/AdminPage";
 // import ProtectedRoute from "./components/Admin/ProtectedRoute";
 import StudentReportPage from "./pages/StudentReportPage/StudentReportPage";
 import LecturerReportPage from "./pages/LecturerPage/LecturerReportPage";
+import StudentSideBar from "./components/StudentSideBar/StudentSideBar";
+import SignupGuard from "./components/Signup/SignupGuard/SignupGuard";
 // import LoginGuard from "./components/Admin/LoginGuard";
 
 function App() {
@@ -47,6 +49,7 @@ function App() {
         <Header />
         <ChatWrapper />
         <LecturerSideBar />
+        <StudentSideBar />
 
         <Routes>
           {/* 일반 Layout */}
@@ -65,9 +68,11 @@ function App() {
             path={PAGE_PATHS.SIGNUP}
             element={
               <RoleGuard minRole="GUEST">
-                <Layout>
-                  <SignupPage />
-                </Layout>
+                <SignupGuard>
+                  <Layout>
+                    <SignupPage />
+                  </Layout>
+                </SignupGuard>
               </RoleGuard>
             }
           />
