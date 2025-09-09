@@ -254,16 +254,13 @@ const PaymentPage: React.FC = () => {
       }
 
       const checkPopupClosed = setInterval(() => {
-        console.log("시발")
         try {
           if (!popUp || popUp.closed) {
-            console.log("팝업창 닫힘");
             alert("결제창이 닫혔습니다. 결제를 완료해주세요.");
             dispatch(setPending());
             clearInterval(checkPopupClosed);
           }
         } catch (e) {
-          console.log("팝업창 닫힘");
           alert("결제창이 닫혔습니다. 결제를 완료해주세요.");
           dispatch(setPending());
           clearInterval(checkPopupClosed);
