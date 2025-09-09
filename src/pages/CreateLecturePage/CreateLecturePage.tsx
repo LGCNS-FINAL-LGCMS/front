@@ -317,7 +317,7 @@ const CreateLecturePage = () => {
             name: cat.name.replace(/^"|"$/g, ""),
           }))
         );
-      } catch (error) {
+      } catch {
         setInterests([]);
       }
     };
