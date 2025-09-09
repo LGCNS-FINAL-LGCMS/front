@@ -11,6 +11,7 @@ const Container = styled.div`
   min-height: calc(100vh - ${({ theme }) => theme.size.header.height});
   font-family: ${({ theme }) => theme.font.primary};
 `;
+
 const PageTitle = styled.h1`
   font-size: ${({ theme }) => theme.fontSize.title.max};
   color: ${({ theme }) => theme.colors.text_D};
