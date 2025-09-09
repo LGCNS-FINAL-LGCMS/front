@@ -13,7 +13,6 @@ import InfoCheckModal from "../../components/Signup/signupModal";
 import RoleSelect from "../../components/Signup/RoleSelect";
 import { setUserInfo } from "../../redux/Auth/authSlice";
 import SideTab from "../../components/Common/SideTab";
-import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const PageWrapper = styled.div`
   display: flex;
