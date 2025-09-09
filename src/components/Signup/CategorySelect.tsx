@@ -45,7 +45,7 @@ const CategorySelect = ({ onCategoryChange }: CategorySelectProps) => {
     (selected: Interest[]) => {
       const count = selected.length;
 
-      if (count === 0) {
+      if (count === 1 || count === 0) {
         setCategoriesCountMessage("최소 1개의 카테고리를 선택해주세요.");
       } else if (count >= 5) {
         setCategoriesCountMessage(

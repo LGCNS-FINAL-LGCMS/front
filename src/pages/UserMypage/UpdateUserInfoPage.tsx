@@ -201,6 +201,11 @@ const UpdateUserInfoPage = () => {
       setShowFailModal(true);
       return;
     }
+    if (selectedCategories.length === 0) {
+      setModalMessage("1개이상의 카테고리를 선택해주세요.");
+      setShowFailModal(true);
+      return;
+    }
     try {
       const result = await signupAPI(
         nickname,
