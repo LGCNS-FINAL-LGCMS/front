@@ -4,9 +4,6 @@ import { useEffect, useState } from "react";
 import QuestionCard from "../../../components/Qna/QuestionCard";
 import { getMemberQnas } from "../../../api/Qna/qnaAPI";
 import type { Qna } from "../../../types/qna";
-import SideTab from "../../../components/Common/SideTab";
-import { PAGE_PATHS } from "../../../constants/pagePaths";
-import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   font-family: ${(props) => props.theme.font.primary};
@@ -78,7 +75,6 @@ const EmptyMessage = styled.p`
 
 const StudentQnaPage = () => {
   const [memberQnaList, setMemberQnaList] = useState<Qna[]>([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const getMemberQna = async () => {
@@ -94,39 +90,8 @@ const StudentQnaPage = () => {
     getMemberQna();
   }, []);
 
-  //sideTab
-  const tabItems = [
-    {
-      id: 1,
-      label: "My Lecture",
-      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES),
-    },
-    {
-      id: 2,
-      label: "Level Test",
-      action: () => navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD),
-    },
-    {
-      id: 3,
-      label: "회원정보수정",
-      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO),
-    },
-    {
-      id: 4,
-      label: "나의 Q&A",
-      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.QNA),
-    },
-  ];
-
-  const handleTabSelect = (id: number) => {
-    const tab = tabItems.find((t) => t.id === id);
-    if (tab?.action) tab.action();
-  };
-
   return (
     <Container>
-      <SideTab title="MyPage" items={tabItems} onSelect={handleTabSelect} />
-
       <StudentQnaContainer>
         <MypageTitle>나의 Q&A</MypageTitle>
         <Qnasection>
