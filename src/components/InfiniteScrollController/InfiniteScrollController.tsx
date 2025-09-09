@@ -180,7 +180,7 @@ const InfiniteScrollController: React.FC = () => {
           ) : null
         ) : null
       }
-      scrollThreshold={"35%"}
+      scrollThreshold={"60%"}
       scrollableTarget="scrollableDiv"
     >
       <CardsGrid>

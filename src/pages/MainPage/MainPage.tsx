@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useParams, useNavigate, generatePath } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setKeyword, clearKeyword } from "../../redux/keyword/keywordSlice";
 import SearchBar from "../../components/Common/SearchBar";
 import { theme } from "../../assets/styles/theme";
 import InfiniteScrollController from "../../components/InfiniteScrollController/InfiniteScrollController";
 import CategoryButtons from "../../components/CategoryButtons/CategoryButtons";
-import { PAGE_PATHS } from "../../constants/pagePaths";
 import Sidebar from "../../components/MainPageSideBar/MainPageSideBar";
 import type { RootState } from "../../redux/store";
 
@@ -28,41 +27,27 @@ const Container = styled.div`
   max-width: 1200px;
 `;
 
-const ScrollableContainer = styled.div.attrs({ id: "scrollableDiv" })`
-  height: calc(100vh - ${theme.size.header.height} - 195px);
-  overflow-y: auto;
-  &::-webkit-scrollbar {
-    width: 10px; /* 스크롤바 너비 */
-  }
+// const StickyWrapper = styled.div`
+//   position: sticky;
+//   top: ${theme.size.header.height};
+//   z-index: 50;
+//   background-color: ${({ theme }) => theme.colors.background_B};
+//   display: flex;
+//   flex-direction: column;
+//   gap: 1rem;
+//   padding: 0.5rem 0;
+// `;
 
-  &::-webkit-scrollbar-thumb {
-    background-color: ${theme.colors.header}; /* 스크롤바 색상 */
-    border-radius: 10px; /* 스크롤바 둥근 모서리 */
-    border: 2px solid ${theme.colors.header}; /* 테두리 색상 */
-  }
-
-  &::-webkit-scrollbar-track {
-    background: ${theme.colors.header}; /* 스크롤바 트랙 색상 */
-    border-radius: 10px; /* 트랙의 둥근 모서리 */
-  }
-
-  /* IE / Edge 에서 지원하는 스크롤바 */
-  scrollbar-width: thin;
-  scrollbar-color: ${theme.colors.header} ${theme.colors.gray_L};
-`;
-
-const MainPage = () => {
-  const navigate = useNavigate();
+const MainPage: React.FC = () => {
   const dispatch = useDispatch();
-  const { keyword } = useParams();
-
-  const [localSearchKeyword, setLocalSearchKeyword] = useState(keyword || "");
-
-  const currentCategoryFromStore = useSelector(
-    (state: RootState) => state.category.category
+  const { keyword } = useParams<{ keyword?: string }>();
+  const currentKeyword = useSelector(
+    (state: RootState) => state.keyword.searchText
   );
 
-  const handleKeywordSearch = () => {};
+  const [localSearchKeyword, setLocalSearchKeyword] = useState(
+    currentKeyword || ""
+  );
 
   useEffect(() => {
     if (keyword) {
@@ -80,33 +65,24 @@ const MainPage = () => {
 
   const handleSearch = (query: string) => {
     const trimmedQuery = query.trim();
-    if (trimmedQuery) {
-      dispatch(setKeyword(trimmedQuery));
-
-      const url = generatePath(`${PAGE_PATHS.HOME}/:keyword?/:category?`, {
-        keyword: trimmedQuery || null,
-        category: currentCategoryFromStore || null,
-      });
-
-      navigate(url);
-    }
+    if (trimmedQuery === currentKeyword) return;
+    dispatch(setKeyword(trimmedQuery));
   };
+
   return (
     <CenteredWrapper>
       <Container>
         <Sidebar />
-
         <SearchBar
           value={localSearchKeyword}
           onChange={handleInputChange}
           onSearch={handleSearch}
-          design={2}
-          fontColor={1}
+          design={1}
+          fontColor={2}
         />
-        <CategoryButtons onCategoryClick={handleKeywordSearch} />
-        <ScrollableContainer>
-          <InfiniteScrollController />
-        </ScrollableContainer>
+        <CategoryButtons />
+
+        <InfiniteScrollController />
       </Container>
     </CenteredWrapper>
   );

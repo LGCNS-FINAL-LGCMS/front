@@ -38,7 +38,7 @@ export const postPaymentReady = async (
       price: lectureItem.price,
       lectureId: lectureItem.lectureId,
     };
-    console.log(query);
+    // console.log(query);
 
     const response = await apiClient.post<PaymentApiResponse>(
       API_ENDPOINTS.PAYMENT.READY,
@@ -50,11 +50,11 @@ export const postPaymentReady = async (
       //   },
       // },
     );
-    console.log(response);
+    // console.log(response);
     return response.data.data;
   } catch (error: unknown) {
     const message = getErrorMessage(error, "결제준비 실패");
-    console.error("PaymentReady API error:", message);
+    // console.error("PaymentReady API error:", message);
     throw new Error(message);
   }
 };
@@ -80,11 +80,11 @@ export const postPaymentBundleReady = async (
       //   },
       // },
     );
-    console.log(response);
+    // console.log(response);
     return response.data.data;
   } catch (error: unknown) {
     const message = getErrorMessage(error, "번들결제준비 실패");
-    console.error("PaymentBundleReady API error:", message);
+    // console.error("PaymentBundleReady API error:", message);
     throw new Error(message);
   }
 };
@@ -111,7 +111,7 @@ export const postPaymentApprove = async (query: paymentToken) => {
     }
   } catch (error: unknown) {
     const message = getErrorMessage(error, "결제승인 실패");
-    console.error("PaymentApprove API error:", message);
+    // console.error("PaymentApprove API error:", message);
     throw new Error(message);
   }
 };
