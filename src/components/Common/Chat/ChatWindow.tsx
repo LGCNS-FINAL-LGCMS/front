@@ -9,6 +9,7 @@ interface ChatWindowProps {
   messages: ChatMessage[];
   onSend: (message: string) => void;
   onClose: () => void;
+  initialSuggestions?: string[];
 }
 
 const ChatContainer = styled.div<{ isOpen: boolean }>`
@@ -68,6 +69,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   messages,
   onSend,
   onClose,
+  initialSuggestions = [],
 }) => {
   return (
     <ChatContainer isOpen={isOpen}>
@@ -76,7 +78,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         <CloseButton onClick={onClose}>✖</CloseButton>
       </ChatHeader>
       <MessageList messages={messages} />
-      <MessageInput onSend={onSend} />
+      <MessageInput onSend={onSend} initialSuggestions={initialSuggestions} />
     </ChatContainer>
   );
 };
