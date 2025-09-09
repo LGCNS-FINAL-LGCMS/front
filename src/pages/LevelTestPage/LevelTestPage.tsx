@@ -299,6 +299,7 @@ const LevelTestPage = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false); // 성공 모달 띄우기
   const [showAnswerCheckModal, setShowAnswerCheckModal] = useState(false); // 답변 없을 때 알림 모달
   const [showTimeoverModal, setShowTimeoverModal] = useState(false); // 타임오버 됐을 때 모달
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
   //타이머 핸들러
   const handleTimeOver = () => {
@@ -323,7 +324,7 @@ const LevelTestPage = () => {
   useEffect(() => {
     const session = getSession();
     if (!session || !session.questions || session.questions.length !== 10) {
-      alert("레벨 테스트 데이터를 불러올 수 없습니다. 처음부터 시작해주세요.");
+      setShowErrorModal(true);
       navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD);
       return;
     } else {
@@ -403,12 +404,11 @@ const LevelTestPage = () => {
         setShowSuccessModal(false);
         navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD);
       } else {
-        alert("제출에 실패했습니다. 다시 시도해주세요.");
-        setShowSuccessModal(false);
+        setShowErrorModal(true);
       }
     } catch {
-      alert("오류가 발생했습니다. 다시 시도해주세요.");
       setShowSuccessModal(false);
+      setShowErrorModal(true);
     }
   };
 
@@ -568,6 +568,20 @@ const LevelTestPage = () => {
             <ModalTitle>시험 시간 종료</ModalTitle>
             답변이 제출 되었어요. <br />
             레포트 작성이 완료되면 알려드릴게요.
+          </ModalMessage>
+        }
+        onConfirm={handleSubmit}
+        onCancel={handleCancel}
+        confirmText="확인"
+      />
+
+      <InfoCheckModal
+        isOpen={showErrorModal}
+        message={
+          <ModalMessage>
+            오류가 발생했습니다.
+            <br />
+            다시 시도해주세요.
           </ModalMessage>
         }
         onConfirm={handleSubmit}
