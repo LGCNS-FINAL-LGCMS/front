@@ -76,6 +76,7 @@ export const API_ENDPOINTS = {
 
   GUIDE: {
     POST: "/guide", // POST
+    GET_RECOMMEND: "/guide", // GET
   },
 
   FAQ: {

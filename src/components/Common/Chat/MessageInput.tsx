@@ -103,11 +103,7 @@ const SuggestionChip = styled.div`
 
 const MessageInput: React.FC<MessageInputProps> = ({
   onSend,
-  initialSuggestions = [
-    "이것은 더미데이터로 하드코딩되어있습니다.",
-    "자동으로 검색을 수행합니다.",
-    "자동으로 사라집니다.",
-  ],
+  initialSuggestions = [],
   showInitialSuggestions = true,
 }) => {
   const [input, setInput] = useState("");
