@@ -237,7 +237,7 @@ const LessonViewPage: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
+  // const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -297,7 +297,6 @@ const LessonViewPage: React.FC = () => {
             : "알 수 없는 오류가 발생했습니다.";
 
         setModalMessage(errorMessage);
-        setIsSuccess(false);
         setModalOpen(true);
       }
     };
