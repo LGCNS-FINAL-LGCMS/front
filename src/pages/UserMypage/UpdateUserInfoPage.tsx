@@ -197,6 +197,7 @@ const UpdateUserInfoPage = () => {
       return;
     }
     if (nicknameCheck !== true && nickname !== userInfo.nickname) {
+
       setModalMessage("닉네임 중복확인을 해주세요.");
       setShowFailModal(true);
       return;

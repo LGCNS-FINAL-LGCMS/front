@@ -103,7 +103,7 @@ const UrlPortalCard: React.FC<UrlPortalCardProps> = ({ description, url }) => {
     }
   }
   if (!isValidUrl(url)) {
-    console.warn("유효하지 않은 URL:", url);
+    // console.warn("유효하지 않은 URL:", url);
     return null; // 유효하지 않은 URL은 렌더링하지 않음
   }
 
