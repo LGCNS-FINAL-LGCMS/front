@@ -343,7 +343,9 @@ const QnaDetailPage = () => {
       });
       setNewAnswer("");
       await fetchQna();
-    } catch (error) {}
+    } catch {
+      return;
+    }
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -418,12 +420,12 @@ const QnaDetailPage = () => {
 
           setEditingAnswerId(null);
           setEditAnswerContent("");
-        } catch (error) {
-          console.error("답변 수정 실패:", error);
+        } catch {
+          return null;
         }
       }
-    } catch (error) {
-      console.error("Confirm action error:", error);
+    } catch {
+      return null;
     } finally {
       setShowConfirmModal(false);
       setConfirmAction(null);
