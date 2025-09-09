@@ -180,22 +180,20 @@ const RoleSelect = ({
 
   return (
     <RollSelectContainer>
-      {isDesireLecturer ? null : (
+      {!isDesireLecturer && styleType === "checkbox" && (
         <CheckboxWrapper>
           <RoleSelectSubtitle>강사로 전환하시겠습니까?</RoleSelectSubtitle>
-          {styleType === "checkbox" && (
-            <CheckboxContainer>
-              <CheckboxLabel>
-                <HiddenCheckbox
-                  id="lecturerDesire"
-                  checked={selectedRole === true}
-                  onChange={handleCheckbox}
-                />
-                <CustomCheckbox checked={selectedRole === true} />
-                강사로 전환하기
-              </CheckboxLabel>
-            </CheckboxContainer>
-          )}
+          <CheckboxContainer>
+            <CheckboxLabel>
+              <HiddenCheckbox
+                id="lecturerDesire"
+                checked={selectedRole === true}
+                onChange={handleCheckbox}
+              />
+              <CustomCheckbox checked={selectedRole === true} />
+              강사로 전환하기
+            </CheckboxLabel>
+          </CheckboxContainer>
         </CheckboxWrapper>
       )}
       {styleType === "card" && (
