@@ -222,17 +222,24 @@ const PaymentPage: React.FC = () => {
         return;
       }
 
+      // 중복막기
+      const itemsList = items
+        .filter(item => item.selected)
+        .filter((item, index, self) =>
+          index === self.findIndex(t => t.lectureId === item.lectureId)
+        );
+
       // 준비요청 -> 카카오 팝업 -> tid와 토큰값을 승인api요청 -> 결제완료!
-      if (items.length > 1) {
+      if (itemsList.length > 1) {
         // case 1: 개수가 2개 이상인 경우 /payment/list/ready
-        response = await postPaymentBundleReady(items.filter(item => item.selected));
+        response = await postPaymentBundleReady(itemsList);
 
         tid = response.tid;
         sessionStorage.setItem("tid", tid);
         stepUrl = response.nextStepUrl;
-      } else if (items.length === 1) {
+      } else if (itemsList.length === 1) {
         // case 2: 개수가 한개인 경우 /payment/ready
-        response = await postPaymentReady(items[0]);
+        response = await postPaymentReady(itemsList[0]);
 
         tid = response.tid;
         sessionStorage.setItem("tid", tid);
