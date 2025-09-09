@@ -130,8 +130,8 @@ const MessageInput: React.FC<MessageInputProps> = ({
         await onSend(message.trim());
 
         dispatch(setSuccess());
-      } catch (error) {
-        console.error("전송버튼 중 오류 발생:", error);
+      } catch {
+        // console.error("전송버튼 중 오류 발생:", error);
 
         dispatch(setError());
       } finally {

@@ -35,7 +35,7 @@ export const postGuides = async (query: string): Promise<ResponseData> => {
         .data.message;
     }
 
-    console.error("Guide API error:", message);
+    // console.error("Guide API error:", message);
     throw new Error(message);
   }
 };
