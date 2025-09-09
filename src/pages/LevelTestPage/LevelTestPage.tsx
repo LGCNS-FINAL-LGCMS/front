@@ -449,21 +449,9 @@ const LevelTestPage = () => {
     }
   };
 
-  // 모달 확인 버튼(답변 제출)
-  const handleSubmit = async () => {
-    try {
-      const success = await levelTestSubmit();
-      if (success) {
-        setShowSuccessModal(false);
-        navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD);
-      } else {
-        alert("제출에 실패했습니다. 다시 시도해주세요.");
-        setShowSuccessModal(false);
-      }
-    } catch {
-      alert("오류가 발생했습니다. 다시 시도해주세요.");
-      setShowSuccessModal(false);
-    }
+  const handleShowAnswerCheck = () => {
+    setShowAnswerCheckModal(false);
+    setShowSuccessModal(true);
   };
 
   //모달 취소 버튼
