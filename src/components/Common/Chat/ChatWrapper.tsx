@@ -1,11 +1,11 @@
 // ChatWrapper.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, matchPath } from "react-router-dom";
 import styled from "styled-components";
 import { PAGE_PATHS } from "../../../constants/pagePaths";
 import ChatLauncher from "./ChatLauncher";
 import ChatWindow from "./ChatWindow";
-import { postGuides, type ResponseData } from "../../../api/Guide/guideAPI";
+import { getRecommendQuestions, postGuides, type recommendResponse, type ResponseData } from "../../../api/Guide/guideAPI";
 import type { ChatMessage } from "../../../types/message";
 import { theme } from "../../../assets/styles/theme";
 
@@ -145,6 +145,22 @@ const ChatWrapper = () => {
 
   if (!shouldShowChat) return null;
 
+
+  const [recommendedQuestions, setRecommendedQuestions] = useState<recommendResponse>();
+
+  // 3개의 추천질문 불러오기
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      try {
+        const initialSuggestions: recommendResponse = await getRecommendQuestions();
+        setRecommendedQuestions(initialSuggestions);
+      } catch {
+      }
+    };
+    fetchRecommendations();
+  }, []);
+
+
   return (
     <ChatFixedWrapper>
       <ChatLauncher onClick={toggleChat} />
@@ -153,6 +169,7 @@ const ChatWrapper = () => {
         messages={messages}
         onSend={sendMessage}
         onClose={() => setIsChatOpen(false)}
+        initialSuggestions={recommendedQuestions}
       />
     </ChatFixedWrapper>
   );
