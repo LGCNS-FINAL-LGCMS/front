@@ -12,10 +12,6 @@ const CategorysWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-interface CategoryButtonsProps {
-  onCategoryClick: (keyword: string, category: string) => void;
-}
-
 const Button = styled.button<{ isActive: boolean }>`
   padding: 0.5rem 1rem;
   font-size: 1rem;
@@ -48,32 +44,7 @@ const Button = styled.button<{ isActive: boolean }>`
   }
 `;
 
-// const shimmer = keyframes`
-//   0% { background-position: -400px 0; }
-//   100% { background-position: 400px 0; }
-// `;
-
-// const SkeletonButton = styled.div<{ width: string }>`
-//   width: ${({ width }) => width};
-//   height: 36px; /* 버튼 높이와 동일 */
-//   background: linear-gradient(
-//     90deg,
-//     #bfbfbfff 25%,
-//     #9d9d9dff 50%,
-//     #bfbfbfff 75%
-//   );
-//   background-size: 800px 100%;
-//   animation: ${shimmer} 1.2s infinite;
-//   border-radius: 4px;
-//   margin: 0 12px;
-//   overflow: hidden;
-// `;
-
-interface CategoryButtonsProps {
-  onCategoryClick: (keyword: string, category: string) => void;
-}
-
-const CategoryButtons: React.FC<CategoryButtonsProps> = () => {
+const CategoryButtons: React.FC = () => {
   const dispatch = useDispatch();
   const selectedCategory = useSelector((state: RootState) => state.category);
   const myCategories = useSelector((state: RootState) => state.auth.categories);
