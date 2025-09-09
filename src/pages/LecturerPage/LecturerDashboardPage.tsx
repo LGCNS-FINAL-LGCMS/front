@@ -16,18 +16,20 @@ import type {
 } from "../../utils/sessionStorage/consulting";
 
 const DashboardContainer = styled.div`
+  min-height: calc(100vh - ${({ theme }) => theme.size.header.height});
+  font-family: ${({ theme }) => theme.font.primary};
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 10px;
 `;
 
-const DashboardTitle = styled.p`
-  border-bottom: 2px solid;
-  width: 1080px;
-  font-size: ${(props) => props.theme.fontSize.title.max};
-  font-family: ${(props) => props.theme.font.primary};
-  border-color: ${(props) => props.theme.colors.border_Dark};
-  margin: 0 auto 30px auto;
+const DashboardTitle = styled.h1`
+  width: ${({ theme }) => theme.size.bottomLine};
+  font-size: ${({ theme }) => theme.fontSize.title.max};
+  color: ${({ theme }) => theme.colors.text_D};
+  border-bottom: 2px solid ${({ theme }) => theme.colors.border_Dark};
+  padding: 10px 0;
 `;
 
 const ChartsGrid = styled.div`
@@ -71,7 +73,6 @@ const ChartCard = styled.div<{ $span?: "col" | "row" | "both" }>`
 
 const ChartTitle = styled.h3`
   font-size: ${({ theme }) => theme.fontSize.subtitle};
-  font-weight: 600;
   color: ${({ theme }) => theme.colors.text_D};
   margin-bottom: 15px;
   text-align: center;
@@ -83,9 +84,9 @@ const ChartContainer = styled.div`
 
 const NotFoundMessage = styled.p`
   font-size: ${({ theme }) => theme.fontSize.subtitle};
-  font-weight: 600;
   color: ${({ theme }) => theme.colors.caution};
   text-align: center;
+  padding: 20px;
 `;
 
 const NoDataMessage = styled.div`

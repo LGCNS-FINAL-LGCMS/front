@@ -320,18 +320,14 @@ const QnaDetailPage = () => {
     try {
       const data = await getQnaById(qnaId);
       setQna(data);
-      console.log(data);
-    } catch (err) {
-      console.error(err);
+    } catch {
+      return null;
     }
   }, [qnaId]);
 
   useEffect(() => {
     fetchQna();
   }, [fetchQna, qnaId]);
-
-  // const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
-  //   setNewAnswer(e.target.value);
 
   const handleAddAnswer = async (
     e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
@@ -347,8 +343,8 @@ const QnaDetailPage = () => {
       });
       setNewAnswer("");
       await fetchQna();
-    } catch (error) {
-      console.error("답변 등록 실패:", error);
+    } catch {
+      return;
     }
   };
 
@@ -424,12 +420,12 @@ const QnaDetailPage = () => {
 
           setEditingAnswerId(null);
           setEditAnswerContent("");
-        } catch (error) {
-          console.error("답변 수정 실패:", error);
+        } catch {
+          return null;
         }
       }
-    } catch (error) {
-      console.error("Confirm action error:", error);
+    } catch {
+      return null;
     } finally {
       setShowConfirmModal(false);
       setConfirmAction(null);

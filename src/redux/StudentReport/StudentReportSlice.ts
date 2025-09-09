@@ -119,8 +119,7 @@ export const studentReportSlice = createSlice({
         state.createdAt = action.payload.createdAt;
         state.category = action.payload.category;
       })
-      .addCase(fetchStudentReport.rejected, (state, action) => {
-        console.log("학생 Report API 호출 실패", action.payload);
+      .addCase(fetchStudentReport.rejected, (state) => {
         // api호출 실패 시 state를 초기값으로 리셋
         state.reportId = -1;
         state.memberId = -1;
