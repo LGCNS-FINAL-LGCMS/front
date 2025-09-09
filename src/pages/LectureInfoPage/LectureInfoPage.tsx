@@ -256,7 +256,7 @@ const LectureInfoPage = () => {
                   ? "수강 관련 문의 사항을 적어주세요"
                   : "로그인 후 Q&A를 이용해 주세요"}
               </QnaText>
-              {isAuthenticated && (
+              {isAuthenticated && lecture?.isStudent && (
                 <Button
                   text="문의 작성하기"
                   onClick={() => setIsAddQnaModalOpen(true)}
