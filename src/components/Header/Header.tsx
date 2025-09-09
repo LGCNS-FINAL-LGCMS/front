@@ -12,6 +12,7 @@ import { clearCategory } from "../../redux/Category/categorySlice";
 import { clearKeyword } from "../../redux/keyword/keywordSlice";
 import { logoutUsingToken } from "../../redux/token/tokenSlice";
 import { resetUserInfo } from "../../redux/Auth/authSlice";
+import Button from "../Common/Button";
 import {
   faCircleUser,
   faBars,
@@ -106,6 +107,7 @@ const Container = styled.nav`
 const ActionButton = styled.div`
   padding: 0 16px;
   font-size: ${({ theme }) => theme.fontSize.button.max};
+  font-family: ${({ theme }) => theme.font.primary};
   border-radius: 25px;
   font-weight: 600;
   cursor: pointer;
@@ -467,7 +469,7 @@ const Header = () => {
               )}
             </>
           ) : (
-            <ActionButton onClick={onLogin}>Log In</ActionButton>
+            <Button text="Log In" onClick={onLogin} design={1} />
           )}
         </UserActionsWrapper>
       </Container>

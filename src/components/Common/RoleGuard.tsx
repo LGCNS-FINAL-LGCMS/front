@@ -30,7 +30,6 @@ const RoleGuard = ({ minRole, children }: RoleGuardProps) => {
       userRole !== "ADMIN" &&
       roleHierarchy[userRole] < roleHierarchy[minRole]
     ) {
-      alert("접근 권한이 없습니다.");
       navigate(PAGE_PATHS.LOGIN, { replace: true });
     }
   }, [userRole, minRole, navigate]);
