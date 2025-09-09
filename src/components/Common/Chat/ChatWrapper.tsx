@@ -41,17 +41,32 @@ const ChatWrapper = () => {
     },
   ]);
 
+
   const toggleChat = () => {
     setIsChatOpen((prev) => !prev);
   };
 
-  function extractUrl(text: string): string | undefined {
-    if (!text) return;
-    const pattern = /(https?:\/\/[^\s\]]+)/g;
-    const urls = text.match(pattern);
-    if (!urls) return;
-    return urls[0].trim();
+  type ParsedText = {
+    text: string;
+    url?: string;
+  };
+
+  function parseTextUrl(inputText: string): ParsedText | undefined {
+    if (!inputText) return;
+    const pattern = /\[(https?:\/\/[^\s\]]+)\]/;
+    const match = inputText.match(pattern);
+    if (match && match[1]) {
+      const allmatches = match[0];
+      const url = match[1];
+      // 원본에서 url 제거
+      const text = inputText.replace(allmatches, '').trim();
+
+      return { text: text, url: url };
+    } else {
+      return { text: inputText, url: undefined };
+    }
   }
+
 
   // API를 호출하고 메시지 상태를 업데이트하는 함수
   const sendMessage = async (query: string) => {
@@ -76,26 +91,21 @@ const ChatWrapper = () => {
 
       // 3. API 응답 데이터를 화면에 추가할 메시지 형태로 변환합니다.
       // image가 있을 경우 이미지 메시지도 추가합니다.
+      const parsedResponse = parseTextUrl(responseData.answer);
       const botChatMessages: ChatMessage = {
         id: Date.now().toString() + '-bot',
         sender: 'bot',
-        content: responseData.answer,
+        content: parsedResponse ? parsedResponse.text : responseData.answer,
         timestamp: new Date().getTime(),
         type: "text",
       }
       botMessages.push(botChatMessages);
-      // 3-1. URL을 추출하고, URL이 있다면 UrlPortalCard 컴포넌트를 사용하여 메시지를 생성합니다.
-      // TODO: 테스트중입니다.
-      // const testdata = "네, 마이페이지의 회원정보수정에서 카테고리를 변경할 수 있습니다. 변경 후 저장하면 메인 추천이 순차적으로 반영됩니다.\n\n이 곳으로 이동하시면 원하시는 서비스를 이용할 수 있어요.\n[http://localhost:5173/home]\n\n궁금하신 점이 있다면 언제든지 질문해 주세요!";
-      // const url = extractUrl(testdata);
 
-      const url = extractUrl(responseData.answer);
-      console.log("Extracted URL:", url);
-      if (url) {
+      if (parsedResponse) {
         const botUrlMessage: ChatMessage = {
           id: Date.now().toString() + '-bot-url',
           sender: 'bot',
-          content: url,
+          content: parsedResponse.url || "",
           timestamp: new Date().getTime(),
           type: "url",
         };
@@ -115,12 +125,12 @@ const ChatWrapper = () => {
         };
         botMessages.push(botImageMessage);
       }
-      console.log("botMessages", botMessages);
+      // console.log("botMessages", botMessages);
       // 4. 기존 메시지 목록에 봇의 답변을 추가합니다.
       setMessages((prevMessages) => [...prevMessages, ...botMessages]);
 
-    } catch (error) {
-      console.error("Error sending message:", error);
+    } catch {
+      // console.error("Error sending message:", error);
 
       // 5. 에러 메시지를 사용자에게 보여줍니다.
       const errorMessage: ChatMessage = {
@@ -136,6 +146,9 @@ const ChatWrapper = () => {
 
   if (!shouldShowChat) return null;
 
+
+
+
   return (
     <ChatFixedWrapper>
       <ChatLauncher onClick={toggleChat} />
@@ -144,6 +157,11 @@ const ChatWrapper = () => {
         messages={messages}
         onSend={sendMessage}
         onClose={() => setIsChatOpen(false)}
+        initialSuggestions={[
+          "LGCMS는 어떤 서비스인가요?",
+          "튜터 챗봇은 무엇인가요?",
+          "회원가입은 어떻게 하나요?",
+        ]}
       />
     </ChatFixedWrapper>
   );
