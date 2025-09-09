@@ -140,6 +140,7 @@ const PaymentPage: React.FC = () => {
   const popupIntervalRef = useRef<number | null>(null);
 
   useEffect(() => {
+    // 이벤트 이름 선언
     const handleMessage = async (event: MessageEvent) => {
       if (popupIntervalRef.current) {
         clearInterval(popupIntervalRef.current);
@@ -158,32 +159,38 @@ const PaymentPage: React.FC = () => {
         setModalIsOpen(true);
         return;
       } else {
+        // event.data.type이 성공일시
         const pgToken = event.data.pg_token;
         const tid = sessionStorage.getItem("tid");
 
+        // 카트ID가져오기
         const pendingCartIdString = sessionStorage.getItem("itemIds");
         const pendingCartId = pendingCartIdString
           ? JSON.parse(pendingCartIdString)
           : [];
 
+        // 강의 ID 가져오기
         const pendingLectureIdString =
           sessionStorage.getItem("lectureIds");
         const pendingLectureId = pendingLectureIdString
           ? JSON.parse(pendingLectureIdString)
           : [];
+
+        // 요청 리퀘스트에 넣을 cartInfos형태에 맞게 리스트 생성
         const cartIdList = pendingCartId.map((id: number) => ({
           cartId: id,
           lectureId: pendingLectureId[pendingCartId.indexOf(id)],
         }));
 
         if (pgToken && tid) {
-          // --- 이 로직은 이제 단 한번만 안전하게 실행 ---
+          // 이 로직은 이제 단 한번만 안전하게 실행
           const paymentResult = await postPaymentApprove({
             token: pgToken,
             tid: tid,
             cartInfos: cartIdList,
           });
 
+          // 결제승인 요청이 완료되면 모달이 열리고 확인 누르면 페이지로 넘어간다.
           if (paymentResult === "결제가 완료되었습니다.") {
             // alert("결제가 완료되었습니다.");
             dispatch(setSuccess());
@@ -193,6 +200,7 @@ const PaymentPage: React.FC = () => {
 
             return;
           } else {
+            // 결제승인 요청 실패시
             // alert("결제가 실패하였습니다.");
             dispatch(setFailure());
             setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
@@ -227,6 +235,7 @@ const PaymentPage: React.FC = () => {
     };
   }, [dispatch, navigate])
 
+  // 장바구니 데이터 가져오는 useEffect
   useEffect(() => {
     const fetchCartData = async () => {
       try {
@@ -251,8 +260,8 @@ const PaymentPage: React.FC = () => {
     fetchCartData();
   }, [dispatch]);
 
-  // 결제함수
 
+  // 결제함수
   const startKakaoAccount = async (subtotal: number) => {
     try {
       let tid = "";
@@ -278,7 +287,7 @@ const PaymentPage: React.FC = () => {
       let response: paymentData;
       let stepUrl = "";
 
-      // 실제 결제 api
+      // 무료 강의 결제 시
       if (subtotal <= 0) {
         // 바로 join요청 + cart에서 제거
         const enrollmentPromises = items
@@ -312,7 +321,8 @@ const PaymentPage: React.FC = () => {
         return;
       }
 
-      // 중복막기
+      // 실제 결제 api
+      // 중복막기 ( 만에 하나 동일한 렉쳐가 들어왔을 때 )
       const itemsList = items
         .filter(item => item.selected)
         .filter((item, index, self) =>
@@ -395,96 +405,16 @@ const PaymentPage: React.FC = () => {
           dispatch(setPending());
         }
       }, 500);
-
-      /**
-       * ** 팝업에서 결제 진행 **
-       **/
-      /** 결제 성공시 이벤트리스너 (postMessage 받기) **/
-
-      // window.addEventListener(
-      //   "message",
-      //   async (event) => {
-      //     // 이벤트 보낸 오리진이 카카오결제창이라 다를 수도 있으니 안되면 삭제하세요 if문
-      //     if (event.data.type === "fail") {
-      //       // 실패창 넘어가기
-      //       dispatch(setFailure());
-      //       navigate(PAGE_PATHS.PAYMENT.RESULT);
-      //       //  TODO 실패요청 백엔드로 보내기
-      //       return;
-      //     } else if (event.data.type === "cancel") {
-      //       // 취소창 넘어가기
-      //       dispatch(setCancelled());
-      //       navigate(PAGE_PATHS.PAYMENT.RESULT);
-      //       // TODO 취소요청 백엔드로 보내기
-      //       return;
-      //     } else {
-      //       const pgToken = event.data.pg_token;
-      //       const tid = sessionStorage.getItem("tid");
-      //       // console.log("pgToken 수신 : ", pgToken);
-      //       // console.log("tid : ", tid);
-      //       if (pgToken && tid) {
-      //         clearInterval(checkPopupClosed);
-
-      //         const pendingCartIdString = sessionStorage.getItem("itemIds");
-      //         const pendingCartId = pendingCartIdString
-      //           ? JSON.parse(pendingCartIdString)
-      //           : [];
-      //         // console.log("장바구니 아이디:", pendingCartId);
-
-      //         const pendingLectureIdString =
-      //           sessionStorage.getItem("lectureIds");
-      //         const pendingLectureId = pendingLectureIdString
-      //           ? JSON.parse(pendingLectureIdString)
-      //           : [];
-
-      //         const cartIdList = pendingCartId.map((id: number) => ({
-      //           cartId: id,
-      //           lectureId: pendingLectureId[pendingCartId.indexOf(id)],
-      //         }));
-      //         // console.log("cartIdList:", cartIdList);
-
-      //         const paymentResult = await postPaymentApprove({
-      //           token: pgToken,
-      //           tid: tid,
-      //           cartInfos: cartIdList,
-      //         });
-
-      //         // 세션 청소 ( 이걸로 eventlistener가 )
-      //         sessionStorage.removeItem("itemIds");
-      //         sessionStorage.removeItem("lectureIds");
-      //         sessionStorage.removeItem("tid");
-
-      //         if (paymentResult === "결제가 완료되었습니다.") {
-      //           // alert("결제가 완료되었습니다.");
-      //           dispatch(setSuccess());
-      //           setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
-      //           setModalMessage("결제가 완료되었습니다.");
-      //           setModalIsOpen(true);
-
-      //           return;
-      //         } else {
-      //           // alert("결제가 실패하였습니다.");
-      //           dispatch(setFailure());
-      //           setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
-      //           setModalMessage("결제가 실패하였습니다.");
-      //           setModalIsOpen(true);
-
-      //           return;
-      //         }
-      //       }
-      //     }
-
-      //   },
-      //   false
-      // ); // 버블링(false)인지 캡처링(true)인지 상관없다. mes sage타입 이벤트는 DOM트리를 거치지 않고 window에 직접 전달되니까!
     } catch {
-      // console.error("결제 처리 중 오류가 발생했습니다.", error);
-      // alert("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
       setModalMessage("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
       setModalIsOpen(true);
 
       dispatch(setFailure());
-      // sessionStorage.removeItem('itemIds');
+
+      // 세션 청소
+      sessionStorage.removeItem("itemIds");
+      sessionStorage.removeItem("lectureIds");
+      sessionStorage.removeItem("tid");
 
       navigate(PAGE_PATHS.PAYMENT.RESULT);
     }
