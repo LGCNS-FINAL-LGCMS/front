@@ -104,40 +104,6 @@ const Container = styled.nav`
   align-items: center;
 `;
 
-const ActionButton = styled.div`
-  padding: 0 16px;
-  font-size: ${({ theme }) => theme.fontSize.button.max};
-  font-family: ${({ theme }) => theme.font.primary};
-  border-radius: 25px;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  line-height: 1;
-  min-height: 38px;
-  text-align: center;
-  vertical-align: middle;
-  user-select: none;
-  outline: none;
-
-  svg {
-    font-size: 1.1em;
-  }
-
-  background-color: rgba(0, 0, 0, 0.25);
-  color: ${({ theme }) => theme.colors.text_B};
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.45);
-  }
-
-  &:active {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-`;
-
 const UserActionsWrapper = styled.div`
   display: flex;
   align-items: center;
