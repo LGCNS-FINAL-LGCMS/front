@@ -100,13 +100,15 @@ const LecturerReportPage = () => {
 
   if (isLoading) {
     return (
-      <LecturerReportContainer>
+      <Container>
         <PageTitle>강사 레포트</PageTitle>
-        <LoadingContainer>
-          <LoadingSpinner />
-          <LoadingMessage>강사 레포트를 생성중입니다...</LoadingMessage>
-        </LoadingContainer>
-      </LecturerReportContainer>
+        <LecturerReportContainer>
+          <LoadingContainer>
+            <LoadingSpinner />
+            <LoadingMessage>강사 레포트를 생성중입니다...</LoadingMessage>
+          </LoadingContainer>
+        </LecturerReportContainer>
+      </Container>
     );
   }
 
