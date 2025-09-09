@@ -40,13 +40,15 @@ const ChatWrapper = () => {
       type: "text",
     },
   ]);
-  const [recommendedQuestions, setRecommendedQuestions] = useState<recommendResponse>([]);
+  const [recommendedQuestions, setRecommendedQuestions] = useState<string[]>();
 
   // 3개의 추천질문 불러오기
   useEffect(() => {
     const fetchRecommendations = async () => {
       const initialSuggestions: recommendResponse = await getRecommendQuestions();
-      setRecommendedQuestions(initialSuggestions);
+      // string[]으로 변환
+      const questions = initialSuggestions.exampleQuestion;
+      setRecommendedQuestions(questions);
     };
     fetchRecommendations();
   }, []);
