@@ -277,6 +277,7 @@ const SignupPage = () => {
           <RoleSelect
             selectedRole={selectedRole}
             onRoleChange={handleRoleSelection}
+            styleType="card"
           />
         </RoleSelectContainer>
 
