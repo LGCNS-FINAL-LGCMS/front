@@ -13,6 +13,7 @@ import InfoCheckModal from "../../components/Signup/signupModal";
 import RoleSelect from "../../components/Signup/RoleSelect";
 import { setUserInfo } from "../../redux/Auth/authSlice";
 import SideTab from "../../components/Common/SideTab";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -134,11 +135,7 @@ const UpdateUserInfoPage = () => {
     setNicknameCheckMessage("");
     setNickname(e.target.value);
     setNicknameCheck(null);
-
-    if (nickname === userInfo.nickname) {
-      setNicknameCheckMessage("현재 사용중인 닉네임과 같습니다.");
-      setNicknameCheck(true);
-    }
+    setIsCheckingNickname(false);
   };
 
   //중복버튼 클릭 시
@@ -154,20 +151,21 @@ const UpdateUserInfoPage = () => {
     }
 
     if (nickname !== userInfo.nickname) {
-      setIsCheckingNickname(true);
       try {
         const result = await checkNicknameAPI(nickname);
         if (result.data.isUsed === true) {
           setNicknameCheck(false);
           setNicknameCheckMessage("사용할 수 없는 닉네임입니다.");
+          setIsCheckingNickname(true);
         } else if (result.data.isUsed === false) {
-          setNicknameCheckMessage("사용가능한 닉네임입니다.");
           setNicknameCheck(true);
+          setNicknameCheckMessage("사용가능한 닉네임입니다.");
+          setIsCheckingNickname(true);
+          console.log(result.data.isUsed);
         }
       } catch {
         setNicknameCheckMessage("오류가 발생했습니다. 다시 시도해주세요.");
-      } finally {
-        setIsCheckingNickname(false);
+        setNicknameCheck(null);
       }
     }
   };
@@ -198,63 +196,41 @@ const UpdateUserInfoPage = () => {
       alert("변경된 정보가 없습니다.");
       return;
     }
-
-    if (nicknameChanged) {
-      if (nickname === userInfo.nickname) {
-        setNicknameCheck(true);
-      } else {
-        if (nickname.trim() == "") {
-          alert("닉네임을 입력해주세요");
-          return;
-        } else if (nicknameCheck !== true && nickname !== userInfo.nickname) {
-          alert("닉네임 중복확인을 해주세요.");
-          return;
-        }
-      }
+    if (nicknameCheck !== true && nickname !== userInfo.nickname) {
+      alert("닉네임 중복확인을 해주세요.");
+      return;
     }
+    try {
+      const result = await signupAPI(
+        nickname,
+        selectedCategories,
+        selectedRole
+      );
 
-    if (categoryChanged) {
-      setNicknameCheck(true);
-      // 카테고리 5개이상이면 리스트에 안보냄
-      if (selectedCategories.length === 0) {
-        alert("카테고리를 다시 선택해주세요.");
-        return;
-      }
-    }
-
-    if (nicknameCheck === true) {
-      try {
-        const result = await signupAPI(
+      if (result.status === "OK") {
+        const {
+          memberId,
           nickname,
-          selectedCategories,
-          selectedRole
-        );
+          role,
+          desireLecturer: desireLecturer,
+          categories,
+        } = result.data;
 
-        if (result.status === "OK") {
-          const {
-            memberId,
-            nickname,
-            role,
+        dispatch(
+          setUserInfo({
+            memberId: memberId,
+            nickname: nickname,
+            role: role,
             desireLecturer: desireLecturer,
             categories,
-          } = result.data;
-
-          dispatch(
-            setUserInfo({
-              memberId: memberId,
-              nickname: nickname,
-              role: role,
-              desireLecturer: desireLecturer,
-              categories,
-            })
-          );
-          setShowSuccessModal(true);
-        } else {
-          setShowFailModal(true);
-        }
-      } catch {
+          })
+        );
+        setShowSuccessModal(true);
+      } else {
         setShowFailModal(true);
       }
+    } catch {
+      setShowFailModal(true);
     }
     return;
   };
@@ -318,7 +294,6 @@ const UpdateUserInfoPage = () => {
             text="중복확인"
             onClick={checkNickname}
             design={3}
-            fontWeight={400}
             disabled={isCheckingNickname}
           />
           <NicknameCheckMessage>{nicknameCheckMessage}</NicknameCheckMessage>
