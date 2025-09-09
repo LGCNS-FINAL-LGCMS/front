@@ -40,6 +40,20 @@ const ChatWrapper = () => {
       type: "text",
     },
   ]);
+  const [recommendedQuestions, setRecommendedQuestions] = useState<recommendResponse>([]);
+
+  // 3개의 추천질문 불러오기
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      try {
+        const initialSuggestions: recommendResponse = await getRecommendQuestions();
+        setRecommendedQuestions(initialSuggestions);
+      } catch {
+      }
+    };
+    fetchRecommendations();
+  }, []);
+
 
   const toggleChat = () => {
     setIsChatOpen((prev) => !prev);
@@ -146,19 +160,6 @@ const ChatWrapper = () => {
   if (!shouldShowChat) return null;
 
 
-  const [recommendedQuestions, setRecommendedQuestions] = useState<recommendResponse>();
-
-  // 3개의 추천질문 불러오기
-  useEffect(() => {
-    const fetchRecommendations = async () => {
-      try {
-        const initialSuggestions: recommendResponse = await getRecommendQuestions();
-        setRecommendedQuestions(initialSuggestions);
-      } catch {
-      }
-    };
-    fetchRecommendations();
-  }, []);
 
 
   return (
