@@ -39,7 +39,6 @@ export const fetchStudentLecturePage = createAsyncThunk<
     });
 
     if (response.data?.status === "OK") {
-      console.log(response);
       const { content, totalElements } = response.data.data;
 
       const lectures: LectureType[] = content.map((item: LectureType) => ({

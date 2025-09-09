@@ -149,7 +149,7 @@ const ModalContent = styled.div<{ isSuccess: boolean }>`
   h2 {
     font-size: ${({ theme }) => theme.fontSize.title.max};
     color: ${({ isSuccess, theme }) =>
-      isSuccess ? theme.colors.success : theme.colors.danger};
+    isSuccess ? theme.colors.success : theme.colors.danger};
     margin: 0;
     display: flex;
     align-items: center;

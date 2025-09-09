@@ -72,6 +72,10 @@ const RoleCheckMessage = styled.div`
   color: ${(props) => props.theme.colors.caution};
 `;
 
+const RoleSelectSubtitle = styled.p`
+  font-size: ${(props) => props.theme.fontSize.contents.medium};
+`;
+
 // 체크박스 컨테이너
 const CheckboxContainer = styled.div`
   display: flex;
@@ -145,10 +149,8 @@ const RoleSelect = ({
   const handleRoleSelect = (roleType: string) => {
     if (roleType === "student") {
       onRoleChange(false);
-      console.log("학생 선택됨: false");
     } else if (roleType === "teacher") {
       onRoleChange(true);
-      console.log("강사 선택됨:true ");
     }
   };
 
@@ -182,6 +184,8 @@ const RoleSelect = ({
     <RollSelectContainer>
       {isDesireLecturer ? null : (
         <>
+          <RoleSelectSubtitle>강사로 전환하시겠습니까?</RoleSelectSubtitle>
+
           {styleType === "checkbox" && (
             <CheckboxContainer>
               <CheckboxLabel>
