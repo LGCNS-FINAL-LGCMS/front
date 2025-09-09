@@ -7,10 +7,15 @@ import { fetchStudentReport } from "../../redux/StudentReport/StudentReportSlice
 
 import blueStar from "../../assets/images/levelTestPage/blueStar.svg";
 import blueStar_empty from "../../assets/images/levelTestPage/blueStar_empty.svg";
-import SideTab from "../../components/Common/SideTab";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PAGE_PATHS } from "../../constants/pagePaths";
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+`;
 
 const StudentReportWrapper = styled.div`
   font-family: ${(props) => props.theme.font.primary};
@@ -19,9 +24,34 @@ const StudentReportWrapper = styled.div`
 
   background-color: white;
   border-radius: 11px;
-  margin: 30px;
+  margin: 10px;
   padding: 80px;
   border: 2px solid ${(props) => props.theme.colors.gray_M};
+`;
+
+const BackButtion = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  min-height: 52px;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid ${(props) => props.theme.colors.gray_M};
+  color: ${({ theme }) => theme.colors.border_Dark};
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    transform: ${(props) => props.theme.transition.slow};
+    transform: scale(1.1);
+  }
+  &:active {
+    transform: scale(0.95);
+  }
 `;
 
 const ReportHeader = styled.div`
@@ -37,7 +67,7 @@ const PageTitle = styled.h1`
   font-size: ${({ theme }) => theme.fontSize.title.max};
   font-family: ${({ theme }) => theme.font.primary};
   border-color: ${({ theme }) => theme.colors.background_Overlay};
-  color: ${({ theme }) => theme.colors.background_Overlay};
+  color: ${({ theme }) => theme.colors.text_D};
   padding-bottom: 12px;
 `;
 
@@ -220,38 +250,15 @@ const StudentReportPage = () => {
     }
   }, [reportId, dispatch]);
 
-  //sideTab
-  const tabItems = [
-    {
-      id: 1,
-      label: "My Lecture",
-      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES),
-    },
-    {
-      id: 2,
-      label: "Level Test",
-      action: () => navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD),
-    },
-    {
-      id: 3,
-      label: "회원정보수정",
-      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO),
-    },
-    {
-      id: 4,
-      label: "나의 Q&A",
-      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.QNA),
-    },
-  ];
-
-  const handleTabSelect = (id: number) => {
-    const tab = tabItems.find((t) => t.id === id);
-    if (tab?.action) tab.action();
-  };
-
   return (
     <Container>
-      <SideTab title="MyPage" items={tabItems} onSelect={handleTabSelect} />
+      <BackButtion
+        onClick={() => {
+          navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD);
+        }}
+      >
+        <FontAwesomeIcon icon={faArrowLeft} size="2x" />
+      </BackButtion>
       <StudentReportWrapper>
         <ReportHeader>
           <PageTitle>LevelTest Report</PageTitle>
