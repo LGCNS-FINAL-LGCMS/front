@@ -466,24 +466,25 @@ const QnaDetailPage = () => {
           )}
         </Header>
 
-        <InputContainer>
-          <AnswerTextarea
-            value={newAnswer}
-            onChange={(e) => {
-              setNewAnswer(e.target.value);
+        {role !== "STUDENT" && (
+          <InputContainer>
+            <AnswerTextarea
+              value={newAnswer}
+              onChange={(e) => {
+                setNewAnswer(e.target.value);
 
-              // 자동 높이 조절
-              e.target.style.height = "auto";
-              e.target.style.height = `${e.target.scrollHeight}px`;
-            }}
-            placeholder="답변을 입력하세요"
-            onKeyDown={(e) => handleKeyPress(e)}
-            maxLength={5000}
-          />
-          <SubmitButton onClick={handleAddAnswer}>
-            <FontAwesomeIcon icon={faArrowRight} />
-          </SubmitButton>
-        </InputContainer>
+                e.target.style.height = "auto";
+                e.target.style.height = `${e.target.scrollHeight}px`;
+              }}
+              placeholder="답변을 입력하세요"
+              onKeyDown={(e) => handleKeyPress(e)}
+              maxLength={5000}
+            />
+            <SubmitButton onClick={handleAddAnswer}>
+              <FontAwesomeIcon icon={faArrowRight} />
+            </SubmitButton>
+          </InputContainer>
+        )}
 
         <AnswerSection>
           <AnswerHeader>
