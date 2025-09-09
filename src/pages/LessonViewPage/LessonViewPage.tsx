@@ -7,7 +7,6 @@ import styled from "styled-components";
 import Button from "../../components/Common/Button";
 import {
   getLessonDetails,
-  postLessonProgress,
   patchLessonProgress,
 } from "../../api/Lesson/lessonAPI";
 import type { Lesson } from "../../types/lesson";
@@ -171,13 +170,6 @@ const LessonViewPage: React.FC = () => {
     if (lessonList && lessonList.length > 0) {
       setSelectedLesson(0);
       setCurrentLesson(lessonList[0]);
-      if (currentLesson && currentLesson?.progress === null && lectureId) {
-        postLessonProgress(
-          lectureId,
-          currentLesson?.id,
-          currentLesson?.playtime
-        );
-      }
     }
   }, [lessonList]);
 
@@ -277,8 +269,12 @@ const LessonViewPage: React.FC = () => {
     const lessonId = currentLesson.id;
 
     try {
-      await patchLessonProgress(lectureId, lessonId, playtime);
-      console.log("진도 저장 성공:", playtime);
+      await patchLessonProgress(
+        lectureId,
+        lessonId,
+        playtime,
+        currentLesson.playtime
+      );
     } catch (error) {
       console.error("진도 저장 실패:", error);
     }

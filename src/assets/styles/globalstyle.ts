@@ -2,9 +2,9 @@ import { createGlobalStyle } from "styled-components";
 
 // ======폰트=======
 import BlackHanSans from "../fonts/BlackHanSans-Regular.ttf";
-import GTL_B from "../fonts/GTLBold.ttf";
-import GTL_R from "../fonts/GTLRegular.ttf";
-import GTL_T from "../fonts/GTLThin.ttf";
+import NotoSans_B from "../fonts/NotoSansKR-Bold.ttf";
+import NotoSans_R from "../fonts/NotoSansKR-Regular.ttf";
+import NotoSans_T from "../fonts/NotoSansKR-Thin.ttf";
 
 const GlobalStyle = createGlobalStyle`
 
@@ -17,22 +17,22 @@ const GlobalStyle = createGlobalStyle`
   }
 
   @font-face {
-    font-family: 'GTL';
-    src: url(${GTL_T}) format('truetype');
+    font-family: 'NotoSans';
+    src: url(${NotoSans_T}) format('truetype');
     font-weight: 100;
     font-style: normal;
   }
 
   @font-face {
-    font-family: 'GTL';
-    src: url(${GTL_R}) format('truetype');
+    font-family: 'NotoSans';
+    src: url(${NotoSans_R}) format('truetype');
     font-weight: 400;
     font-style: normal;
   }
 
   @font-face {
-    font-family: 'GTL';
-    src: url(${GTL_B}) format('truetype');
+    font-family: 'NotoSans';
+    src: url(${NotoSans_B}) format('truetype');
     font-weight: 700;
     font-style: normal;
   }

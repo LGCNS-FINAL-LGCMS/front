@@ -4,5 +4,5 @@ export interface Notification {
   memberId: number;
   content: string;
   webPath: string;
-  createdAt: string;
+  createdAt: number[];
 }
