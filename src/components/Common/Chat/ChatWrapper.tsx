@@ -1,11 +1,11 @@
 // ChatWrapper.tsx
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation, matchPath } from "react-router-dom";
 import styled from "styled-components";
 import { PAGE_PATHS } from "../../../constants/pagePaths";
 import ChatLauncher from "./ChatLauncher";
 import ChatWindow from "./ChatWindow";
-import { getRecommendQuestions, postGuides, type recommendResponse, type ResponseData } from "../../../api/Guide/guideAPI";
+import { postGuides, type ResponseData } from "../../../api/Guide/guideAPI";
 import type { ChatMessage } from "../../../types/message";
 import { theme } from "../../../assets/styles/theme";
 
@@ -40,18 +40,6 @@ const ChatWrapper = () => {
       type: "text",
     },
   ]);
-  const [recommendedQuestions, setRecommendedQuestions] = useState<string[]>();
-
-  // 3개의 추천질문 불러오기
-  useEffect(() => {
-    const fetchRecommendations = async () => {
-      const initialSuggestions: recommendResponse = await getRecommendQuestions();
-      // string[]으로 변환
-      const questions = initialSuggestions.exampleQuestion;
-      setRecommendedQuestions(questions);
-    };
-    fetchRecommendations();
-  }, []);
 
 
   const toggleChat = () => {
@@ -169,7 +157,11 @@ const ChatWrapper = () => {
         messages={messages}
         onSend={sendMessage}
         onClose={() => setIsChatOpen(false)}
-        initialSuggestions={recommendedQuestions}
+        initialSuggestions={[
+          "LGCMS는 어떤 서비스인가요?",
+          "튜터 챗봇은 무엇인가요?",
+          "회원가입은 어떻게 하나요?",
+        ]}
       />
     </ChatFixedWrapper>
   );

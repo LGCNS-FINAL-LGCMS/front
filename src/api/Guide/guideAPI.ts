@@ -39,33 +39,3 @@ export const postGuides = async (query: string): Promise<ResponseData> => {
     throw new Error(message);
   }
 };
-
-export interface recommendResponse{
-  exampleQuestion: string[];
-}
-
-export const getRecommendQuestions = async (): Promise<recommendResponse> => {
-  try {
-    const response = await apiClient.get<{ data: recommendResponse }>(
-      API_ENDPOINTS.GUIDE.GET_RECOMMEND
-      // "http://localhost:38105/guide"
-    )
-    return response.data.data;
-
-  }catch(error: unknown){
-    let message = "추천 질문 호출 중 오류";
-    if (error instanceof Error){
-      message = error.message;
-    }else if(typeof error === "object" &&
-      error !== null &&
-      "response" in error &&
-      typeof (error as { response?: { data?: { message?: unknown } } }).response
-        ?.data?.message === "string"
-    ) {
-      message = (error as { response: { data: { message: string } } }).response
-        .data.message;
-    }
-
-    throw new Error(message);
-  }
-};
