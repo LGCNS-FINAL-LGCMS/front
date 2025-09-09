@@ -449,7 +449,6 @@ const LevelTestPage = () => {
     }
   };
 
-  //setShowAnswerCheckModal 확인 시 다시 확인
   const handleShowAnswerCheck = () => {
     setShowAnswerCheckModal(false);
     setShowSuccessModal(true);
