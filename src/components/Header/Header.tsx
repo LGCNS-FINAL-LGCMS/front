@@ -134,12 +134,13 @@ const LogoText = styled.span`
 const AlertDropdown = styled(DropdownMenu)`
   right: rem;
   width: 250px;
-
   top: calc(100% - ${({ theme }) => theme.size.header});
   background-color: ${theme.colors.header};
   box-shadow: 0 10px 10px -3px rgba(130, 130, 130, 0.35);
   font-size: 0.85rem;
   padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
 `;
 
 const AlertItem = styled.div`
