@@ -196,11 +196,9 @@ function App() {
           <Route
             path={PAGE_PATHS.PAYMENT.RESULT}
             element={
-              <RoleGuard minRole="STUDENT">
-                <Layout>
-                  <PaymentResultPage />
-                </Layout>
-              </RoleGuard>
+              <Layout>
+                <PaymentResultPage />
+              </Layout>
             }
           />
 
@@ -282,27 +280,15 @@ function App() {
           />
           <Route
             path={`${PAGE_PATHS.PAYMENT.SUCCESS}`}
-            element={
-              <RoleGuard minRole="STUDENT">
-                <PaymentSuccess />
-              </RoleGuard>
-            }
+            element={<PaymentSuccess />}
           />
           <Route
             path={`${PAGE_PATHS.PAYMENT.FAIL}`}
-            element={
-              <RoleGuard minRole="STUDENT">
-                <PaymentSuccess />
-              </RoleGuard>
-            }
+            element={<PaymentSuccess />}
           />
           <Route
             path={`${PAGE_PATHS.PAYMENT.CANCEL}`}
-            element={
-              <RoleGuard minRole="STUDENT">
-                <PaymentSuccess />
-              </RoleGuard>
-            }
+            element={<PaymentSuccess />}
           />
         </Routes>
       </Router>
