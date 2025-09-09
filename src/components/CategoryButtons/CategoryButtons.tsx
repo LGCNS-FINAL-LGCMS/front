@@ -13,11 +13,11 @@ const CategorysWrapper = styled.div`
 `;
 
 const Button = styled.button<{ isActive: boolean }>`
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 1rem;
   font-size: 1rem;
   font-family: ${({ theme }) => theme.font.primary}, sans-serif;
   font-weight: 700;
-  border-radius: 4px;
+  border-radius: 30px;
   border: 2px solid ${({ theme }) => theme.colors.header};
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, border 0.3s;
