@@ -144,16 +144,13 @@ const SignupPage = () => {
     try {
       const result = await checkNicknameAPI(nickname);
       if (result.data.isUsed === true) {
-        console.log("사용중인 닉네임", result.data.isUsed);
         setNicknameCheck(false);
         setNicknameCheckMessage("사용할 수 없는 닉네임입니다.");
       } else if (result.data.isUsed === false) {
         setNicknameCheck(true);
-        console.log("사용안하고 있는 닉네임", result.data.isUsed);
         setNicknameCheckMessage("사용가능한 닉네임입니다.");
       }
-    } catch (error) {
-      console.error("중복확인 오류:", error);
+    } catch {
       setNicknameCheckMessage("오류가 발생했습니다. 다시 시도해주세요.");
     } finally {
       setIsCheckingNickname(false);
@@ -198,7 +195,6 @@ const SignupPage = () => {
         );
 
         if (result.status === "OK") {
-          console.log("서버연결 성공");
           const { memberId, nickname, role, desireLecturer, categories } =
             result.data;
 
@@ -216,10 +212,9 @@ const SignupPage = () => {
         } else {
           setShowFailModal(true);
           setNicknameCheck(false);
-          console.log("회원가입 실패");
         }
-      } catch (error) {
-        console.error("회원가입 서버 오류 : ", error);
+      } catch {
+        setShowFailModal(true);
       }
       return;
     }

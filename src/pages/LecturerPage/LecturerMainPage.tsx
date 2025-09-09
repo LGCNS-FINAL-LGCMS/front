@@ -8,6 +8,7 @@ const PageWrapper = styled.div`
   position: relative;
   padding-top: calc(${({ theme }) => theme.size.header.height} / 2);
   min-height: calc(100vh - ${({ theme }) => theme.size.header.height} - 40px);
+  font-family: ${(props) => props.theme.font.primary};
 `;
 
 const PageHeader = styled.div`
@@ -15,8 +16,8 @@ const PageHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   width: ${({ theme }) => theme.size.bottomLine};
-  margin: 0 auto 16px;
-  padding: 0 20px;
+  margin: 0 auto;
+  padding: 0 20px 0 0;
 `;
 const ButtonOffset = styled.div`
   margin-top: -16px;
@@ -24,13 +25,12 @@ const ButtonOffset = styled.div`
 
 const PageTitle = styled.h1`
   font-size: ${({ theme }) => theme.fontSize.title.max};
-  font-weight: 700;
 `;
 
 const Underline = styled.div`
   width: ${({ theme }) => theme.size.bottomLine};
   height: 2px;
-  background-color: ${({ theme }) => theme.colors.header};
+  background-color: ${({ theme }) => theme.colors.border_Dark};
   margin: 0 auto 24px;
   border-radius: 1px;
 `;
