@@ -260,7 +260,7 @@ const PaymentPage: React.FC = () => {
             dispatch(setPending());
             clearInterval(checkPopupClosed);
           }
-        } catch (e) {
+        } catch {
           alert("결제창이 닫혔습니다. 결제를 완료해주세요.");
           dispatch(setPending());
           clearInterval(checkPopupClosed);
