@@ -163,8 +163,8 @@ const VideoUploadModal: React.FC<Props> = ({
 }) => {
   // 최대 파일 크기
   const MAX_FILE_SIZE = 1000 * 1024 * 1024; // 1000MB
-  const TITLE_MAX_LENGTH = 15;
-  const DESCRIPTION_MAX_LENGTH = 20;
+  const TITLE_MAX_LENGTH = 50;
+  const DESCRIPTION_MAX_LENGTH = 100;
 
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
