@@ -72,7 +72,7 @@ export const theme: DefaultTheme = {
   },
 
   font: {
-    primary: "GTL",
+    primary: "NotoSans",
     logo: "BlackHanSans",
   },
 
