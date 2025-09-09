@@ -135,6 +135,8 @@ const PaymentPage: React.FC = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>("");
   const [items, setItems] = useState<LectureItem[]>([]);
+  const [nextAction, setNextAction] = useState<(() => void) | null>(null);
+
   useEffect(() => {
     const fetchCartData = async () => {
       try {
@@ -211,6 +213,7 @@ const PaymentPage: React.FC = () => {
         );
 
         // alert("결제가 완료되었습니다.");
+        setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
         setModalMessage("결제가 완료되었습니다.");
         setModalIsOpen(true);
 
@@ -338,22 +341,19 @@ const PaymentPage: React.FC = () => {
 
               if (paymentResult === "결제가 완료되었습니다.") {
                 // alert("결제가 완료되었습니다.");
+                dispatch(setSuccess());
+                setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
                 setModalMessage("결제가 완료되었습니다.");
                 setModalIsOpen(true);
 
-                // 완료창 넘어가기
-                dispatch(setSuccess());
-                navigate(PAGE_PATHS.PAYMENT.RESULT);
                 return;
               } else {
                 // alert("결제가 실패하였습니다.");
+                dispatch(setFailure());
+                setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
                 setModalMessage("결제가 실패하였습니다.");
                 setModalIsOpen(true);
 
-                // 실패창 넘어가기
-                dispatch(setFailure());
-                //  TODO 실패요청 백엔드로 보내기
-                navigate(PAGE_PATHS.PAYMENT.RESULT);
                 return;
               }
             }
@@ -383,9 +383,14 @@ const PaymentPage: React.FC = () => {
         message={modalMessage}
         onConfirm={function (): void {
           setModalIsOpen(false);
+          if (nextAction) {
+            nextAction();
+            setNextAction(null);
+          }
         }}
         onCancel={function (): void {
-          throw new Error("Function not implemented.");
+          setModalIsOpen(false);
+          setNextAction(null);
         }}
       />
 
