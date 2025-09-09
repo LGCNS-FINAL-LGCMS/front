@@ -117,6 +117,7 @@ const KakaoPayBox: React.FC<ProductListProps> = ({ items, startKakaoAccount }) =
 
   return (
     <PaymentContainer>
+
       <SectionTitle>소계 ({selectedCount}개 항목):</SectionTitle>
       <PriceDisplay>
         {subtotal.toLocaleString()}<span>₩</span>
