@@ -4,7 +4,7 @@ import type { LessonResponse } from "../../api/LectureInfo/lectureInfoAPI";
 
 const ScrollableLeftPane = styled.div`
   overflow-y: auto;
-  max-height: calc(100vh - 2rem - 530px);
+  max-height: calc(100%);
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -55,6 +55,7 @@ const LessonContent = styled.div`
   justify-content: space-between;
   align-items: center;
   flex: 1;
+  overflow: hidden;
 `;
 
 const LessonTitle = styled.div`
@@ -62,6 +63,7 @@ const LessonTitle = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 0.95rem;
+  max-width: 70%;
 `;
 
 const Playtime = styled.div`
@@ -82,7 +84,7 @@ const CurriculumList: React.FC<CurriculumListProps> = ({ lessons }) => {
 
     if (minutes === 0) return `${secs}초`;
     if (secs === 0) return `${minutes}분`;
-    return `${minutes}분 ${secs}초`;
+    return `${minutes}분`;
   };
 
   return (

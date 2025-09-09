@@ -61,12 +61,12 @@ export const postLessonFiles = async (
 // 강좌 메타데이터 수정
 export const modifyLessonMetadata = async (
   lessonId: string,
-  information: string
+  payload: LessonMetadataPayload
 ) => {
   try {
     const response = await apiClient.put(
       `${API_ENDPOINTS.LESSON.MODIFY}/${lessonId}`,
-      information
+      payload
     );
     console.log("Modify Lesson Metadata Response:", response);
     return response.data.data;
