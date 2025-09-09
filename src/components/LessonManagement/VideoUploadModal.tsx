@@ -151,6 +151,7 @@ type Props = {
   mode?: "upload" | "edit";
   initialData?: { title: string; description: string };
   isUploading?: boolean;
+  uploadMessage?: string;
 };
 
 const VideoUploadModal: React.FC<Props> = ({
@@ -160,6 +161,7 @@ const VideoUploadModal: React.FC<Props> = ({
   mode = "upload",
   initialData,
   isUploading,
+  uploadMessage,
 }) => {
   // 최대 파일 크기
   const MAX_FILE_SIZE = 1000 * 1024 * 1024; // 1000MB
@@ -338,7 +340,9 @@ const VideoUploadModal: React.FC<Props> = ({
           <UploadOverlay>
             <ClipLoader color="white" size={40} />
             <p>강좌를 업로드 중입니다. 잠시만 기다려주세요...</p>
-            <p>영상 길이에 따라 최대 5분 소요될 수 있습니다.</p>
+            <p>
+              {uploadMessage || "영상 길이에 따라 최대 5분 소요될 수 있습니다."}
+            </p>
           </UploadOverlay>
         )}
       </ModalContent>

@@ -51,7 +51,13 @@ interface ReviewCardProps {
 const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
   const { nickname, star, comment, createdAt } = review;
 
-  const date = new Date(createdAt[0], createdAt[1], createdAt[2]);
+  const formatDate = (createdAt: number[]) => {
+    const [year, month, day] = createdAt;
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
+      2,
+      "0"
+    )}`;
+  };
 
   return (
     <Card>
@@ -63,7 +69,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
           ))}
           {star % 1 !== 0 && <Star>☆</Star>}
         </Stars>
-        <DateText>{date.toLocaleDateString()}</DateText>
+        <DateText>{formatDate(createdAt)}</DateText>
       </Header>
       <Comment>{comment}</Comment>
     </Card>

@@ -87,8 +87,8 @@ const ErrorMessage = styled.div`
   margin-top: -15px;
 `;
 
-const MAX_COMMENT_LENGTH = 100; // 한줄평 최대 글자수
-const MAX_SUGGESTION_LENGTH = 100; // 개선점 최대 글자수
+const MAX_COMMENT_LENGTH = 100;
+const MAX_SUGGESTION_LENGTH = 100;
 
 const AddReviewModal: React.FC<AddReviewModalProps> = ({
   visible,
