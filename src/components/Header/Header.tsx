@@ -287,7 +287,7 @@ const Header = () => {
     try {
       await dispatch(logoutUsingToken()).unwrap();
       dispatch(resetUserInfo());
-      navigate(PAGE_PATHS.LOGIN);
+      navigate(PAGE_PATHS.HOME);
     } catch (err) {
       console.error("로그아웃 실패:", err);
     }
