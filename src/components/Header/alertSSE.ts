@@ -34,14 +34,13 @@ export const useSseConnect = () => {
       try {
         const data: Notification = JSON.parse(event.data);
         setMessage(data);
-        console.log(data);
       } catch (err) {
         console.error("SSE 데이터 파싱 오류:", err);
       }
     };
 
-    eventSource.onerror = (error) => {
-      console.error("SSE 연결 오류:", error);
+    eventSource.onerror = () => {
+      // console.error("SSE 연결 오류:", error);
     };
 
     return () => {
