@@ -11,12 +11,7 @@ import type {
 import qs from "qs";
 
 import type { AppDispatch, RootState } from "../redux/store";
-import {
-  login,
-  logout,
-  triggerBan,
-  maintenance,
-} from "../redux/token/tokenSlice";
+import { login, logout, maintenance } from "../redux/token/tokenSlice";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL as string;
 const REFRESH_URL = API_ENDPOINTS.AUTH.REFRESH;
@@ -56,7 +51,7 @@ apiClient.interceptors.request.use(
     if (accessToken && config.headers) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     } else {
-      console.warn("Access token missing or headers not present");
+      // console.warn("Access token missing or headers not present");
     }
 
     if (
@@ -65,11 +60,10 @@ apiClient.interceptors.request.use(
     ) {
       delete config.headers["Content-Type"];
     }
-
     return config;
   },
   (error: AxiosError): Promise<AxiosError> => {
-    console.error("Request Interceptor Error:", error);
+    // console.error("Request Interceptor Error:", error);
     return Promise.reject(error);
   }
 );
@@ -94,7 +88,7 @@ const processQueue = (error: unknown, token: string | null): void => {
 
 const handleLogoutForInterceptor = (): void => {
   storeRef?.dispatch(logout());
-  console.error("User logged out from interceptor due to token issues.");
+  // console.error("User logged out from interceptor due to token issues.");
 };
 
 interface RefreshResponse {
@@ -119,15 +113,6 @@ apiClient.interceptors.response.use(
     const errorMessage = (error.response?.data as { message?: string })
       ?.message;
 
-    // --- 서버에서 강제 밴 ---
-    if (
-      error.response?.status === 401 &&
-      errorMessage === "관리자에 의해 삭제처리된 계정입니다."
-    ) {
-      storeRef.dispatch(triggerBan());
-      return Promise.reject(error);
-    }
-
     // --- 서버 점검 중 ---
     if (
       error.response?.status === 503 &&
@@ -139,7 +124,7 @@ apiClient.interceptors.response.use(
 
     // --- 토큰 갱신 로직 ---
     if (
-      error.response?.status === 401 &&
+      error.response?.status === undefined &&
       !originalRequest._retry &&
       originalRequest.url !== REFRESH_URL
     ) {
@@ -173,7 +158,6 @@ apiClient.interceptors.response.use(
       }
 
       try {
-        console.log("리프레쉬 요청");
         const refreshResponse = await axios.post<RefreshResponse>(
           `${API_BASE_URL}${REFRESH_URL}`,
           { refreshToken },
@@ -183,7 +167,6 @@ apiClient.interceptors.response.use(
         );
 
         const responseData = refreshResponse.data;
-
         if (
           responseData.status === "OK" &&
           responseData.data?.accessToken &&
