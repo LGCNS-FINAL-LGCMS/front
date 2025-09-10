@@ -434,7 +434,6 @@ const PaymentPage: React.FC = () => {
           }
         }}
         onCancel={function (): void {
-          setModalIsOpen(false);
           setNextAction(null);
         }}
       />
