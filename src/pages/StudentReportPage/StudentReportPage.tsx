@@ -14,7 +14,6 @@ import { PAGE_PATHS } from "../../constants/pagePaths";
 const Container = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: 10px;
 `;
 
 const StudentReportWrapper = styled.div`
@@ -33,14 +32,16 @@ const BackButtion = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
+  position: absolute;
+  top: -70px;
+  left: -50px;
   margin-top: 20px;
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
-  min-height: 52px;
-  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
   background-color: white;
-  border: 2px solid ${(props) => props.theme.colors.gray_M};
   color: ${({ theme }) => theme.colors.border_Dark};
   cursor: pointer;
   padding: 0;
@@ -73,7 +74,7 @@ const PageTitle = styled.h1`
 
 const Category = styled.div`
   position: absolute;
-  top: -12px;
+  top: -10px;
   right: 32px;
 
   background: white;
@@ -255,15 +256,15 @@ const StudentReportPage = () => {
 
   return (
     <Container>
-      <BackButtion
-        onClick={() => {
-          navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD);
-        }}
-      >
-        <FontAwesomeIcon icon={faArrowLeft} size="2x" />
-      </BackButtion>
       <StudentReportWrapper>
         <ReportHeader>
+          <BackButtion
+            onClick={() => {
+              navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD);
+            }}
+          >
+            <FontAwesomeIcon icon={faArrowLeft} size="2x" />
+          </BackButtion>
           <PageTitle>LevelTest Report</PageTitle>
           <Category>{reportData.category}</Category>
         </ReportHeader>
