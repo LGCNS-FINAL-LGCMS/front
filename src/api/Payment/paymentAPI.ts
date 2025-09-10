@@ -103,7 +103,7 @@ export const postPaymentApprove = async (query: paymentToken) => {
       //   },
       // },
     );
-    console.log(response);
+    // console.log(response);
     if (response.status === 200) {
       return "결제가 완료되었습니다.";
     } else {
@@ -115,3 +115,13 @@ export const postPaymentApprove = async (query: paymentToken) => {
     throw new Error(message);
   }
 };
+
+// TODO 결제 취소 요청
+// export const postPaymentCancel() = async (query:) => {
+//   try{
+
+//   }catch(error) {
+//     const message = getErrorMessage(error, "결제승인 실패")
+//     throw new Error(message)
+//   }
+// }

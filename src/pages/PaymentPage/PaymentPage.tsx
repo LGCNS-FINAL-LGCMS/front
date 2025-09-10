@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import KakaoPayBox from "../../components/Payment/KakaoPayBox";
 import ProductList from "../../components/Payment/ProductList";
 import styled, { keyframes, css } from "styled-components";
@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 
 import type { RootState } from "../../redux/store";
 import { postLectureStudent } from "../../api/Lecture/lectureAPI";
+import InfoCheckModal from "../../components/Signup/signupModal";
 
 const PaymentContainer = styled.div`
   display: flex;
@@ -131,7 +132,110 @@ const PaymentPage: React.FC = () => {
   const navigate = useNavigate();
 
   // 상태관리
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>("");
   const [items, setItems] = useState<LectureItem[]>([]);
+  const [nextAction, setNextAction] = useState<(() => void) | null>(null);
+
+  const popupIntervalRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    // 이벤트 이름 선언
+    const handleMessage = async (event: MessageEvent) => {
+      if (popupIntervalRef.current) {
+        clearInterval(popupIntervalRef.current);
+      }
+
+      if (event.data.type === "fail") {
+        dispatch(setFailure());
+        setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
+        setModalMessage("결제에 실패했습니다.");
+        setModalIsOpen(true);
+        return;
+      } else if (event.data.type === "cancel") {
+        dispatch(setCancelled());
+        setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
+        setModalMessage("결제를 취소했습니다.");
+        setModalIsOpen(true);
+        return;
+      } else {
+        // event.data.type이 성공일시
+        const pgToken = event.data.pg_token;
+        const tid = sessionStorage.getItem("tid");
+
+        // 카트ID가져오기
+        const pendingCartIdString = sessionStorage.getItem("itemIds");
+        const pendingCartId = pendingCartIdString
+          ? JSON.parse(pendingCartIdString)
+          : [];
+
+        // 강의 ID 가져오기
+        const pendingLectureIdString =
+          sessionStorage.getItem("lectureIds");
+        const pendingLectureId = pendingLectureIdString
+          ? JSON.parse(pendingLectureIdString)
+          : [];
+
+        // 요청 리퀘스트에 넣을 cartInfos형태에 맞게 리스트 생성
+        const cartIdList = pendingCartId.map((id: number) => ({
+          cartId: id,
+          lectureId: pendingLectureId[pendingCartId.indexOf(id)],
+        }));
+
+        if (pgToken && tid) {
+          // 이 로직은 이제 단 한번만 안전하게 실행
+          const paymentResult = await postPaymentApprove({
+            token: pgToken,
+            tid: tid,
+            cartInfos: cartIdList,
+          });
+
+          // 결제승인 요청이 완료되면 모달이 열리고 확인 누르면 페이지로 넘어간다.
+          if (paymentResult === "결제가 완료되었습니다.") {
+            // alert("결제가 완료되었습니다.");
+            dispatch(setSuccess());
+            setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
+            setModalMessage("결제가 완료되었습니다.");
+            setModalIsOpen(true);
+
+            return;
+          } else {
+            // 결제승인 요청 실패시
+            // alert("결제가 실패하였습니다.");
+            dispatch(setFailure());
+            setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
+            setModalMessage("결제가 실패하였습니다.");
+            setModalIsOpen(true);
+
+            return;
+          }
+        };
+        window.addEventListener("message", handleMessage);
+
+        // 컴포넌트가 화면에서 사라질 때(unmount) 등록했던 리스너를 '제거'합니다.
+        return () => {
+          window.removeEventListener("message", handleMessage);
+          // 만약 인터벌이 남아있다면 함께 정리
+          if (popupIntervalRef.current) {
+            clearInterval(popupIntervalRef.current);
+          }
+        };
+      }
+    };
+
+    // 컴포넌트가 처음 렌더링될 때 '한 번만' 이벤트 리스너를 등록
+    window.addEventListener("message", handleMessage);
+
+    // 컴포넌트가 화면에서 사라질 때(unmount) 등록했던 리스너를 '제거'
+    return () => {
+      window.removeEventListener("message", handleMessage);
+      if (popupIntervalRef.current) {
+        clearInterval(popupIntervalRef.current);
+      }
+    };
+  }, [dispatch, navigate])
+
+  // 장바구니 데이터 가져오는 useEffect
   useEffect(() => {
     const fetchCartData = async () => {
       try {
@@ -156,8 +260,8 @@ const PaymentPage: React.FC = () => {
     fetchCartData();
   }, [dispatch]);
 
-  // 결제함수
 
+  // 결제함수
   const startKakaoAccount = async (subtotal: number) => {
     try {
       let tid = "";
@@ -183,7 +287,7 @@ const PaymentPage: React.FC = () => {
       let response: paymentData;
       let stepUrl = "";
 
-      // 실제 결제 api
+      // 무료 강의 결제 시
       if (subtotal <= 0) {
         // 바로 join요청 + cart에서 제거
         const enrollmentPromises = items
@@ -207,30 +311,45 @@ const PaymentPage: React.FC = () => {
           })
         );
 
-        alert("결제가 완료되었습니다.");
+        // alert("결제가 완료되었습니다.");
+        setNextAction(() => () => navigate(PAGE_PATHS.PAYMENT.RESULT));
+        setModalMessage("결제가 완료되었습니다.");
+        setModalIsOpen(true);
+
         dispatch(setSuccess());
         navigate(PAGE_PATHS.PAYMENT.RESULT);
         return;
       }
 
+      // 실제 결제 api
+      // 중복막기 ( 만에 하나 동일한 렉쳐가 들어왔을 때 )
+      const itemsList = items
+        .filter(item => item.selected)
+        .filter((item, index, self) =>
+          index === self.findIndex(t => t.lectureId === item.lectureId)
+        );
+
       // 준비요청 -> 카카오 팝업 -> tid와 토큰값을 승인api요청 -> 결제완료!
-      if (items.length > 1) {
+      if (itemsList.length > 1) {
         // case 1: 개수가 2개 이상인 경우 /payment/list/ready
-        response = await postPaymentBundleReady(items.filter(item => item.selected));
+        response = await postPaymentBundleReady(itemsList);
 
         tid = response.tid;
         sessionStorage.setItem("tid", tid);
         stepUrl = response.nextStepUrl;
-      } else if (items.length === 1) {
+      } else if (itemsList.length === 1) {
         // case 2: 개수가 한개인 경우 /payment/ready
-        response = await postPaymentReady(items[0]);
+        response = await postPaymentReady(itemsList[0]);
 
         tid = response.tid;
         sessionStorage.setItem("tid", tid);
         stepUrl = response.nextStepUrl;
         // console.log(response.nextStepUrl);
       } else {
-        alert("결제할 항목이 없습니다.");
+        // alert("결제할 항목이 없습니다.");
+        setModalMessage("결제할 항목이 없습니다.");
+        setModalIsOpen(true);
+
         dispatch(setPending());
         return;
       }
@@ -243,106 +362,59 @@ const PaymentPage: React.FC = () => {
         })
       );
 
+      // 팝업 오픈
       const popUp = window.open(
         stepUrl,
         "카카오페이 결제",
         "width=450,height=700"
       ) as Window;
       if (!popUp) {
-        alert("팝업 차단을 해제해주세요.");
+        // alert("팝업 차단을 해제해주세요.");
+        setModalMessage("팝업 차단을 해제해주세요.");
+        setModalIsOpen(true);
         return;
       }
 
-      const checkPopupClosed = setInterval(() => {
+      // 기존에 실행되던 인터벌이 있다면 먼저 정리합니다.
+      if (popupIntervalRef.current) {
+        clearInterval(popupIntervalRef.current);
+      }
+
+      popupIntervalRef.current = window.setInterval(async () => {
         try {
           if (!popUp || popUp.closed) {
-            alert("결제창이 닫혔습니다. 결제를 완료해주세요.");
-            dispatch(setPending());
-            clearInterval(checkPopupClosed);
+            clearInterval(popupIntervalRef.current as number); // 확실하게 number로 타입 단언
+
+            sessionStorage.removeItem("tid"); // 세션 정리
+            setModalMessage("결제가 취소되었습니다.");
+            setModalIsOpen(true);
+            dispatch(setCancelled());
           }
         } catch {
-          alert("결제창이 닫혔습니다. 결제를 완료해주세요.");
+          // alert("결제창이 닫혔습니다. 결제를 완료해주세요.");
+          setModalMessage("결제창이 닫혔습니다. 결제를 완료해주세요.");
+          setModalIsOpen(true);
+
+          // 세션 청소
+          sessionStorage.removeItem("itemIds");
+          sessionStorage.removeItem("lectureIds");
+          sessionStorage.removeItem("tid");
+
+
+
           dispatch(setPending());
-          clearInterval(checkPopupClosed);
         }
       }, 500);
-
-      /**
-       * ** 팝업에서 결제 진행 **
-       **/
-      /** 결제 성공시 이벤트리스너 (postMessage 받기) **/
-
-      window.addEventListener(
-        "message",
-        async (event) => {
-          // 이벤트 보낸 오리진이 카카오결제창이라 다를 수도 있으니 안되면 삭제하세요 if문
-          if (event.data.type === "fail") {
-            // 실패창 넘어가기
-            dispatch(setFailure());
-            navigate(PAGE_PATHS.PAYMENT.RESULT);
-            //  TODO 실패요청 백엔드로 보내기
-            return;
-          } else if (event.data.type === "cancel") {
-            // 취소창 넘어가기
-            dispatch(setCancelled());
-            navigate(PAGE_PATHS.PAYMENT.RESULT);
-            // TODO 취소요청 백엔드로 보내기
-            return;
-          } else {
-            const pgToken = event.data.pg_token;
-            const tid = sessionStorage.getItem("tid");
-            // console.log("pgToken 수신 : ", pgToken);
-            // console.log("tid : ", tid);
-            if (pgToken && tid) {
-              const pendingCartIdString = sessionStorage.getItem("itemIds");
-              const pendingCartId = pendingCartIdString
-                ? JSON.parse(pendingCartIdString)
-                : [];
-              // console.log("장바구니 아이디:", pendingCartId);
-
-              const pendingLectureIdString =
-                sessionStorage.getItem("lectureIds");
-              const pendingLectureId = pendingLectureIdString
-                ? JSON.parse(pendingLectureIdString)
-                : [];
-
-              const cartIdList = pendingCartId.map((id: number) => ({
-                cartId: id,
-                lectureId: pendingLectureId[pendingCartId.indexOf(id)],
-              }));
-              // console.log("cartIdList:", cartIdList);
-              const paymentResult = await postPaymentApprove({
-                token: pgToken,
-                tid: tid,
-                cartInfos: cartIdList,
-              });
-
-              if (paymentResult === "결제가 완료되었습니다.") {
-                alert("결제가 완료되었습니다.");
-
-                // 완료창 넘어가기
-                dispatch(setSuccess());
-                navigate(PAGE_PATHS.PAYMENT.RESULT);
-                return;
-              } else {
-                alert("결제가 실패하였습니다.");
-                // 실패창 넘어가기
-                dispatch(setFailure());
-                //  TODO 실패요청 백엔드로 보내기
-                navigate(PAGE_PATHS.PAYMENT.RESULT);
-                return;
-              }
-            }
-          }
-
-        },
-        false
-      ); // 버블링(false)인지 캡처링(true)인지 상관없다. mes sage타입 이벤트는 DOM트리를 거치지 않고 window에 직접 전달되니까!
     } catch {
-      // console.error("결제 처리 중 오류가 발생했습니다.", error);
-      alert("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+      setModalMessage("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+      setModalIsOpen(true);
+
       dispatch(setFailure());
-      // sessionStorage.removeItem('itemIds');
+
+      // 세션 청소
+      sessionStorage.removeItem("itemIds");
+      sessionStorage.removeItem("lectureIds");
+      sessionStorage.removeItem("tid");
 
       navigate(PAGE_PATHS.PAYMENT.RESULT);
     }
@@ -350,6 +422,22 @@ const PaymentPage: React.FC = () => {
 
   return (
     <PaymentContainer>
+      {/* 사용자에게 확인시켜주는 용도의 모달 */}
+      <InfoCheckModal
+        isOpen={modalIsOpen}
+        message={modalMessage}
+        onConfirm={function (): void {
+          setModalIsOpen(false);
+          if (nextAction) {
+            nextAction();
+            setNextAction(null);
+          }
+        }}
+        onCancel={function (): void {
+          setNextAction(null);
+        }}
+      />
+
       <ProductWrapper>
         <ProductList items={items} setItems={setItems} />
       </ProductWrapper>

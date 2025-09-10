@@ -12,7 +12,6 @@ import CategorySelect from "../../components/Signup/CategorySelect";
 import InfoCheckModal from "../../components/Signup/signupModal";
 import RoleSelect from "../../components/Signup/RoleSelect";
 import { setUserInfo } from "../../redux/Auth/authSlice";
-import SideTab from "../../components/Common/SideTab";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -128,6 +127,7 @@ const UpdateUserInfoPage = () => {
 
   const [showSuccessModal, setShowSuccessModal] = useState(false); // 성공 모달
   const [showFailModal, setShowFailModal] = useState(false); // 실패 모달
+  const [modalMessage, setModalMessage] = useState<string>("");
 
   // 닉네임 input
   const handleNicknameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -192,11 +192,18 @@ const UpdateUserInfoPage = () => {
     const roleChanged = selectedRole !== userInfo.desireLecturer;
 
     if (!nicknameChanged && !categoryChanged && !roleChanged) {
-      alert("변경된 정보가 없습니다.");
+      setModalMessage("변경된 정보가 없습니다.");
+      setShowFailModal(true);
       return;
     }
     if (nicknameCheck !== true && nickname !== userInfo.nickname) {
-      alert("닉네임 중복확인을 해주세요.");
+      setModalMessage("닉네임 중복확인을 해주세요.");
+      setShowFailModal(true);
+      return;
+    }
+    if (selectedCategories.length === 0) {
+      setModalMessage("1개이상의 카테고리를 선택해주세요.");
+      setShowFailModal(true);
       return;
     }
     try {
@@ -224,59 +231,36 @@ const UpdateUserInfoPage = () => {
             categories,
           })
         );
+        setModalMessage("회원 정보 수정이 완료되었습니다.");
         setShowSuccessModal(true);
       } else {
+        setModalMessage("오류가 생겼습니다. 다시 시도해주세요.");
         setShowFailModal(true);
       }
     } catch {
+      setModalMessage("오류가 생겼습니다. 다시 시도해주세요.");
       setShowFailModal(true);
     }
     return;
   };
 
-  // 확인 누르면 변경된 회원수정페이지 보여주기
-  const handelConfirm = () => {
+  const handleGoHome = () => {
     setShowSuccessModal(true);
     navigate(PAGE_PATHS.HOME);
   };
 
-  //취소 버튼 없어
-  const handelCancel = () => {
+  const handleUpdateFail = () => {
     setShowFailModal(false);
+    navigate(PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO);
   };
 
-  //sideTab
-  const tabItems = [
-    {
-      id: 1,
-      label: "My Lecture",
-      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES),
-    },
-    {
-      id: 2,
-      label: "Level Test",
-      action: () => navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD),
-    },
-    {
-      id: 3,
-      label: "회원정보수정",
-      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO),
-    },
-    {
-      id: 4,
-      label: "나의 Q&A",
-      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.QNA),
-    },
-  ];
-
-  const handleTabSelect = (id: number) => {
-    const tab = tabItems.find((t) => t.id === id);
-    if (tab?.action) tab.action();
+  //취소 버튼 없어
+  const handleCancel = () => {
+    setShowSuccessModal(false);
   };
 
   return (
     <PageWrapper>
-      <SideTab title="MyPage" items={tabItems} onSelect={handleTabSelect} />
       <UserInfoContainer>
         <TitleSection>
           <UserInfoTitle>회원 정보 수정</UserInfoTitle>
@@ -323,17 +307,17 @@ const UpdateUserInfoPage = () => {
 
       <InfoCheckModal
         isOpen={showSuccessModal}
-        message="회원정보수정이 완료되었습니다."
-        onConfirm={handelConfirm}
-        onCancel={handelConfirm}
+        message={modalMessage}
+        onConfirm={handleGoHome}
+        onCancel={handleCancel}
         confirmText="확인"
       />
 
       <InfoCheckModal
         isOpen={showFailModal}
-        message="회원가입에 실패했습니다."
-        onConfirm={handelCancel}
-        onCancel={handelCancel}
+        message={modalMessage}
+        onConfirm={handleUpdateFail}
+        onCancel={handleCancel}
         confirmText="확인"
       />
     </PageWrapper>

@@ -124,11 +124,13 @@ const SignupPage = () => {
 
   const [showSuccessModal, setShowSuccessModal] = useState(false); // 성공 모달
   const [showFailModal, setShowFailModal] = useState(false); // 실패 모달
+  const [modalMessage, setModalMessage] = useState<string>("");
 
   const handleNicknameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
     setNicknameCheck(null); // input 바뀌면 중복확인 다시해야됨
     setNicknameCheckMessage("");
+    setIsCheckingNickname(false);
   };
 
   //중복버튼 클릭 시
@@ -137,23 +139,22 @@ const SignupPage = () => {
       setNicknameCheckMessage("닉네임을 입력해주세요.");
       setNicknameCheck(null); // 중복확인 다시 눌러야됨
       return;
-    }
-
-    setIsCheckingNickname(true);
-
-    try {
-      const result = await checkNicknameAPI(nickname);
-      if (result.data.isUsed === true) {
-        setNicknameCheck(false);
-        setNicknameCheckMessage("사용할 수 없는 닉네임입니다.");
-      } else if (result.data.isUsed === false) {
-        setNicknameCheck(true);
-        setNicknameCheckMessage("사용가능한 닉네임입니다.");
+    } else {
+      try {
+        const result = await checkNicknameAPI(nickname);
+        if (result.data.isUsed === true) {
+          setNicknameCheck(false);
+          setNicknameCheckMessage("사용할 수 없는 닉네임입니다.");
+          setIsCheckingNickname(true);
+        } else if (result.data.isUsed === false) {
+          setNicknameCheck(true);
+          setNicknameCheckMessage("사용가능한 닉네임입니다.");
+          setIsCheckingNickname(true);
+          console.log(result.data.isUsed);
+        }
+      } catch {
+        setNicknameCheckMessage("오류가 발생했습니다. 다시 시도해주세요.");
       }
-    } catch {
-      setNicknameCheckMessage("오류가 발생했습니다. 다시 시도해주세요.");
-    } finally {
-      setIsCheckingNickname(false);
     }
   };
 
@@ -170,21 +171,27 @@ const SignupPage = () => {
     setSelectedRole(desireLecturer);
   };
 
+  //회원가입 완료 클릭
   const signupClick = async () => {
     if (nickname.trim() === "") {
-      alert("닉네임을 입력해주세요");
+      setModalMessage("닉네임을 입력해주세요");
+      setShowFailModal(true);
       return;
     } else if (nicknameCheck === null) {
-      alert("닉네임 중복확인을 해주세요.");
+      setModalMessage("닉네임 중복확인을 해주세요.");
+      setShowFailModal(true);
       return;
     } else if (nicknameCheck === false) {
-      alert("사용할 수 없는 닉네임입니다.");
+      setModalMessage("사용할 수 없는 닉네임입니다.");
+      setShowFailModal(true);
       return;
     } else if (selectedCategories.length === 0) {
-      alert("카테고리가 많거나 없습니다.");
+      setModalMessage("카테고리를 1개 이상 선택해주세요.");
+      setShowFailModal(true);
       return;
     } else if (selectedRole === null) {
-      alert("사용자 역할을 선택해주세요.");
+      setModalMessage("사용자 역할을 선택해주세요.");
+      setShowFailModal(true);
       return;
     } else if (nicknameCheck === true) {
       try {
@@ -208,8 +215,10 @@ const SignupPage = () => {
             })
           );
           setNicknameCheck(true);
+          setModalMessage("회원가입이 되었습니다. \n 축하드립니다.");
           setShowSuccessModal(true);
         } else {
+          setModalMessage("오류가 발생하였습니다. 다시시도 해주세요.");
           setShowFailModal(true);
           setNicknameCheck(false);
         }
@@ -224,6 +233,11 @@ const SignupPage = () => {
   const handelConfirm = () => {
     setShowSuccessModal(false);
     navigate(PAGE_PATHS.HOME);
+  };
+
+  const handleUpdateFail = () => {
+    setShowFailModal(false);
+    navigate(PAGE_PATHS.SIGNUP);
   };
 
   //취소 누르면 로그인 페이지로
@@ -263,6 +277,7 @@ const SignupPage = () => {
           <RoleSelect
             selectedRole={selectedRole}
             onRoleChange={handleRoleSelection}
+            styleType="card"
           />
         </RoleSelectContainer>
 
@@ -276,7 +291,7 @@ const SignupPage = () => {
 
       <InfoCheckModal
         isOpen={showSuccessModal}
-        message="회원가입을 축하드립니다."
+        message={modalMessage}
         onConfirm={handelConfirm}
         onCancel={handelConfirm}
         confirmText="확인"
@@ -284,8 +299,8 @@ const SignupPage = () => {
 
       <InfoCheckModal
         isOpen={showFailModal}
-        message="회원가입에 실패했습니다."
-        onConfirm={handelCancel}
+        message={modalMessage}
+        onConfirm={handleUpdateFail}
         onCancel={handelCancel}
         confirmText="확인"
       />
