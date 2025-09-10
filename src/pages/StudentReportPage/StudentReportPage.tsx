@@ -136,8 +136,8 @@ const SummaryTitle = styled.h3`
 const SummaryContainer = styled.div`
   display: grid;
   margin: 0 auto;
-
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   gap: 20px;
   margin-top: 20px;
   width: 97%;
@@ -158,7 +158,9 @@ const SummaryCard = styled.div`
     transform: scale(0.95);
   }
 `;
+
 const SummaryData = styled.div``;
+
 const ConceptName = styled.p`
   font-size: ${(props) => props.theme.fontSize.subtitle};
   margin: 10px;
@@ -183,6 +185,7 @@ const SummaryComment = styled.p`
   height: 30%;
   margin: 0 auto;
 `;
+
 const EmptySummaryMessage = styled.p`
   min-width: 30%;
 
