@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { logoutRequest } from "../../api/Auth/authApi";
 import { resetUserInfo } from "../Auth/authSlice";
+import { clearLecturerSession } from "../../utils/sessionStorage/consulting";
 
 interface TokenState {
   accessToken: string;
@@ -28,6 +29,7 @@ export const logoutUsingToken = createAsyncThunk(
     try {
       const data = await logoutRequest();
       dispatch(resetUserInfo());
+      clearLecturerSession();
       return data;
     } catch (error) {
       return rejectWithValue(error || "Logout failed");
@@ -51,24 +53,28 @@ const tokenSlice = createSlice({
       state.isMaintenance = false;
     },
     logout: (state) => {
+      clearLecturerSession();
       Object.assign(state, {
         ...initialState,
         isExpired: true,
       });
     },
     triggerBan: (state) => {
+      clearLecturerSession();
       Object.assign(state, {
         ...initialState,
         isBanned: true,
       });
     },
     maintenance: (state) => {
+      clearLecturerSession();
       Object.assign(state, {
         ...initialState,
         isMaintenance: true,
       });
     },
     reset: (state) => {
+      clearLecturerSession();
       Object.assign(state, initialState);
     },
   },
