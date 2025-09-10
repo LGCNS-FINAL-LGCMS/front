@@ -149,7 +149,7 @@ const ModalContent = styled.div<{ isSuccess: boolean }>`
   h2 {
     font-size: ${({ theme }) => theme.fontSize.title.max};
     color: ${({ isSuccess, theme }) =>
-    isSuccess ? theme.colors.success : theme.colors.danger};
+      isSuccess ? theme.colors.success : theme.colors.danger};
     margin: 0;
     display: flex;
     align-items: center;
@@ -183,10 +183,11 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
   const [modalMessage, setModalMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddCart = async () => {
-    if (!lecture) return;
-
+    if (!lecture || isLoading) return;
+    setIsLoading(true);
     try {
       await postCartItem({
         lectureId: lecture.lectureId,
@@ -202,7 +203,8 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
       setModalMessage(message);
       setIsSuccess(false);
       setModalOpen(true);
-      console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -224,9 +226,10 @@ const LectureInfoHeader: React.FC<LectureHeaderProps> = ({
               <div style={{ marginLeft: "auto", display: "flex", gap: "1rem" }}>
                 {isAuthenticated && (
                   <Button
-                    text="장바구니에 추가"
+                    text={isLoading ? "추가 중..." : "장바구니에 추가"}
                     onClick={handleAddCart}
                     design={1}
+                    disabled={isLoading}
                   />
                 )}
               </div>
