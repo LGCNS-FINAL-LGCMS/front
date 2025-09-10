@@ -126,3 +126,8 @@ const getLecturerReportFromSession = () => {
     return null;
   }
 };
+
+export const clearLecturerSession = () => {
+  sessionStorage.removeItem("lecturerDashboard");
+  sessionStorage.removeItem("lecturerReport");
+};

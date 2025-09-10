@@ -40,9 +40,9 @@ const LecturerReportCard = styled.div`
 `;
 const NotFoundMessage = styled.p`
   font-size: ${({ theme }) => theme.fontSize.subtitle};
-  font-weight: 600;
   color: ${({ theme }) => theme.colors.caution};
   text-align: center;
+  padding: 20px;
 `;
 
 const LoadingContainer = styled.div`
