@@ -7,10 +7,14 @@ import { fetchStudentReport } from "../../redux/StudentReport/StudentReportSlice
 
 import blueStar from "../../assets/images/levelTestPage/blueStar.svg";
 import blueStar_empty from "../../assets/images/levelTestPage/blueStar_empty.svg";
-import SideTab from "../../components/Common/SideTab";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PAGE_PATHS } from "../../constants/pagePaths";
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  align-items: flex-start;
+`;
 
 const StudentReportWrapper = styled.div`
   font-family: ${(props) => props.theme.font.primary};
@@ -19,9 +23,36 @@ const StudentReportWrapper = styled.div`
 
   background-color: white;
   border-radius: 11px;
-  margin: 30px;
+  margin: 10px;
   padding: 80px;
   border: 2px solid ${(props) => props.theme.colors.gray_M};
+`;
+
+const BackButtion = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  top: -70px;
+  left: -50px;
+  margin-top: 20px;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  background-color: white;
+  color: ${({ theme }) => theme.colors.border_Dark};
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    transform: ${(props) => props.theme.transition.slow};
+    transform: scale(1.1);
+  }
+  &:active {
+    transform: scale(0.95);
+  }
 `;
 
 const ReportHeader = styled.div`
@@ -37,13 +68,13 @@ const PageTitle = styled.h1`
   font-size: ${({ theme }) => theme.fontSize.title.max};
   font-family: ${({ theme }) => theme.font.primary};
   border-color: ${({ theme }) => theme.colors.background_Overlay};
-  color: ${({ theme }) => theme.colors.background_Overlay};
+  color: ${({ theme }) => theme.colors.text_D};
   padding-bottom: 12px;
 `;
 
 const Category = styled.div`
   position: absolute;
-  top: -12px;
+  top: -10px;
   right: 32px;
 
   background: white;
@@ -106,8 +137,8 @@ const SummaryTitle = styled.h3`
 const SummaryContainer = styled.div`
   display: grid;
   margin: 0 auto;
-
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   gap: 20px;
   margin-top: 20px;
   width: 97%;
@@ -128,7 +159,9 @@ const SummaryCard = styled.div`
     transform: scale(0.95);
   }
 `;
+
 const SummaryData = styled.div``;
+
 const ConceptName = styled.p`
   font-size: ${(props) => props.theme.fontSize.subtitle};
   margin: 10px;
@@ -153,6 +186,7 @@ const SummaryComment = styled.p`
   height: 30%;
   margin: 0 auto;
 `;
+
 const EmptySummaryMessage = styled.p`
   min-width: 30%;
 
@@ -220,40 +254,17 @@ const StudentReportPage = () => {
     }
   }, [reportId, dispatch]);
 
-  //sideTab
-  const tabItems = [
-    {
-      id: 1,
-      label: "My Lecture",
-      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.MY_LECTURES),
-    },
-    {
-      id: 2,
-      label: "Level Test",
-      action: () => navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD),
-    },
-    {
-      id: 3,
-      label: "회원정보수정",
-      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.USER_INFO),
-    },
-    {
-      id: 4,
-      label: "나의 Q&A",
-      action: () => navigate(PAGE_PATHS.USER_PAGE.STUDENT.QNA),
-    },
-  ];
-
-  const handleTabSelect = (id: number) => {
-    const tab = tabItems.find((t) => t.id === id);
-    if (tab?.action) tab.action();
-  };
-
   return (
     <Container>
-      <SideTab title="MyPage" items={tabItems} onSelect={handleTabSelect} />
       <StudentReportWrapper>
         <ReportHeader>
+          <BackButtion
+            onClick={() => {
+              navigate(PAGE_PATHS.LEVEL_TEST.DASHBOARD);
+            }}
+          >
+            <FontAwesomeIcon icon={faArrowLeft} size="2x" />
+          </BackButtion>
           <PageTitle>LevelTest Report</PageTitle>
           <Category>{reportData.category}</Category>
         </ReportHeader>
