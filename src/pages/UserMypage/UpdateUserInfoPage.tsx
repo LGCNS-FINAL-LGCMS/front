@@ -4,14 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { PAGE_PATHS } from "../../constants/pagePaths";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../redux/store";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { checkNicknameAPI, signupAPI } from "../../api/Signup/signupAPI";
+import { signoutRequest } from "../../api/Auth/authApi";
 import type { UserCategoriesList } from "../../types/authInfo";
 import Button from "../../components/Common/Button";
 import CategorySelect from "../../components/Signup/CategorySelect";
 import InfoCheckModal from "../../components/Signup/signupModal";
 import RoleSelect from "../../components/Signup/RoleSelect";
-import { setUserInfo } from "../../redux/Auth/authSlice";
+import { resetUserInfo, setUserInfo } from "../../redux/Auth/authSlice";
+import { theme } from "../../assets/styles/theme";
+import { logoutUsingToken } from "../../redux/token/tokenSlice";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -105,6 +109,133 @@ const RoleSection = styled.div`
   gap: 30px;
 `;
 
+const ModalBackdrop = styled.div`
+  position: fixed;
+  inset: 0;
+  background: ${({ theme }) => theme.colors.background_Overlay};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: ${({ theme }) => theme.zIndex.modal};
+`;
+
+const ModalContent = styled.div<{ isSuccess: boolean }>`
+  background: #fff;
+  width: ${({ theme }) => theme.size.modal.width};
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: ${({ theme }) => theme.shadow.lg};
+  text-align: center;
+  animation: fadeIn 0.3s ${({ theme }) => theme.transition.default};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  h2 {
+    font-size: ${({ theme }) => theme.fontSize.title.max};
+    color: ${({ isSuccess, theme }) =>
+      isSuccess ? theme.colors.success : theme.colors.danger};
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  p {
+    font-size: ${({ theme }) => theme.fontSize.body.max};
+    color: ${({ theme }) => theme.colors.text_D};
+    margin: 0;
+    white-space: pre-line;
+  }
+`;
+const Input = styled.input`
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.header || "#333"};
+  }
+`;
+
+const Modal: React.FC<{
+  message: string;
+  onClose: () => void;
+  navigate: () => void;
+}> = ({ message, onClose, navigate }) => {
+  const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleConfirm = async () => {
+    if (inputValue !== "탈퇴하겠습니다" || isLoading) return;
+
+    setIsLoading(true);
+    try {
+      await navigate();
+    } finally {
+      onClose();
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <ModalBackdrop onClick={onClose}>
+      <ModalContent onClick={(e) => e.stopPropagation()} isSuccess={false}>
+        <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+          <FontAwesomeIcon
+            icon={faTriangleExclamation}
+            size="3x"
+            color={theme.colors.caution}
+          />
+        </div>
+        <p
+          style={{
+            fontSize: "1rem",
+            marginBottom: "1rem",
+            textAlign: "center",
+          }}
+        >
+          {message}
+        </p>
+
+        <Input
+          type="text"
+          placeholder='"탈퇴하겠습니다"를 입력하세요'
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          disabled={isLoading}
+        />
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "1rem",
+            marginTop: "1.5rem",
+          }}
+        >
+          <Button
+            text={isLoading ? "처리 중..." : "확인"}
+            onClick={handleConfirm}
+            design={4}
+            disabled={inputValue !== "탈퇴하겠습니다" || isLoading}
+          />
+          <Button
+            text="취소"
+            onClick={onClose}
+            design={2}
+            disabled={isLoading}
+          />
+        </div>
+      </ModalContent>
+    </ModalBackdrop>
+  );
+};
+
 const ButtonSection = styled.div``;
 
 const UpdateUserInfoPage = () => {
@@ -116,6 +247,7 @@ const UpdateUserInfoPage = () => {
   const [nicknameCheckMessage, setNicknameCheckMessage] = useState(""); // 중복확인 결과 메세지
   const [nicknameCheck, setNicknameCheck] = useState<boolean | null>(null); // 중복확인 여부 확인
   const [isCheckingNickname, setIsCheckingNickname] = useState(false); // api 중복 실행 방지
+  const [showSignOutModal, setShowSignOutModal] = useState(false);
 
   const [selectedCategories, setSelectedCategories] = useState<
     UserCategoriesList[]
@@ -303,6 +435,12 @@ const UpdateUserInfoPage = () => {
             fontWeight={400}
           />
         </ButtonSection>
+        <Button
+          text="회원 탈퇴"
+          onClick={() => setShowSignOutModal(true)}
+          design={4}
+          fontWeight={400}
+        />
       </UserInfoContainer>
 
       <InfoCheckModal
@@ -320,6 +458,24 @@ const UpdateUserInfoPage = () => {
         onCancel={handleCancel}
         confirmText="확인"
       />
+
+      {showSignOutModal && (
+        <Modal
+          message={`정말로 회원 탈퇴를 진행하시겠습니까?\n탈퇴하려면 '탈퇴하겠습니다'를 입력하세요.`}
+          onClose={() => setShowSignOutModal(false)}
+          navigate={async () => {
+            try {
+              const response = await signoutRequest();
+              if (response.status !== "OK") throw new Error("탈퇴 실패");
+              await dispatch(logoutUsingToken()).unwrap();
+              dispatch(resetUserInfo());
+            } catch (error) {
+              setModalMessage("탈퇴 중 오류가 발생했습니다.");
+              setShowFailModal(true);
+            }
+          }}
+        />
+      )}
     </PageWrapper>
   );
 };

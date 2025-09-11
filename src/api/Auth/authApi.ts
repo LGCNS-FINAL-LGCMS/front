@@ -15,3 +15,13 @@ export const logoutRequest = async () => {
     throw new Error(message);
   }
 };
+
+export const signoutRequest = async () => {
+  try {
+    const response = await apiClient.post(API_ENDPOINTS.AUTH.SIGN_OUT);
+    return response.data;
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, "회원 탈퇴 실패");
+    throw new Error(message);
+  }
+};

@@ -7,7 +7,7 @@ interface ButtonProps {
   onClick: () => void;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
-  design?: 1 | 2 | 3;
+  design?: 1 | 2 | 3 | 4;
   fontColor?: 1 | 2;
   fontWeight?: 100 | 400 | 700;
   title?: string;
@@ -38,8 +38,18 @@ const buttonStyles = {
     background-color: rgba(0, 0, 0, 0.25);
     color: ${({ theme }) => theme.colors.text_B};
     border-radius: 25px;
+
     &:hover {
       background-color: rgba(0, 0, 0, 0.45);
+    }
+  `,
+  4: css`
+    background-color: ${({ theme }) => theme.colors.danger};
+    color: ${({ theme }) => theme.colors.text_B};
+    border-radius: 6px;
+
+    &:hover {
+      background-color: #c62828;
     }
   `,
 };
@@ -54,7 +64,7 @@ const buttonFontColors = {
 };
 
 const StyledButton = styled.button<{
-  design: 1 | 2 | 3;
+  design: 1 | 2 | 3 | 4;
   fontColor?: 1 | 2;
   fontWeight: 100 | 400 | 700;
 }>`
