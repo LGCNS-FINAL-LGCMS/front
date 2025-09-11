@@ -287,7 +287,12 @@ const LecturerLectureContainer: React.FC = () => {
             <CustomPaginationItem
               key={idx + 1}
               active={idx + 1 === currentPage}
-              onClick={() => handlePageChange(idx + 1)}
+              onClick={() => {
+                if (idx + 1 === currentPage) {
+                  return;
+                }
+                handlePageChange(idx + 1);
+              }}
             >
               {idx + 1}
             </CustomPaginationItem>
