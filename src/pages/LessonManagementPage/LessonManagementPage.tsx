@@ -132,13 +132,11 @@ const LessonManagementPage = () => {
 
       let data;
       if (editingLesson) {
-        data = await modifyLessonMetadata(editingLesson.id, description);
-        console.log("Metadata modified successfully:", data);
+        data = await modifyLessonMetadata(editingLesson.id, payload);
       } else {
         data = await postLessonMetadata(lectureId, payload);
         if (file) {
-          const res = await postLessonFiles(data, lectureId, file);
-          console.log("Lesson added successfully:", res);
+          await postLessonFiles(data, lectureId, file);
         }
       }
 
@@ -156,6 +154,12 @@ const LessonManagementPage = () => {
       setIsUploading(false);
     }
   };
+
+  const uploadMessage = isUploading
+    ? editingLesson
+      ? "강좌를 수정 중입니다. 잠시만 기다려주세요..."
+      : "영상 길이에 따라 최대 5분 소요될 수 있습니다..."
+    : "";
 
   return (
     <PageWrapper>
@@ -201,6 +205,7 @@ const LessonManagementPage = () => {
           handleSubmit({ title, description, file });
         }}
         isUploading={isUploading}
+        uploadMessage={uploadMessage}
       />
     </PageWrapper>
   );

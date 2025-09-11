@@ -4,7 +4,10 @@ import Hls from "hls.js";
 import type { Level } from "hls.js";
 import type { ManifestParsedData } from "hls.js";
 import styled from "styled-components";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../../components/Common/Button";
+import { useNavigate } from "react-router-dom";
 import {
   getLessonDetails,
   patchLessonProgress,
@@ -14,6 +17,7 @@ import { tutorRequest } from "../../api/Tutor/tutorAPI";
 import MessageList from "../../components/Common/Chat/MessageList";
 import type { ChatMessage } from "../../types/message";
 import MessageInput from "../../components/Common/Chat/MessageInput";
+import { PAGE_PATHS } from "../../constants/pagePaths";
 
 const Container = styled.div`
   display: grid;
@@ -152,6 +156,72 @@ const ChatbotContainer = styled.div`
   height: 100%;
 `;
 
+const ModalBackdrop = styled.div`
+  position: fixed;
+  inset: 0;
+  background: ${({ theme }) => theme.colors.background_Overlay};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: ${({ theme }) => theme.zIndex.modal};
+`;
+
+const ModalContent = styled.div<{ isSuccess: boolean }>`
+  background: #fff;
+  width: ${({ theme }) => theme.size.modal.width};
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: ${({ theme }) => theme.shadow.lg};
+  text-align: center;
+  animation: fadeIn 0.3s ${({ theme }) => theme.transition.default};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  h2 {
+    font-size: ${({ theme }) => theme.fontSize.title.max};
+    color: ${({ isSuccess, theme }) =>
+      isSuccess ? theme.colors.success : theme.colors.danger};
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  p {
+    font-size: ${({ theme }) => theme.fontSize.body.max};
+    color: ${({ theme }) => theme.colors.text_D};
+    margin: 0;
+  }
+`;
+
+const Modal: React.FC<{
+  message: string;
+  onClose: () => void;
+  navigate: () => void;
+}> = ({ message, onClose, navigate }) => {
+  const handleCloseAndNavigate = () => {
+    onClose();
+    navigate();
+  };
+
+  return (
+    <ModalBackdrop onClick={handleCloseAndNavigate}>
+      <ModalContent onClick={(e) => e.stopPropagation()} isSuccess={false}>
+        <h2>
+          <FontAwesomeIcon icon={faCircleXmark} size="2x" />
+          "실패"
+        </h2>
+        <p>{message}</p>
+        <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+          <Button text="확인" onClick={handleCloseAndNavigate} design={1} />
+        </div>
+      </ModalContent>
+    </ModalBackdrop>
+  );
+};
+
 type SidebarTab = "lecture" | "chatbot";
 
 const LessonViewPage: React.FC = () => {
@@ -165,6 +235,10 @@ const LessonViewPage: React.FC = () => {
   const [lessonList, setLessonList] = useState<Lesson[] | null>(null);
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  // const [isSuccess, setIsSuccess] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (lessonList && lessonList.length > 0) {
@@ -174,32 +248,36 @@ const LessonViewPage: React.FC = () => {
   }, [lessonList]);
 
   useEffect(() => {
-    if (!currentLesson || !videoRef.current) return;
+    const setupVideo = () => {
+      if (!currentLesson || !videoRef.current) return;
 
-    hlsRef.current?.destroy();
+      hlsRef.current?.destroy();
 
-    const hls = new Hls();
+      const hls = new Hls();
 
-    if (Hls.isSupported()) {
-      hls.loadSource(currentLesson.videoUrl);
-      hls.attachMedia(videoRef.current);
+      if (Hls.isSupported()) {
+        hls.loadSource(currentLesson.videoUrl);
+        hls.attachMedia(videoRef.current);
+        hls.on(
+          Hls.Events.MANIFEST_PARSED,
+          (_event, data: { levels: Level[] }) => {
+            setLevels(data.levels.filter((lvl) => lvl.height >= 360));
+          }
+        );
+        hlsRef.current = hls;
+      } else if (
+        videoRef.current.canPlayType("application/vnd.apple.mpegurl")
+      ) {
+        videoRef.current.src = currentLesson.videoUrl;
+      }
 
-      hls.on(
-        Hls.Events.MANIFEST_PARSED,
-        (_event, data: { levels: Level[] }) => {
-          setLevels(data.levels.filter((lvl) => lvl.height >= 360));
-        }
-      );
+      if (videoRef.current && currentLesson.progress != null) {
+        videoRef.current.currentTime =
+          (currentLesson.playtime * currentLesson.progress) / 100;
+      }
+    };
 
-      hlsRef.current = hls;
-    } else if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
-      videoRef.current.src = currentLesson.videoUrl;
-    }
-
-    if (videoRef.current && currentLesson.progress != null) {
-      videoRef.current.currentTime =
-        (currentLesson.playtime * currentLesson.progress) / 100;
-    }
+    setupVideo();
 
     return () => {
       hlsRef.current?.destroy();
@@ -213,12 +291,22 @@ const LessonViewPage: React.FC = () => {
         const res = await getLessonDetails(lectureId);
         setLessonList(res);
       } catch (err) {
-        console.error("레슨 불러오기 실패:", err);
+        const errorMessage =
+          err instanceof Error
+            ? err.message
+            : "알 수 없는 오류가 발생했습니다.";
+
+        setModalMessage(errorMessage);
+        setModalOpen(true);
       }
     };
 
     fetchLesson();
   }, [lectureId]);
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
 
   useEffect(() => {
     if (videoRef.current) {
@@ -438,6 +526,14 @@ const LessonViewPage: React.FC = () => {
           )}
         </ScrollableSidebarContent>
       </Sidebar>
+
+      {modalOpen && (
+        <Modal
+          message={modalMessage}
+          onClose={handleCloseModal}
+          navigate={() => navigate(PAGE_PATHS.HOME)}
+        />
+      )}
     </Container>
   );
 };
