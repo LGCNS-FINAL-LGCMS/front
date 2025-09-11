@@ -20,6 +20,7 @@ export const theme: DefaultTheme = {
     text_B: "#f2f2f2", // 밝은 텍스트
     disable: "rgba(85, 85, 85, 0.45)",
     card: "#f8f9fa",
+    white: "rgba(255, 255, 255, 1)",
   },
 
   size: {
