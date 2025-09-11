@@ -27,7 +27,7 @@ const Wrapper = styled.nav`
 const SidebarWrapper = styled.nav`
   width: 80px;
   height: calc(100vh - ${theme.size.header.height} - 30px);
-  background-color: ${theme.colors.text_D};
+  background-color: ${theme.colors.white};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -41,7 +41,7 @@ const IconButton = styled.button<{ active?: boolean }>`
   background: none;
   border: none;
   color: ${({ active, theme }) =>
-    active ? theme.colors.secondary : theme.colors.text_B};
+    active ? theme.colors.secondary : theme.colors.gray_D};
   cursor: pointer;
   font-size: 1.6rem;
   transition: color 0.2s;
