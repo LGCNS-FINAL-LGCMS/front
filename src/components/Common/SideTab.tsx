@@ -1,76 +1,91 @@
 import React from "react";
 import styled from "styled-components";
 
-const TAB_WIDTH = 160;
-const ITEM_HEIGHT = 40;
-const GAP = 5;
+const TAB_WIDTH = 240;
+const ITEM_HEIGHT = 200;
+const GAP = 8;
 
 const Wrapper = styled.nav`
   width: ${TAB_WIDTH}px;
   height: calc(100vh - ${({ theme }) => theme.size.header.height});
   position: fixed;
   top: ${({ theme }) => theme.size.header.height};
-  left: 20px;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   z-index: ${({ theme }) => theme.zIndex.header};
+  left: 0;
 `;
 
 const TabContainer = styled.div<{ $itemCount: number }>`
   width: ${TAB_WIDTH}px;
-  height: calc(100% - 40px);
-  background: ${({ theme }) => theme.colors.secondary};
+  height: 100%;
+  background: ${({ theme }) => theme.colors.white};
   backdrop-filter: blur(5px);
-  border-radius: 20px;
   font-family: ${({ theme }) => theme.font.primary};
   z-index: ${({ theme }) => theme.zIndex.header};
-  box-shadow: ${({ theme }) => theme.shadow.md};
 `;
 
 const TabList = styled.ul`
   list-style: none;
-  margin: 0;
-  padding: 5px 3px 1px 1px;
+  margin: 30px 0 0 0;
+  padding: 14px 18px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: ${ITEM_HEIGHT}px;
   gap: ${GAP}px;
 `;
 
-const TabItem = styled.li`
+const TabItem = styled.li<{ isActive: boolean }>`
   font-size: 1rem;
-  height: ${ITEM_HEIGHT}px;
-  color: ${({ theme }) => theme.colors.text_D};
   padding: 10px 14px;
-  margin: 0px 5px;
-  border-radius: 8px;
-  box-shadow: ${({ theme }) => theme.shadow.md};
+  transition: ${({ theme }) => theme.transition.default};
+  width: 90%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
 
-  transition: font-weight 0.2s;
+  //active일 때
+  color: ${({ theme, isActive }) =>
+    isActive ? theme.colors.white : theme.colors.gray_D};
+  background-color: ${({ theme, isActive }) =>
+    isActive ? theme.colors.gray_D : "none"};
+  font-weight: ${({ isActive }) => (isActive ? 700 : 500)};
 
   &:hover {
     font-weight: 700;
-    background: ${({ theme }) => theme.colors.gray_M};
-    cursor: pointer;
-    box-shadow: ${({ theme }) => theme.shadow.lg};
+    background: ${({ theme }) => theme.colors.gray_D};
+    color: ${({ theme }) => theme.colors.white};
   }
 `;
 
 const TabTitle = styled.div`
   font-size: 1.3rem;
   font-weight: 400;
-  color: ${({ theme }) => theme.colors.text_B};
-  padding: 12px 14px;
-  width: 90%;
+  color: ${({ theme }) => theme.colors.gray_M};
+  padding: 24px;
+  width: 100%;
+  display: flex;
 `;
 
 interface TabMenuProps {
   items: { id: number; label: string }[];
   title?: string;
+  currentItemId?: number;
   onSelect: (id: number) => void;
 }
 
-const SideTab: React.FC<TabMenuProps> = ({ title, items, onSelect }) => {
+const SideTab: React.FC<TabMenuProps> = ({
+  title,
+  items,
+  currentItemId,
+  onSelect,
+}) => {
   return (
     <Wrapper>
       <TabContainer $itemCount={items.length}>
@@ -82,6 +97,7 @@ const SideTab: React.FC<TabMenuProps> = ({ title, items, onSelect }) => {
               role="button"
               tabIndex={0}
               onClick={() => onSelect(item.id)}
+              isActive={currentItemId === item.id}
             >
               {item.label}
             </TabItem>
