@@ -34,12 +34,11 @@ const HeaderWrapper = styled.header`
   left: 0;
   right: 0;
   z-index: ${({ theme }) => theme.zIndex.header};
-  background-color: ${({ theme }) => theme.colors.background_B};
+  background-color: ${({ theme }) => theme.colors.white};
   height: ${({ theme }) => theme.size.header.height};
   padding: 0 1rem;
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(10px);
-  box-shadow: ${({ theme }) => theme.shadow.md};
 `;
 
 const DropdownMenu = styled.div`
@@ -84,7 +83,7 @@ const UserButton = styled.button`
   gap: 0.4rem;
   font-size: 1.3rem;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors.text_D};
+  color: ${({ theme }) => theme.colors.gray_D};
   background: none;
   border: none;
   cursor: pointer;
