@@ -59,7 +59,7 @@ const ChatWrapper = () => {
 
   function parseTextUrl(inputText: string): ParsedText | undefined {
     if (!inputText) return;
-    const pattern = /\[(https?:\/\/[^\s\]]+)\]/;
+    const pattern = /((?:https?:\/\/|www\.)[^\s\]]+)/;
     const match = inputText.match(pattern);
     if (match && match[1]) {
       const allmatches = match[0];
@@ -117,16 +117,20 @@ const ChatWrapper = () => {
       }
 
       // 3-2. imageUrl
-      if (responseData.imageUrl) {
-        const botImageMessage: ChatMessage = {
-          id: Date.now().toString() + "-bot-image",
-          sender: "bot",
-          content: responseData.imageUrl,
-          // content: "https://ko.react.dev/images/docs/react-devtools-standalone.png",
-          timestamp: new Date().getTime(),
-          type: "image",
-        };
-        botMessages.push(botImageMessage);
+      const imageUrl = responseData.imageUrl;
+      if (imageUrl) {
+        const isFromValidDomain = imageUrl.startsWith('https://cdn.lgcms.click/');
+        if (isFromValidDomain) {
+          const botImageMessage: ChatMessage = {
+            id: Date.now().toString() + "-bot-image",
+            sender: "bot",
+            content: imageUrl,
+            // content: "https://ko.react.dev/images/docs/react-devtools-standalone.png",
+            timestamp: new Date().getTime(),
+            type: "image",
+          };
+          botMessages.push(botImageMessage);
+        }
       }
       // console.log("botMessages", botMessages);
       // 4. 기존 메시지 목록에 봇의 답변을 추가합니다.
