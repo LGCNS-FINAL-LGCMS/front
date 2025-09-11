@@ -299,7 +299,7 @@ const LevelTestDashboardPage = () => {
   return (
     <Container>
       <CategorySelectWrapper>
-        <PageTitle>Level Test</PageTitle>
+        <PageTitle>레벨 테스트</PageTitle>
         <CategorySelectBox>
           <CategoryTitle>레벨 테스트할 카테고리를 선택해 주세요.</CategoryTitle>
           <CategoryContainer>
@@ -324,7 +324,7 @@ const LevelTestDashboardPage = () => {
       </CategorySelectWrapper>
 
       <ReportListWrapper>
-        <ReportTitle>Report</ReportTitle>
+        <ReportTitle>레포트</ReportTitle>
         <ReportContainer>
           {reportList.length > 0 ? (
             reportList.map((report, index) => (

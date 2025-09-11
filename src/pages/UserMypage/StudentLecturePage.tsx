@@ -22,7 +22,7 @@ const MypageTitle = styled.h1`
 const StudentLecturePage = () => {
   return (
     <Container>
-      <MypageTitle>나의 강의실</MypageTitle>
+      <MypageTitle>나의 강좌</MypageTitle>
       <StudentLectureContainer />
     </Container>
   );
