@@ -77,11 +77,9 @@ const RoleSelectSubtitle = styled.p`
 `;
 
 // 체크박스 컨테이너
+const CheckboxWrapper = styled.div``;
+
 const CheckboxContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: auto;
   margin-bottom: 30px;
   padding: 20px;
   border: 1.5px solid #ccc;
@@ -182,24 +180,21 @@ const RoleSelect = ({
 
   return (
     <RollSelectContainer>
-      {isDesireLecturer ? null : (
-        <>
+      {!isDesireLecturer && styleType === "checkbox" && (
+        <CheckboxWrapper>
           <RoleSelectSubtitle>강사로 전환하시겠습니까?</RoleSelectSubtitle>
-
-          {styleType === "checkbox" && (
-            <CheckboxContainer>
-              <CheckboxLabel>
-                <HiddenCheckbox
-                  id="lecturerDesire"
-                  checked={selectedRole === true}
-                  onChange={handleCheckbox}
-                />
-                <CustomCheckbox checked={selectedRole === true} />
-                강사로 전환하기
-              </CheckboxLabel>
-            </CheckboxContainer>
-          )}
-        </>
+          <CheckboxContainer>
+            <CheckboxLabel>
+              <HiddenCheckbox
+                id="lecturerDesire"
+                checked={selectedRole === true}
+                onChange={handleCheckbox}
+              />
+              <CustomCheckbox checked={selectedRole === true} />
+              강사로 전환하기
+            </CheckboxLabel>
+          </CheckboxContainer>
+        </CheckboxWrapper>
       )}
       {styleType === "card" && (
         <RoleCardContainer>

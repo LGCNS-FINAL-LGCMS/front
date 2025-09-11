@@ -226,6 +226,10 @@ const ConfirmRow = styled.div`
     display: inline-block;
     min-width: 65px;
   }
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 `;
 
 const CreateLecturePage = () => {

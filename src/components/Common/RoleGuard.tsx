@@ -30,7 +30,7 @@ const RoleGuard = ({ minRole, children }: RoleGuardProps) => {
       userRole !== "ADMIN" &&
       roleHierarchy[userRole] < roleHierarchy[minRole]
     ) {
-      navigate(PAGE_PATHS.LOGIN, { replace: true });
+      navigate(PAGE_PATHS.HOME, { replace: true });
     }
   }, [userRole, minRole, navigate]);
 

@@ -40,9 +40,9 @@ const LecturerReportCard = styled.div`
 `;
 const NotFoundMessage = styled.p`
   font-size: ${({ theme }) => theme.fontSize.subtitle};
-  font-weight: 600;
   color: ${({ theme }) => theme.colors.caution};
   text-align: center;
+  padding: 20px;
 `;
 
 const LoadingContainer = styled.div`
@@ -100,13 +100,15 @@ const LecturerReportPage = () => {
 
   if (isLoading) {
     return (
-      <LecturerReportContainer>
+      <Container>
         <PageTitle>강사 레포트</PageTitle>
-        <LoadingContainer>
-          <LoadingSpinner />
-          <LoadingMessage>강사 레포트를 생성중입니다...</LoadingMessage>
-        </LoadingContainer>
-      </LecturerReportContainer>
+        <LecturerReportContainer>
+          <LoadingContainer>
+            <LoadingSpinner />
+            <LoadingMessage>강사 레포트를 생성중입니다...</LoadingMessage>
+          </LoadingContainer>
+        </LecturerReportContainer>
+      </Container>
     );
   }
 

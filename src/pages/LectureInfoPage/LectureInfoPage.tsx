@@ -49,7 +49,7 @@ const Content = styled.div`
 const LeftPane = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1;
+  width: 300px;
 `;
 
 const RightPane = styled.div`
