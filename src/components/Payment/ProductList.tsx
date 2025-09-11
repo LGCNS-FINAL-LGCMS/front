@@ -106,7 +106,7 @@ const ProductList: React.FC<ProductListProps> = ({ items, setItems }) => {
                   {/* 썸네일 */}
                   <T.Td >
 
-                    <Thumb $imageUrl={it.thumbnailUrl || undefined} />
+                    <Thumb $imageUrl={encodeURI(it.thumbnailUrl) || undefined} />
 
                   </T.Td>
 
@@ -186,7 +186,7 @@ const Thumb = styled.div<{ $imageUrl?: string }>`
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: ${({ $imageUrl }) => //
+    background-image: ${({ $imageUrl }) =>
     $imageUrl ? `url(${$imageUrl})` : "none"};
     background-size: cover;
     background-position: center;

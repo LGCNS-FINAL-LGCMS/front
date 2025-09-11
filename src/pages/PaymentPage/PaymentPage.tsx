@@ -123,7 +123,7 @@ export type LectureItem = {
   lectureId: string;
   title: string;
   price: number;
-  thumbnailUrl?: string;
+  thumbnailUrl: string;
   selected: boolean;
 };
 
