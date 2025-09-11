@@ -469,7 +469,7 @@ const UpdateUserInfoPage = () => {
               if (response.status !== "OK") throw new Error("탈퇴 실패");
               await dispatch(logoutUsingToken()).unwrap();
               dispatch(resetUserInfo());
-            } catch (error) {
+            } catch {
               setModalMessage("탈퇴 중 오류가 발생했습니다.");
               setShowFailModal(true);
             }
